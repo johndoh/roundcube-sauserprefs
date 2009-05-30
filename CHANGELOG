@@ -1,6 +1,15 @@
 Roundcube Webmail SpamAssassin User Prefs (SQL)
 ===============================================
 
+2009 05 30
+==========
+ * Added delete icon
+
+2009 05 24
+==========
+ * Added support for plugin template system
+ * Removed display_order config var, this is now controlled from the template
+
 2009 05 03
 ==========
  * Added new contact add/save/delete hooks

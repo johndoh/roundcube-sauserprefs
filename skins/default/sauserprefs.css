@@ -1,31 +1,5 @@
 /***** RoundCube|Mail sauserprefs plugin styles *****/
 
-#pagecontent
-{
-  position: absolute;
-  top: 95px;
-  left: 20px;
-  bottom: 60px;
-  right: 20px;
-  overflow: auto;
-  border: 1px solid #999999;
-  /* css hack for IE */
-  height: expression((parseInt(document.documentElement.clientHeight)-155)+'px');
-  width: expression((parseInt(document.documentElement.clientWidth)-40)+'px');
-}
-
-#pagecontent table td.title
-{
-  color: #666666;
-  padding-right: 10px;
-  white-space: nowrap;
-}
-
-#pagecontent table tr.advanced
-{
-  display: none;
-}
-
 #address-rules-cont, #spam-langs-cont
 {
   border: 1px solid #999999;

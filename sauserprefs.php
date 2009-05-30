@@ -41,39 +41,23 @@ class sauserprefs extends rcube_plugin
 		$this->_load_user_prefs();
 
 		$this->user_prefs = array_merge($this->global_prefs, $this->user_prefs);
-		$this->register_handler('plugin.body', array($this, 'gen_form'));
-		$this->register_handler('plugin.footer', array($this, 'gen_footer'));
-		$this->include_stylesheet('sauserprefs.css');
+		$this->api->output->add_handler('usersauserprefs', array($this, 'gen_form'));
 		$this->api->output->set_pagetitle($this->gettext('sauserprefssettings'));
-		$this->api->output->send('plugin');
+		$this->api->output->send('sauserprefs.sauserprefs');
 	}
 
-	function gen_form()
+	function gen_form($attrib)
 	{
-		list($form_start, $form_end) = get_form_tags(null, 'plugin.sauserprefs.save');
+		list($form_start, $form_end) = get_form_tags($attrib, 'plugin.sauserprefs.save');
+		unset($attrib['form']);
 
 		$out = $form_start;
 
-		foreach ($this->config['display_order'] as $blocks) {
-			$buff = '';
+		$parts = $attrib['parts'] ? preg_split('/[\s,;]+/', strip_quotes($attrib['parts'])) : array('general','headers','tests','report','addresses');
+		foreach ($parts as $part)
+			$out .= $this->_prefs_block($part, $attrib);
 
-			foreach ($blocks as $part)
-				$buff .= $this->_prefs_block($part);
-
-			$out .= "\n" . html::tag('div', array('class' => 'userprefs-block'), "\n" . $buff);
-		}
-
-		$out .= $form_end;
-
-		$out = "\n" . html::tag('div', array('style' => 'padding: 15px 0 15px 15px;'), "\n" . $out . "\n" . html::tag('div', array('style' => 'clear: left;'), null) . "\n");
-		$out = html::tag('div', array('id' => 'userprefs-title'), Q($this->gettext('sauserprefssettings'))) . $out;
-
-		return $out;
-	}
-
-	function gen_footer()
-	{
-		return html::tag('p', array('id' => 'listbuttons'), $this->api->output->button(array('command' => 'plugin.sauserprefs.save', 'type' => 'input', 'class' => 'button mainaction', 'label' => 'save')));
+		return $out . $form_end;
 	}
 
 	function save()
@@ -359,7 +343,7 @@ class sauserprefs extends rcube_plugin
 		$this->user_prefs = $user_prefs;
 	}
 
-	private function _prefs_block($part)
+	private function _prefs_block($part, $attrib)
 	{
 		switch ($part)
 		{
@@ -418,8 +402,8 @@ class sauserprefs extends rcube_plugin
 				$table->add(array('colspan' => 2, 'id' => 'listcontrols'), $this->gettext('select') .":&nbsp;&nbsp;". $select_all ."&nbsp;&nbsp;". $select_none);
 				$table->add_row();
 
-				$enable_button = html::img(array('src' => 'plugins/sauserprefs/enabled.png', 'alt' => $this->gettext('enabled'), 'border' => 0));
-				$disable_button = html::img(array('src' => 'plugins/sauserprefs/disabled.png', 'alt' => $this->gettext('disabled'), 'border' => 0));
+				$enable_button = html::img(array('src' => $attrib['enableicon'], 'alt' => $this->gettext('enabled'), 'border' => 0));
+				$disable_button = html::img(array('src' => $attrib['disableicon'], 'alt' => $this->gettext('disabled'), 'border' => 0));
 
 				$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table', 'cellspacing' => '0', 'cols' => 2));
 				$lang_table->add_header(array('colspan' => 2), $this->gettext('language'));
@@ -589,7 +573,7 @@ class sauserprefs extends rcube_plugin
 			$address_table->add_header(null, $this->gettext('email'));
 			$address_table->add_header(array('width' => '40px'), '&nbsp;');
 
-			$this->_address_row($address_table, null, null);
+			$this->_address_row($address_table, null, null, $attrib);
 
 			$sql_result = $this->db->query(
 			  "SELECT ". $this->config['sql_preference_field'] .", ". $this->config['sql_value_field'] ."
@@ -614,7 +598,7 @@ class sauserprefs extends rcube_plugin
 				$field = $sql_arr[$this->config['sql_preference_field']];
 				$value = $sql_arr[$this->config['sql_value_field']];
 
-				$this->_address_row($address_table, $field, $value);
+				$this->_address_row($address_table, $field, $value, $attrib);
 			}
 
 			$table->add(array('colspan' => 3), html::div(array('id' => 'address-rules-cont'), $address_table->show()));
@@ -632,7 +616,7 @@ class sauserprefs extends rcube_plugin
 		return $out;
 	}
 
-	private function _address_row($address_table, $field, $value)
+	private function _address_row($address_table, $field, $value, $attrib)
 	{
 		if (!isset($field))
 			$address_table->set_row_attribs(array('style' => 'display: none;'));
@@ -655,7 +639,7 @@ class sauserprefs extends rcube_plugin
 
 		$address_table->add(array('class' => $field), $fieldtxt);
 		$address_table->add(array('class' => 'email'), $value);
-		$del_button = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'image', 'image' => 'plugins/sauserprefs/delete.png', 'alt' => 'delete', 'title' => 'delete'));
+		$del_button = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'image', 'image' => $attrib['deleteicon'], 'alt' => 'delete', 'title' => 'delete'));
 		$address_table->add('control', '&nbsp;' . $del_button . $hidden_action->show() . $hidden_field->show() . $hidden_text->show());
 
 		return $address_table;

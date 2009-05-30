@@ -43,11 +43,6 @@ $sauserprefs_config['sql_value_field'] = "value";
 // check README for more information
 $sauserprefs_config['whitelist_sync'] = FALSE;
 
-// define the order of the sections
-// available blocks: general, headers, tests, report, addresses
-$sauserprefs_config['display_order'] = array('col1' => array('general', 'tests'),
-											 'col2' => array('headers', 'report', 'addresses'));
-
 // define which of the general options to show
 // the order/appearance of the fieldsets is controlled in the template
 $sauserprefs_config['general_settings'] = array(
