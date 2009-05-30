@@ -1,0 +1,148 @@
+<?php
+
+/*
+ +-----------------------------------------------------------------------+
+ | SAUserPrefs configuration file                                        |
+ |                                                                       |
+ | This file is part of the RoundCube Webmail client                     |
+ | Copyright (C) 2005-2009, RoundCube Dev. - Switzerland                 |
+ | Licensed under the GNU GPL                                            |
+ |                                                                       |
+ +-----------------------------------------------------------------------+
+
+*/
+
+$sauserprefs_config = array();
+
+// spamassassin database settings
+$sauserprefs_config['db_dsnw'] = 'mysql://username:password@localhost/database';
+
+// PEAR database DSN for read only operations (if empty write database will be used)
+// useful for database replication
+$sauserprefs_config['db_dsnr'] = '';
+
+// use persistent db-connections
+// beware this will not "always" work as expected
+// see: http://www.php.net/manual/en/features.persistent-connections.php
+$sauserprefs_config['db_persistent'] = FALSE;
+
+// table that holds user prefs
+$sauserprefs_config['sql_table_name'] = "userpref";
+
+// name of the username field in the user prefs table
+$sauserprefs_config['sql_username_field'] = "username";
+
+// name of the preference field in the user prefs table, holds the name of the preference
+$sauserprefs_config['sql_preference_field'] = "preference";
+
+// name of the value field in the user prefs table, holds the value of the preference
+$sauserprefs_config['sql_value_field'] = "value";
+
+// enable the whitelists synchronisation
+// NOTE: To use this your SpamAssassin prefs table must include a field in which the contact_id from the RC address book can be stored
+// check README for more information
+$sauserprefs_config['whitelist_sync'] = FALSE;
+
+// define the order of the sections
+// available blocks: general, headers, tests, report, addresses
+$sauserprefs_config['display_order'] = array('col1' => array('general', 'tests'),
+											 'col2' => array('headers', 'report', 'addresses'));
+
+// define which of the general options to show
+// the order/appearance of the fieldsets is controlled in the template
+$sauserprefs_config['general_settings'] = array(
+									"score" => TRUE,
+									"subject" => TRUE,
+									"language" => TRUE
+								);
+
+// default settings
+// these are overridden by $GLOBAL and user settings from the database
+$sauserprefs_config['default_prefs'] = array(
+									"required_hits" => "5",
+									"rewrite_subject" => "0",
+									"rewrite_header Subject" => "*****SPAM*****",
+									"ok_languages" => "all",
+									"ok_locales" => "all",
+									"fold_headers" => "1",
+									"add_header all Level" => "_STARS(*)_",
+									"use_razor1" => "0",
+									"use_razor2" => "1",
+									"use_pyzor" => "1",
+									"use_dcc" => "1",
+									"use_bayes" => "1",
+									"skip_rbl_checks" => "0",
+									"report_safe" => "1"
+								);
+
+// spam score increment - increment values in the the score threshold drop down by this, from 0 to 10
+$sauserprefs_config['score_inc'] = 1;
+
+// define languages
+$sauserprefs_config['languages'] = array(
+									"af" => "Afrikaans",
+									"sq" => "Albanian",
+									"am" => "Amharic",
+									"ar" => "Arabic",
+									"hy" => "Armenian",
+									"eu" => "Basque",
+									"bs" => "Bosnian",
+									"bg" => "Bulgarian",
+									"be" => "Byelorussian",
+									"ca" => "Catalan",
+									"zh" => "Chinese",
+									"hr" => "Croatian",
+									"cs" => "Czech",
+									"da" => "Danish",
+									"nl" => "Dutch",
+									"en" => "English",
+									"eo" => "Esperanto",
+									"et" => "Estonian",
+									"fi" => "Finnish",
+									"fr" => "French",
+									"fy" => "Frisian",
+									"ka" => "Georgian",
+									"de" => "German",
+									"el" => "Greek",
+									"he" => "Hebrew",
+									"hi" => "Hindi",
+									"hu" => "Hungarian",
+									"is" => "Icelandic",
+									"id" => "Indonesian",
+									"ga" => "Irish Gaelic",
+									"it" => "Italian",
+									"ja" => "Japanese",
+									"ko" => "Korean",
+									"la" => "Latin",
+									"lv" => "Latvian",
+									"lt" => "Lithuanian",
+									"ms" => "Malay",
+									"mr" => "Marathi",
+									"ne" => "Nepali",
+									"no" => "Norwegian",
+									"fa" => "Persian",
+									"pl" => "Polish",
+									"pt" => "Portuguese",
+									"qu" => "Quechua",
+									"rm" => "Rhaeto-Romance",
+									"ro" => "Romanian",
+									"ru" => "Russian",
+									"sa" => "Sanskrit",
+									"sco" => "Scots",
+									"gd" => "Scottish Gaelic",
+									"sr" => "Serbian",
+									"sk" => "Slovak",
+									"sl" => "Slovenian",
+									"es" => "Spanish",
+									"sw" => "Swahili",
+									"sv" => "Swedish",
+									"tl" => "Tagalog",
+									"ta" => "Tamil",
+									"th" => "Thai",
+									"tr" => "Turkish",
+									"uk" => "Ukrainian",
+									"vi" => "Vietnamese",
+									"cy" => "Welsh",
+									"yi" => "Yiddish"
+								);
+?>
