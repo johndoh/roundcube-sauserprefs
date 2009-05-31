@@ -26,6 +26,28 @@ if (window.rcmail) {
 				return false;
 			}, true);
 
+			rcmail.register_command('plugin.sauserprefs.select_invert_langs', function(){
+				var langlist = document.getElementsByName('_spamlang[]');
+				var obj;
+
+				for (var i = 0; i < langlist.length; i++) {
+					if (langlist[i].checked) {
+						langlist[i].checked = false;
+						obj = rcube_find_object('spam_lang_'+ i);
+						obj.title = rcmail.gettext('disabled','sauserprefs');
+						obj.innerHTML = rcube_find_object('disable_button').innerHTML;
+					}
+					else {
+						langlist[i].checked = true;
+						obj = rcube_find_object('spam_lang_'+ i);
+						obj.title = rcmail.gettext('enabled','sauserprefs');
+						obj.innerHTML = rcube_find_object('enable_button').innerHTML;
+					}
+				}
+
+				return false;
+			}, true);
+
 			rcmail.register_command('plugin.sauserprefs.select_no_langs', function(){
 				var langlist = document.getElementsByName('_spamlang[]');
 				var obj;

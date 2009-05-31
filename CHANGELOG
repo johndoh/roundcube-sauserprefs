@@ -1,6 +1,10 @@
 Roundcube Webmail SpamAssassin User Prefs (SQL)
 ===============================================
 
+2009 05 31
+==========
+ * Added invert message language selection
+
 2009 05 30
 ==========
  * Added delete icon
