@@ -415,7 +415,7 @@ class sauserprefs extends rcube_plugin
 				if ($this->user_prefs['ok_locales'] == "all")
 					$ok_locales = array_keys($this->config['languages']);
 				else
-					$ok_locales = split(" ", $this->user_prefs['ok_locales']);
+					$ok_locales = explode(" ", $this->user_prefs['ok_locales']);
 
 				$i = 0;
 				foreach ($this->config['languages'] as $lang_code => $name) {

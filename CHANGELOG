@@ -1,6 +1,8 @@
 Roundcube Webmail SpamAssassin User Prefs (SQL)
 ===============================================
 
+ * Swap split() for explode(), PHP 5.3 compatibility
+
 2009 05 31
 ==========
  * Added invert message language selection
