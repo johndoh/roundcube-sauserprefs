@@ -11,7 +11,7 @@
  */
 class sauserprefs extends rcube_plugin
 {
-	static private $instance;
+	public $task = 'mail|addressbook|settings';
 	private $config;
 	private $db;
 	private $global_prefs;
