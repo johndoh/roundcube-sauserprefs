@@ -16,6 +16,10 @@ class sauserprefs extends rcube_plugin
 	private $db;
 	private $global_prefs;
 	private $user_prefs;
+	private $deprecated_prefs = array(
+			'required_hits' => 'required_score'
+			);
+
 
 	function init()
 	{
@@ -70,7 +74,7 @@ class sauserprefs extends rcube_plugin
 		$new_prefs = array();
 
 		if ($this->config['general_settings']['score'])
-			$new_prefs['required_hits'] = $_POST['_spamthres'];
+			$new_prefs['required_score'] = $_POST['_spamthres'];
 
 		if ($this->config['general_settings']['subject'])
 			$new_prefs['rewrite_header Subject'] = $_POST['_spamsubject'];
@@ -288,6 +292,14 @@ class sauserprefs extends rcube_plugin
 		include('config.inc.php');
 		$this->config = (array)$sauserprefs_config;
 		ob_end_clean();
+
+		// update deprecated prefs
+		foreach ($this->deprecated_prefs as $old => $new) {
+			if ($this->config['default_prefs'][$old]) {
+				$this->config['default_prefs'][$new] = $this->config['default_prefs'][$old];
+				unset($this->config['default_prefs'][$old]);
+			}
+		}
 	}
 
 	private function _db_connect($mode)
@@ -320,6 +332,21 @@ class sauserprefs extends rcube_plugin
 		while ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result)))
 		    $global_prefs[$sql_arr[$this->config['sql_preference_field']]] = $sql_arr[$this->config['sql_value_field']];
 
+		// update deprecated prefs
+		foreach ($this->deprecated_prefs as $old => $new) {
+			if ($global_prefs[$old]) {
+				$this->db->query(
+					  "UPDATE ". $this->config['sql_table_name'] ."
+					   SET    ". $this->config['sql_preference_field'] ." = '". $new ."'
+					   WHERE  ". $this->config['sql_username_field'] ." = '\$GLOBAL'
+					   AND    ". $this->config['sql_preference_field'] ." = '". $old ."';"
+					  );
+
+				$global_prefs[$new] = $global_prefs[$old];
+				unset($global_prefs[$old]);
+			}
+		}
+
 		$global_prefs = array_merge($this->config['default_prefs'], $global_prefs);
 		$this->global_prefs = $global_prefs;
 	}
@@ -339,6 +366,21 @@ class sauserprefs extends rcube_plugin
 
 	    while ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result)))
 		    $user_prefs[$sql_arr[$this->config['sql_preference_field']]] = $sql_arr[$this->config['sql_value_field']];
+
+		// update deprecated prefs
+		foreach ($this->deprecated_prefs as $old => $new) {
+			if ($user_prefs[$old]) {
+				$this->db->query(
+					  "UPDATE ". $this->config['sql_table_name'] ."
+					   SET    ". $this->config['sql_preference_field'] ." = '". $new ."'
+					   WHERE  ". $this->config['sql_username_field'] ." = '". $_SESSION['username'] ."'
+					   AND    ". $this->config['sql_preference_field'] ." = '". $old ."';"
+					  );
+
+				$user_prefs[$new] = $user_prefs[$old];
+				unset($user_prefs[$old]);
+			}
+		}
 
 		$this->user_prefs = $user_prefs;
 	}
@@ -363,7 +405,7 @@ class sauserprefs extends rcube_plugin
 					$input_spamthres->add(number_format($i, $decPlaces), (float)$i);
 
 				$table->add('title', html::label($field_id, Q($this->gettext('spamthres'))));
-				$table->add(null, $input_spamthres->show((float)$this->user_prefs['required_hits']));
+				$table->add(null, $input_spamthres->show((float)$this->user_prefs['required_score']));
 
 				$table->add(array('colspan' => 2), Q($this->gettext('spamthresexp')));
 				$table->add_row();

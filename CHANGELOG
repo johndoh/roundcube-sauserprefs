@@ -1,6 +1,8 @@
 Roundcube Webmail SpamAssassin User Prefs (SQL)
 ===============================================
 
+ * Remove deprecated pref requred_hits and replace with requred_score
+
 2009 06 07
 ==========
  * Swap split() for explode(), PHP 5.3 compatibility

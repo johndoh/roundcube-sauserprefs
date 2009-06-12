@@ -54,7 +54,7 @@ $sauserprefs_config['general_settings'] = array(
 // default settings
 // these are overridden by $GLOBAL and user settings from the database
 $sauserprefs_config['default_prefs'] = array(
-									"required_hits" => "5",
+									"required_score" => "5",
 									"rewrite_subject" => "0",
 									"rewrite_header Subject" => "*****SPAM*****",
 									"ok_languages" => "all",
