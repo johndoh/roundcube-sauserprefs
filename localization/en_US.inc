@@ -34,6 +34,10 @@ $labels['addrule']  = 'Add Rule';
 $labels['rule']  = 'Rule';
 $labels['importfromaddressbook'] = 'Import addresses from Address Book';
 $labels['deleteall'] = 'Delete All';
+$labels['autoscore'] = 'Auto';
+$labels['defaultscore'] = 'Default Score';
+$labels['otherscore'] = 'Other (%s)';
+$labels['usedefault'] = 'Restore Default Settings';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed spam settings';
@@ -52,5 +56,6 @@ $messages['spamaddressdelete'] = 'Are you sure you want to delete this rule?';
 $messages['spamaddressdeleteall'] = 'Are you sure you want to delete all address rules?';
 $messages['noaddressrules'] = 'No address rules found.';
 $messages['importingaddresses'] = 'Importing addresses...';
+$messages['usedefaultconfirm'] = 'Are you sure you want to restore the default settings? This will delete all your settings, including your address rules.';
 
 ?>

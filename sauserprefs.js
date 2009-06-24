@@ -190,7 +190,139 @@ if (window.rcmail) {
 
 			rcmail.register_command('plugin.sauserprefs.save', function(){ rcmail.gui_objects.editform.submit(); }, true);
 
-			rcmail.enable_command('plugin.sauserprefs.save', true);
+			rcmail.register_command('plugin.sauserprefs.default', function(){
+				if (confirm(rcmail.gettext('usedefaultconfirm','sauserprefs'))){
+					// Score
+					if (rcube_find_object('rcmfd_spamthres'))
+						rcube_find_object('rcmfd_spamthres').selectedIndex = 0;
+
+					// Subject tag
+					if (rcube_find_object('rcmfd_spamsubject'))
+						rcube_find_object('rcmfd_spamsubject').value = rcmail.env.rewrite_header_Subject
+
+					// Languages
+					var langlist = document.getElementsByName('_spamlang[]');
+					var obj;
+					var dlangs = " " + rcmail.env.ok_languages + " ";
+
+					for (var i = 0; i < langlist.length; i++) {
+						langlist[i].checked = false;
+						obj = rcube_find_object('spam_lang_'+ i);
+						obj.title = rcmail.gettext('disabled','sauserprefs');
+						obj.innerHTML = rcube_find_object('disable_button').innerHTML;
+
+						if (dlangs.indexOf(" " + langlist[i].value + " ") > -1) {
+							langlist[i].checked = true;
+							obj = rcube_find_object('spam_lang_'+ i);
+							obj.title = rcmail.gettext('enabled','sauserprefs');
+							obj.innerHTML = rcube_find_object('enable_button').innerHTML;
+						}
+					}
+
+					// Tests
+					if (rcube_find_object('rcmfd_spamuserazor1')) {
+						if (rcmail.env.use_razor1 == '1')
+							rcube_find_object('rcmfd_spamuserazor1').checked = true;
+						else
+							rcube_find_object('rcmfd_spamuserazor1').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_spamuserazor2')) {
+						if (rcmail.env.use_razor2 == '1')
+							rcube_find_object('rcmfd_spamuserazor2').checked = true;
+						else
+							rcube_find_object('rcmfd_spamuserazor2').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_spamusepyzor')) {
+						if (rcmail.env.use_pyzor == '1')
+							rcube_find_object('rcmfd_spamusepyzor').checked = true;
+						else
+							rcube_find_object('rcmfd_spamusepyzor').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_spamusedcc')) {
+						if (rcmail.env.use_dcc == '1')
+							rcube_find_object('rcmfd_spamusedcc').checked = true;
+						else
+							rcube_find_object('rcmfd_spamusedcc').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_spamusebayes')) {
+						if (rcmail.env.use_bayes == '1')
+							rcube_find_object('rcmfd_spamusebayes').checked = true;
+						else
+							rcube_find_object('rcmfd_spamusebayes').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_spamskiprblchecks')) {
+						if (rcmail.env.skip_rbl_checks == '1')
+							rcube_find_object('rcmfd_spamskiprblchecks').checked = true;
+						else
+							rcube_find_object('rcmfd_spamskiprblchecks').checked = false;
+					}
+
+					// Headers
+					if (rcube_find_object('rcmfd_spamfoldheaders')) {
+						if (rcmail.env.skip_rbl_checks == '1')
+							rcube_find_object('rcmfd_spamfoldheaders').checked = true;
+						else
+							rcube_find_object('rcmfd_spamfoldheaders').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_spamlevelstars')) {
+						if (rcmail.env.add_header_all_Level != '') {
+							rcube_find_object('rcmfd_spamlevelstars').checked = true;
+							rcube_find_object('rcmfd_spamlevelchar').value = rcmail.env.add_header_all_Level.substr(7, 1);
+						}
+						else {
+							rcube_find_object('rcmfd_spamlevelstars').checked = false;
+							rcube_find_object('rcmfd_spamlevelchar').value = "*";
+						}
+					}
+
+					// Report
+					if (rcube_find_object('rcmfd_spamreport_0')) {
+						if (rcmail.env.report_safe == '0')
+							rcube_find_object('rcmfd_spamreport_0').checked = true;
+						else
+							rcube_find_object('rcmfd_spamreport_0').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_spamreport_1')) {
+						if (rcmail.env.report_safe == '1')
+							rcube_find_object('rcmfd_spamreport_1').checked = true;
+						else
+							rcube_find_object('rcmfd_spamreport_1').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_spamreport_2')) {
+						if (rcmail.env.report_safe == '2')
+							rcube_find_object('rcmfd_spamreport_2').checked = true;
+						else
+							rcube_find_object('rcmfd_spamreport_2').checked = false;
+					}
+
+					// Delete whitelist
+					if (rcube_find_object('address-rules-table')) {
+						var adrTable = rcube_find_object('address-rules-table').tBodies[0];
+						for (var i = adrTable.rows.length - 1; i > 1; i--) {
+							if (document.getElementsByName('_address_rule_act[]')[i-1].value == "INSERT") {
+								adrTable.deleteRow(i);
+								rcmail.env.address_rule_count--;
+							}
+							else if (document.getElementsByName('_address_rule_act[]')[i-1].value != "DELETE") {
+								adrTable.rows[i].style.display = 'none';
+								document.getElementsByName('_address_rule_act[]')[i-1].value = "DELETE";
+								rcmail.env.address_rule_count--;
+							}
+						}
+						adrTable.rows[1].style.display = '';
+					}
+				}
+			}, true);
+
+			rcmail.enable_command('plugin.sauserprefs.save','plugin.sauserprefs.default', true);
 		}
 	})
 }

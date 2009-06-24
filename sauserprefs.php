@@ -24,7 +24,7 @@ class sauserprefs extends rcube_plugin
 	function init()
 	{
 		if (rcmail::get_instance()->task == 'settings') {
-			$this->add_texts('localization/', array('sauserprefs', 'spamaddressexists', 'spamenteraddress', 'spamaddresserror','spamaddressdelete', 'spamaddressdeleteall', 'enabled', 'disabled', 'importingaddresses'));
+			$this->add_texts('localization/', array('sauserprefs', 'spamaddressexists', 'spamenteraddress', 'spamaddresserror','spamaddressdelete', 'spamaddressdeleteall', 'enabled', 'disabled', 'importingaddresses','usedefaultconfirm'));
 			$this->register_action('plugin.sauserprefs', array($this, 'init_html'));
 			$this->register_action('plugin.sauserprefs.save', array($this, 'save'));
 			$this->register_action('plugin.sauserprefs.whitelist_import', array($this, 'whitelist_import'));
@@ -52,6 +52,10 @@ class sauserprefs extends rcube_plugin
 
 	function gen_form($attrib)
 	{
+		// output global prefs as default in env
+		foreach($this->global_prefs as $key => $val)
+			$this->api->output->set_env(str_replace(" ", "_", $key), $val);
+
 		list($form_start, $form_end) = get_form_tags($attrib, 'plugin.sauserprefs.save');
 		unset($attrib['form']);
 
@@ -396,13 +400,22 @@ class sauserprefs extends rcube_plugin
 			if ($this->config['general_settings']['score']) {
 				$field_id = 'rcmfd_spamthres';
 				$input_spamthres = new html_select(array('name' => '_spamthres', 'id' => $field_id));
+				$input_spamthres->add($this->gettext('defaultscore'), '');
 
 				$decPlaces = 0;
 				if ($this->config['score_inc'] - (int)$this->config['score_inc'] > 0)
 					$decPlaces = strlen($this->config['score_inc'] - (int)$this->config['score_inc']) - 2;
 
-				for ($i = 1; $i <= 10; $i = $i + $this->config['score_inc'])
+				$score_found = false;
+				for ($i = 1; $i <= 10; $i = $i + $this->config['score_inc']) {
 					$input_spamthres->add(number_format($i, $decPlaces), (float)$i);
+
+					if (!$score_found && $this->user_prefs['required_score'] && (float)$this->user_prefs['required_score'] == (float)$i)
+						$score_found = true;
+				}
+
+				if (!$score_found && $this->user_prefs['required_score'])
+					$input_spamthres->add(str_replace('%s', $this->user_prefs['required_score'], $this->gettext('otherscore')), (float)$this->user_prefs['required_score']);
 
 				$table->add('title', html::label($field_id, Q($this->gettext('spamthres'))));
 				$table->add(null, $input_spamthres->show((float)$this->user_prefs['required_score']));
