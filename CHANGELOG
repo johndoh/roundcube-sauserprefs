@@ -1,6 +1,8 @@
 Roundcube Webmail SpamAssassin User Prefs (SQL)
 ===============================================
 
+2009 06 27
+==========
  * Added 'Default Score' option to spam score dropdown
  * Added 'Other' option to spam score dropdown (if value is not in the available options)
  * Added ability to restore spam settings to default
