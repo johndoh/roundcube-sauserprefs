@@ -298,17 +298,26 @@ class sauserprefs extends rcube_plugin
 
 	private function _load_config()
 	{
-		ob_start();
-		include('config.inc.php');
-		$this->config = (array)$sauserprefs_config;
-		ob_end_clean();
+		$fpath = $this->home.'/config.inc.php';
+		if (is_file($fpath) && is_readable($fpath)) {
+			ob_start();
+			include($fpath);
+			$this->config = (array)$sauserprefs_config;
+			ob_end_clean();
 
-		// update deprecated prefs
-		foreach ($this->deprecated_prefs as $old => $new) {
-			if ($this->config['default_prefs'][$old]) {
-				$this->config['default_prefs'][$new] = $this->config['default_prefs'][$old];
-				unset($this->config['default_prefs'][$old]);
+			// update deprecated prefs
+			foreach ($this->deprecated_prefs as $old => $new) {
+				if ($this->config['default_prefs'][$old]) {
+					$this->config['default_prefs'][$new] = $this->config['default_prefs'][$old];
+					unset($this->config['default_prefs'][$old]);
+				}
 			}
+		}
+		else {
+			raise_error(array(
+				'code' => 527,
+				'type' => 'php',
+				'message' => "Failed to load SAUserprefs plugin config"), TRUE, TRUE);
 		}
 	}
 
