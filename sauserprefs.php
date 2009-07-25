@@ -24,7 +24,7 @@ class sauserprefs extends rcube_plugin
 	function init()
 	{
 		if (rcmail::get_instance()->task == 'settings') {
-			$this->add_texts('localization/', array('sauserprefs', 'spamaddressexists', 'spamenteraddress', 'spamaddresserror','spamaddressdelete', 'spamaddressdeleteall', 'enabled', 'disabled', 'importingaddresses','usedefaultconfirm'));
+			$this->add_texts('localization/', array('sauserprefs'));
 			$this->register_action('plugin.sauserprefs', array($this, 'init_html'));
 			$this->register_action('plugin.sauserprefs.save', array($this, 'save'));
 			$this->register_action('plugin.sauserprefs.whitelist_import', array($this, 'whitelist_import'));
@@ -52,6 +52,12 @@ class sauserprefs extends rcube_plugin
 
 	function gen_form($attrib)
 	{
+		$this->api->output->add_label(
+			'sauserprefs.spamaddressexists', 'sauserprefs.spamenteraddress',
+			'sauserprefs.spamaddresserror', 'sauserprefs.spamaddressdelete',
+			'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
+			'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm');
+
 		// output global prefs as default in env
 		foreach($this->global_prefs as $key => $val)
 			$this->api->output->set_env(str_replace(" ", "_", $key), $val);
