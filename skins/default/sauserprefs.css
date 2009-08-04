@@ -1,5 +1,35 @@
 /***** RoundCube|Mail sauserprefs plugin styles *****/
 
+#userprefs-box
+{
+  position: absolute;
+  top: 95px;
+  left: 20px;
+  bottom: 60px;
+  right: 20px;
+  overflow: auto;
+  border: 1px solid #999999;
+  /* IE vacks */
+  height: expression((parseInt(document.documentElement.clientHeight)-155)+'px');
+  width: expression((parseInt(document.documentElement.clientWidth)-40)+'px');
+}
+
+#userprefs-box table td.title
+{
+  color: #666666;
+  padding-right: 10px;
+  white-space: nowrap;
+}
+
+.userprefs-block
+{
+  float: left;
+  margin-right: 14px;
+  min-width: 520px;
+  /* IE vacks */
+  width: expression(Math.min(520, parseInt(document.documentElement.clientWidth))+'px');
+}
+
 #address-rules-cont, #spam-langs-cont
 {
   border: 1px solid #999999;
