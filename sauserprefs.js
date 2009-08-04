@@ -11,7 +11,7 @@ if (window.rcmail) {
 		rcmail.add_element(tab, 'tabs');
 		rcmail.register_command('plugin.sauserprefs', function(){ rcmail.goto_url('plugin.sauserprefs') }, true);
 
-		if (rcmail.env.action == 'plugin.sauserprefs') {
+		if (rcmail.env.action == 'plugin.sauserprefs.edit') {
 			rcmail.register_command('plugin.sauserprefs.select_all_langs', function(){
 				var langlist = document.getElementsByName('_spamlang[]');
 				var obj;
@@ -335,6 +335,8 @@ rcmail.sauserprefs_toggle_level_char = function(checkbox) {
 }
 
 rcmail.sauserprefs_addressrule_import = function(address){
+	window.top.rcmail.set_busy(false);
+
 	var adrTable = rcube_find_object('address-rules-table').tBodies[0];
 
 	var actions = document.getElementsByName('_address_rule_act[]');
@@ -368,4 +370,26 @@ rcmail.sauserprefs_addressrule_import = function(address){
 	addresses[newNode.rowIndex - 2].value = address;
 
 	rcmail.env.address_rule_count++;
+}
+
+if (rcmail.env.action == 'plugin.sauserprefs') {
+	rcmail.section_select = function(list)
+	{
+	    var id = list.get_single_selection()
+
+	    if (id) {
+	      var add_url = '';
+	      var target = window;
+	      this.set_busy(true);
+
+	      if (this.env.contentframe && window.frames && window.frames[this.env.contentframe]) {
+	        add_url = '&_framed=1';
+	        target = window.frames[this.env.contentframe];
+	        }
+
+	      target.location.href = this.env.comm_path+'&_action=plugin.sauserprefs.edit&_section='+id+add_url;
+	      }
+
+	    return true;
+	}
 }

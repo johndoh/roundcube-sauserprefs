@@ -34,9 +34,11 @@ $labels['addrule']  = 'Add Rule';
 $labels['rule']  = 'Rule';
 $labels['importfromaddressbook'] = 'Import addresses from Address Book';
 $labels['deleteall'] = 'Delete All';
+$labels['autoscore'] = 'Auto';
 $labels['defaultscore'] = 'Default Score';
 $labels['otherscore'] = 'Other (%s)';
 $labels['usedefault'] = 'Restore Default Settings';
+$labels['langoptions'] = 'Language Options';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed spam settings';

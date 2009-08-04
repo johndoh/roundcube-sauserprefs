@@ -1,41 +1,12 @@
 /***** RoundCube|Mail sauserprefs plugin styles *****/
 
-#userprefs-box
-{
-  position: absolute;
-  top: 95px;
-  left: 20px;
-  bottom: 60px;
-  right: 20px;
-  overflow: auto;
-  border: 1px solid #999999;
-  /* IE vacks */
-  height: expression((parseInt(document.documentElement.clientHeight)-155)+'px');
-  width: expression((parseInt(document.documentElement.clientWidth)-40)+'px');
-}
-
-#userprefs-box table td.title
-{
-  color: #666666;
-  padding-right: 10px;
-  white-space: nowrap;
-}
-
-.userprefs-block
-{
-  float: left;
-  margin-right: 14px;
-  min-width: 520px;
-  /* IE vacks */
-  width: expression(Math.min(520, parseInt(document.documentElement.clientWidth))+'px');
-}
-
 #address-rules-cont, #spam-langs-cont
 {
   border: 1px solid #999999;
   background-color: #F9F9F9;
   height: 200px;
   overflow: auto;
+  width: 510px;
 }
 
 body.address-rules-table, body.spam-langs-table
@@ -83,7 +54,7 @@ html>body*#spam-langs-table[id$="spam-langs-table"]:not([class="none"]) { table-
 
 .blacklist_from
 {
-  color: #CC0000;
+  color: #2D5986;
   text-align: left;
   vertical-align: middle;
 }
@@ -98,7 +69,7 @@ html>body*#spam-langs-table[id$="spam-langs-table"]:not([class="none"]) { table-
 #listcontrols a:active,
 #listcontrols a:visited
 {
-  color: #CC0000;
+  color: #2D5986;
   font-size: 11px;
   text-decoration: none;
 }
@@ -108,7 +79,6 @@ html>body*#spam-langs-table[id$="spam-langs-table"]:not([class="none"]) { table-
   text-decoration: underline;
 }
 
-.userprefs-block
-{
-  width: 520px;
+table.generalprefstable td.title {
+  width: 155px;
 }
