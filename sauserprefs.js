@@ -335,7 +335,7 @@ rcmail.sauserprefs_toggle_level_char = function(checkbox) {
 }
 
 rcmail.sauserprefs_addressrule_import = function(address){
-	window.top.rcmail.set_busy(false);
+	parent.rcmail.set_busy(false);
 
 	var adrTable = rcube_find_object('address-rules-table').tBodies[0];
 
