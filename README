@@ -21,3 +21,8 @@ Rename this to plugins/sauserprefs/config.inc.php
 Whitelist Sync
 ==============
 This plugin contains an option to synchronise changes to your RC address book and your SpamAssassin whitelist.
+
+Delete user bayesian data stored in database
+============================================
+If the bayesian data is stored in the same database as the user prefs then it is possible for users to delete their data from the UI.
+See config file for example SQL

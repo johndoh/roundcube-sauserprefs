@@ -188,6 +188,15 @@ if (window.rcmail) {
 				return false;
 			}, true);
 
+			rcmail.register_command('plugin.sauserprefs.purge_bayes', function(props, obj){
+				if (confirm(rcmail.gettext('purgebayesconfirm','sauserprefs'))) {
+					rcmail.set_busy(true, 'sauserprefs.purgingbayes');
+		    		rcmail.http_request('plugin.sauserprefs.purge_bayes', '', true);
+	    		}
+
+				return false;
+			}, true);
+
 			rcmail.register_command('plugin.sauserprefs.save', function(){ rcmail.gui_objects.editform.submit(); }, true);
 
 			rcmail.register_command('plugin.sauserprefs.default', function(){
@@ -248,6 +257,14 @@ if (window.rcmail) {
 							rcube_find_object('rcmfd_spamusedcc').checked = false;
 					}
 
+					if (rcube_find_object('rcmfd_spamskiprblchecks')) {
+						if (rcmail.env.skip_rbl_checks == '1')
+							rcube_find_object('rcmfd_spamskiprblchecks').checked = true;
+						else
+							rcube_find_object('rcmfd_spamskiprblchecks').checked = false;
+					}
+
+					// Bayes
 					if (rcube_find_object('rcmfd_spamusebayes')) {
 						if (rcmail.env.use_bayes == '1')
 							rcube_find_object('rcmfd_spamusebayes').checked = true;
@@ -255,11 +272,24 @@ if (window.rcmail) {
 							rcube_find_object('rcmfd_spamusebayes').checked = false;
 					}
 
-					if (rcube_find_object('rcmfd_spamskiprblchecks')) {
-						if (rcmail.env.skip_rbl_checks == '1')
-							rcube_find_object('rcmfd_spamskiprblchecks').checked = true;
+					if (rcube_find_object('rcmfd_spambayesautolearn')) {
+						if (rcmail.env.bayes_auto_learn == '1')
+							rcube_find_object('rcmfd_spambayesautolearn').checked = true;
 						else
-							rcube_find_object('rcmfd_spamskiprblchecks').checked = false;
+							rcube_find_object('rcmfd_spambayesautolearn').checked = false;
+					}
+
+					if (rcube_find_object('rcmfd_bayesnonspam'))
+						rcube_find_object('rcmfd_bayesnonspam').selectedIndex = 0;
+
+					if (rcube_find_object('rcmfd_bayesspam'))
+						rcube_find_object('rcmfd_bayesspam').selectedIndex = 0;
+
+					if (rcube_find_object('rcmfd_spambayesrules')) {
+						if (rcmail.env.use_bayes_rules == '1')
+							rcube_find_object('rcmfd_spambayesrules').checked = true;
+						else
+							rcube_find_object('rcmfd_spambayesrules').checked = false;
 					}
 
 					// Headers
@@ -334,6 +364,17 @@ rcmail.sauserprefs_toggle_level_char = function(checkbox) {
 		level_char.disabled = !checkbox.checked;
 }
 
+rcmail.sauserprefs_toggle_bayes_auto = function(checkbox) {
+	var dropdown;
+
+	if (dropdown = rcube_find_object('rcmfd_bayesnonspam'))
+		dropdown.disabled = !checkbox.checked;
+
+	if (dropdown = rcube_find_object('rcmfd_bayesspam'))
+		dropdown.disabled = !checkbox.checked;
+}
+
+
 rcmail.sauserprefs_addressrule_import = function(address){
 	parent.rcmail.set_busy(false);
 
@@ -370,6 +411,12 @@ rcmail.sauserprefs_addressrule_import = function(address){
 	addresses[newNode.rowIndex - 2].value = address;
 
 	rcmail.env.address_rule_count++;
+}
+
+rcmail.sauserprefs_help = function(sel) {
+	var help = rcube_find_object(sel);
+	help.style.display = (help.style.display == 'none' ? '' : 'none');
+	return false;
 }
 
 if (rcmail.env.action == 'plugin.sauserprefs') {

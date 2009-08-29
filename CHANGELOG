@@ -1,6 +1,12 @@
 Roundcube Webmail SpamAssassin User Prefs (SQL)
 ===============================================
 
+2009 08 29
+==========
+ * Added panel for Bayes settings
+ * Replace general_settings config option with dont_override
+ * Added contextual help
+
 2009 08 04
 ==========
  * Re-designed interface to match User Preferences

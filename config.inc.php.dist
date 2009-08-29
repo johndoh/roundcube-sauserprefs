@@ -43,13 +43,9 @@ $sauserprefs_config['sql_value_field'] = "value";
 // check README for more information
 $sauserprefs_config['whitelist_sync'] = FALSE;
 
-// define which of the general options to show
-// the order/appearance of the fieldsets is controlled in the template
-$sauserprefs_config['general_settings'] = array(
-									"score" => TRUE,
-									"subject" => TRUE,
-									"language" => TRUE
-								);
+// don't allow these settings to be overriden by the user
+// eg. $sauserprefs_config['dont_override'] = array('required_score','rewrite_header Subject');
+$sauserprefs_config['dont_override'] = array();
 
 // default settings
 // these are overridden by $GLOBAL and user settings from the database
@@ -66,11 +62,26 @@ $sauserprefs_config['default_prefs'] = array(
 									"use_dcc" => "1",
 									"use_bayes" => "1",
 									"skip_rbl_checks" => "0",
-									"report_safe" => "1"
+									"report_safe" => "1",
+									"bayes_auto_learn" => "1",
+									"bayes_auto_learn_threshold_nonspam" => "0.1",
+									"bayes_auto_learn_threshold_spam" => "12.0",
+									"use_bayes_rules" => "1"
 								);
 
 // spam score increment - increment values in the the score threshold drop down by this, from 0 to 10
 $sauserprefs_config['score_inc'] = 1;
+
+// delete user bayesian data stored in database
+// the query can contain the following macros that will be expanded as follows:
+//      %u is replaced with the username (from the session info)
+// use an array to run multiple queries
+// eg. $sauserprefs_config['bayes_table'] = array(
+//												'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
+//												'DELETE FROM bayes_token WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
+//												'DELETE FROM bayes_vars WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
+//												);
+$sauserprefs_config['bayes_delete_query'] = '';
 
 // define languages
 $sauserprefs_config['languages'] = array(

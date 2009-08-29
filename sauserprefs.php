@@ -30,6 +30,7 @@ class sauserprefs extends rcube_plugin
 			$this->sections = array(
 				'general' => array('id' => 'general', 'section' => $this->gettext('spamgeneralsettings')),
 				'tests' => array('id' => 'tests', 'section' => $this->gettext('spamtests')),
+				'bayes' => array('id' => 'bayes', 'section' => $this->gettext('bayes')),
 				'headers' => array('id' => 'headers', 'section' => $this->gettext('headers')),
 				'report' => array('id' => 'report','section' => $this->gettext('spamreportsettings')),
 				'addresses' => array('id' => 'addresses', 'section' => $this->gettext('spamaddressrules')),
@@ -40,6 +41,7 @@ class sauserprefs extends rcube_plugin
 			$this->register_action('plugin.sauserprefs.edit', array($this, 'init_html'));
 			$this->register_action('plugin.sauserprefs.save', array($this, 'save'));
 			$this->register_action('plugin.sauserprefs.whitelist_import', array($this, 'whitelist_import'));
+			$this->register_action('plugin.sauserprefs.purge_bayes', array($this, 'purge_bayes'));
 			$this->include_script('sauserprefs.js');
 		}
 		else {
@@ -80,7 +82,7 @@ class sauserprefs extends rcube_plugin
 			$attrib['id'] = 'rcmsectionslist';
 
 		$sections = array();
-		$blocks = $attrib['sections'] ? preg_split('/[\s,;]+/', strip_quotes($attrib['sections'])) : array('general','headers','tests','report','addresses');
+		$blocks = $attrib['sections'] ? preg_split('/[\s,;]+/', strip_quotes($attrib['sections'])) : array('general','headers','tests','bayes','report','addresses');
 		foreach ($blocks as $block)
 			$sections[$block] = $this->sections[$block];
 
@@ -113,7 +115,7 @@ class sauserprefs extends rcube_plugin
 			'sauserprefs.spamaddressexists', 'sauserprefs.spamenteraddress',
 			'sauserprefs.spamaddresserror', 'sauserprefs.spamaddressdelete',
 			'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
-			'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm');
+			'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm', 'sauserprefs.purgebayesconfirm');
 
 		// output global prefs as default in env
 		foreach($this->global_prefs as $key => $val)
@@ -143,48 +145,78 @@ class sauserprefs extends rcube_plugin
 		$this->_load_global_prefs();
 		$this->_load_user_prefs();
 
+		$no_override = array_flip($this->config['dont_override']);
 		$new_prefs = array();
 
 		if ($this->cur_section == 'general') {
-			if ($this->config['general_settings']['score'])
+			if (!isset($no_override['required_score']))
 				$new_prefs['required_score'] = $_POST['_spamthres'];
 
-			if ($this->config['general_settings']['subject'])
+			if (!isset($no_override['rewrite_header Subject']))
 				$new_prefs['rewrite_header Subject'] = $_POST['_spamsubject'];
 
-			if ($this->config['general_settings']['language']) {
+			if (!isset($no_override['ok_locales']) && !isset($no_override['ok_languages'])) {
 				$new_prefs['ok_locales'] = is_array($_POST['_spamlang']) ? implode(" ", $_POST['_spamlang']) : '';
 				$new_prefs['ok_languages'] = $new_prefs['ok_locales'];
 			}
 		}
 
 		if ($this->cur_section == 'headers') {
-			$new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : $_POST['_spamfoldheaders'];
-			$spamchar = empty($_POST['_spamlevelchar']) ? "*" : $_POST['_spamlevelchar'];
-			if ($_POST['_spamlevelstars'] == "1") {
-				$new_prefs['add_header all Level'] = "_STARS(". $spamchar .")_";
-				$new_prefs['remove_header all'] = "0";
-			}
-			else {
-				$new_prefs['add_header all Level'] = "";
-				$new_prefs['remove_header all'] = "Level";
+			if (!isset($no_override['fold_headers']))
+				$new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : $_POST['_spamfoldheaders'];
+
+			if (!isset($no_override['add_header all Level'])) {
+				$spamchar = empty($_POST['_spamlevelchar']) ? "*" : $_POST['_spamlevelchar'];
+				if ($_POST['_spamlevelstars'] == "1") {
+					$new_prefs['add_header all Level'] = "_STARS(". $spamchar .")_";
+					$new_prefs['remove_header all'] = "0";
+				}
+				else {
+					$new_prefs['add_header all Level'] = "";
+					$new_prefs['remove_header all'] = "Level";
+				}
 			}
 		}
 
 		if ($this->cur_section == 'tests') {
-			$new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? "0" : $_POST['_spamuserazor1'];
-			$new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? "0" : $_POST['_spamuserazor2'];
-			$new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? "0" : $_POST['_spamusepyzor'];
-			$new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? "0" : $_POST['_spamusebayes'];
-			$new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? "0" : $_POST['_spamusedcc'];
+			if (!isset($no_override['use_razor1']))
+				$new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? "0" : $_POST['_spamuserazor1'];
 
-			if ($_POST['_spamskiprblchecks'] == "1")
-				$new_prefs['skip_rbl_checks'] = "";
-			else
-				$new_prefs['skip_rbl_checks'] = "1";
+			if (!isset($no_override['use_razor2']))
+				$new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? "0" : $_POST['_spamuserazor2'];
+
+			if (!isset($no_override['use_pyzor']))
+				$new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? "0" : $_POST['_spamusepyzor'];
+
+			if (!isset($no_override['use_dcc']))
+				$new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? "0" : $_POST['_spamusedcc'];
+
+			if (!isset($no_override['skip_rbl_checks'])) {
+				if ($_POST['_spamskiprblchecks'] == "1")
+					$new_prefs['skip_rbl_checks'] = "";
+				else
+					$new_prefs['skip_rbl_checks'] = "1";
+			}
 		}
 
-		if ($this->cur_section == 'report')
+		if ($this->cur_section == 'bayes') {
+			if (!isset($no_override['use_bayes']))
+				$new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? "0" : $_POST['_spamusebayes'];
+
+			if (!isset($no_override['bayes_auto_learn']))
+				$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : $_POST['_spambayesautolearn'];
+
+			if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
+				$new_prefs['bayes_auto_learn_threshold_nonspam'] = $_POST['_bayesnonspam'];
+
+			if (!isset($no_override['bayes_auto_learn_threshold_spam']))
+				$new_prefs['bayes_auto_learn_threshold_spam'] = $_POST['_bayesspam'];
+
+			if (!isset($no_override['use_bayes_rules']))
+				$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : $_POST['_spambayesrules'];
+		}
+
+		if ($this->cur_section == 'report' && !isset($no_override['use_bayes']))
 			$new_prefs['report_safe'] = $_POST['_spamreport'];
 
 		$result = true;
@@ -299,6 +331,32 @@ class sauserprefs extends rcube_plugin
 
 		while ($row = $result->next())
 			$this->api->output->command('sauserprefs_addressrule_import', $row['email'], '', '');
+	}
+
+	function purge_bayes()
+	{
+		$this->_load_config();
+
+		if (empty($this->config['bayes_delete_query'])) {
+			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
+			return;
+		}
+
+		$this->_db_connect('w');
+		$queries = !is_array($this->config['bayes_delete_query']) ? array($this->config['bayes_delete_query']) : $this->config['bayes_delete_query'];
+
+		foreach ($queries as $sql) {
+			$sql = str_replace('%u', $this->db->quote($_SESSION['username'],'text'), $sql);
+			$this->db->query($sql);
+
+			if ($this->db->is_error())
+				break;
+		}
+
+		if ($this->db->is_error())
+			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
+		else
+			$this->api->output->command('display_message', $this->gettext('done'), 'confirmation');
 	}
 
 	function contact_add($args)
@@ -470,6 +528,8 @@ class sauserprefs extends rcube_plugin
 
 	private function _prefs_block($part, $attrib)
 	{
+		$no_override = array_flip($this->config['dont_override']);
+
 		switch ($part)
 		{
 		// General tests
@@ -477,7 +537,7 @@ class sauserprefs extends rcube_plugin
 			$out = '';
 			$data = '';
 
-			if ($this->config['general_settings']['score']) {
+			if (!isset($no_override['required_score'])) {
 				$field_id = 'rcmfd_spamthres';
 				$input_spamthres = new html_select(array('name' => '_spamthres', 'id' => $field_id));
 				$input_spamthres->add($this->gettext('defaultscore'), '');
@@ -504,7 +564,7 @@ class sauserprefs extends rcube_plugin
 				$data = $table->show() . Q($this->gettext('spamthresexp')) . '<br /><br />';
 			}
 
-			if ($this->config['general_settings']['subject']) {
+			if (!isset($no_override['rewrite_header Subject'])) {
 				$table = new html_table(array('class' => 'generalprefstable', 'cols' => 2));
 
 				$field_id = 'rcmfd_spamsubject';
@@ -522,7 +582,7 @@ class sauserprefs extends rcube_plugin
 			if (!empty($data))
 				$out .= html::tag('fieldset', null, html::tag('legend', null, Q($this->gettext('mainoptions'))) . $data);
 
-			if ($this->config['general_settings']['language']) {
+			if (!isset($no_override['ok_languages']) && !isset($no_override['ok_locales'])) {
 				$data = html::p(null, Q($this->gettext('spamlangexp')));
 
 				$table = new html_table(array('class' => 'langprefstable', 'cols' => 2));
@@ -579,29 +639,41 @@ class sauserprefs extends rcube_plugin
 		case 'headers':
 			$data = html::p(null, Q($this->gettext('headersexp')));
 
-			$field_id = 'rcmfd_spamfoldheaders';
-			$input_spamreport = new html_checkbox(array('name' => '_spamfoldheaders', 'id' => $field_id, 'value' => '1'));
-			$data .= $input_spamreport->show($this->user_prefs['fold_headers']) ."&nbsp;". html::label($field_id, Q($this->gettext('foldheaders'))) . "<br />";
+			if (!isset($no_override['fold_headers'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("fold_help");', 'title' => $this->gettext('help')), $help_button);
 
-			if ($this->user_prefs['remove_header all'] != 'Level') {
-				$enabled = "1";
-				$char = $this->user_prefs['add_header all Level'];
-				$char = substr($char, 7, 1);
-			}
-			else {
-				$enabled = "0";
-				$char = "*";
+				$field_id = 'rcmfd_spamfoldheaders';
+				$input_spamreport = new html_checkbox(array('name' => '_spamfoldheaders', 'id' => $field_id, 'value' => '1'));
+				$data .= $input_spamreport->show($this->user_prefs['fold_headers']) ."&nbsp;". html::label($field_id, Q($this->gettext('foldheaders'))) . $help_button . "<br />";
+				$data .= html::p(array('id' => 'fold_help', 'style' => 'display: none;'), Q($this->gettext('foldhelp')));
 			}
 
-			$field_id = 'rcmfd_spamlevelstars';
-			$input_spamreport = new html_checkbox(array('name' => '_spamlevelstars', 'id' => $field_id, 'value' => '1',
-				'onchange' => JS_OBJECT_NAME . '.sauserprefs_toggle_level_char(this)'));
-			$data .= $input_spamreport->show($enabled) ."&nbsp;". html::label($field_id, Q($this->gettext('spamlevelstars'))) . "<br />";
+			if (!isset($no_override['add_header all Level'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("level_help");', 'title' => $this->gettext('help')), $help_button);
 
-			$field_id = 'rcmfd_spamlevelchar';
-			$input_spamsubject = new html_inputfield(array('name' => '_spamlevelchar', 'id' => $field_id, 'value' => $char,
-				'style' => 'width:20px;', 'disabled' => $enabled?0:1));
-			$data .= html::span(array('style' => 'padding-left: 30px;'), $input_spamsubject->show() ."&nbsp;". html::label($field_id, Q($this->gettext('spamlevelchar'))));
+				if ($this->user_prefs['remove_header all'] != 'Level') {
+					$enabled = "1";
+					$char = $this->user_prefs['add_header all Level'];
+					$char = substr($char, 7, 1);
+				}
+				else {
+					$enabled = "0";
+					$char = "*";
+				}
+
+				$field_id = 'rcmfd_spamlevelstars';
+				$input_spamreport = new html_checkbox(array('name' => '_spamlevelstars', 'id' => $field_id, 'value' => '1',
+					'onchange' => JS_OBJECT_NAME . '.sauserprefs_toggle_level_char(this)'));
+				$data .= $input_spamreport->show($enabled) ."&nbsp;". html::label($field_id, Q($this->gettext('spamlevelstars'))) . $help_button . "<br />";
+
+				$field_id = 'rcmfd_spamlevelchar';
+				$input_spamsubject = new html_inputfield(array('name' => '_spamlevelchar', 'id' => $field_id, 'value' => $char,
+					'style' => 'width:20px;', 'disabled' => $enabled?0:1));
+				$data .= html::span(array('style' => 'padding-left: 30px;'), $input_spamsubject->show() ."&nbsp;". html::label($field_id, Q($this->gettext('spamlevelchar'))));
+				$data .= html::p(array('id' => 'level_help', 'style' => 'display: none;'), Q($this->gettext('levelhelp')));
+			}
 
 			$out = html::tag('fieldset', null, html::tag('legend', null, Q($this->gettext('mainoptions'))) . $data);
 			break;
@@ -610,51 +682,180 @@ class sauserprefs extends rcube_plugin
 		case 'tests':
 			$data = html::p(null, Q($this->gettext('spamtestssexp')));
 
-			$field_id = 'rcmfd_spamuserazor1';
-			$input_spamtest = new html_checkbox(array('name' => '_spamuserazor1', 'id' => $field_id, 'value' => '1'));
-			$data .= $input_spamtest->show($this->user_prefs['use_razor1']) ."&nbsp;". html::label($field_id, Q($this->gettext('userazor1'))) . "<br />";
+			if (!isset($no_override['use_razor1'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("raz1_help");', 'title' => $this->gettext('help')), $help_button);
 
-			$field_id = 'rcmfd_spamuserazor2';
-			$input_spamtest = new html_checkbox(array('name' => '_spamuserazor2', 'id' => $field_id, 'value' => '1'));
-			$data .= $input_spamtest->show($this->user_prefs['use_razor2']) ."&nbsp;". html::label($field_id, Q($this->gettext('userazor2'))) . "<br />";
+				$field_id = 'rcmfd_spamuserazor1';
+				$input_spamtest = new html_checkbox(array('name' => '_spamuserazor1', 'id' => $field_id, 'value' => '1'));
+				$data .= $input_spamtest->show($this->user_prefs['use_razor1']) ."&nbsp;". html::label($field_id, Q($this->gettext('userazor1'))) . $help_button . "<br />";
+				$data .= html::p(array('id' => 'raz1_help', 'style' => 'display: none;'), Q($this->gettext('raz1help')));
+			}
 
-			$field_id = 'rcmfd_spamusepyzor';
-			$input_spamtest = new html_checkbox(array('name' => '_spamusepyzor', 'id' => $field_id, 'value' => '1'));
-			$data .= $input_spamtest->show($this->user_prefs['use_pyzor']) ."&nbsp;". html::label($field_id, Q($this->gettext('usepyzor'))) . "<br />";
+			if (!isset($no_override['use_razor2'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("raz2_help");', 'title' => $this->gettext('help')), $help_button);
 
-			$field_id = 'rcmfd_spamusebayes';
-			$input_spamtest = new html_checkbox(array('name' => '_spamusebayes', 'id' => $field_id, 'value' => '1'));
-			$data .= $input_spamtest->show($this->user_prefs['use_bayes']) ."&nbsp;". html::label($field_id, Q($this->gettext('usebayes'))) . "<br />";
+				$field_id = 'rcmfd_spamuserazor2';
+				$input_spamtest = new html_checkbox(array('name' => '_spamuserazor2', 'id' => $field_id, 'value' => '1'));
+				$data .= $input_spamtest->show($this->user_prefs['use_razor2']) ."&nbsp;". html::label($field_id, Q($this->gettext('userazor2'))) . $help_button . "<br />";
+				$data .= html::p(array('id' => 'raz2_help', 'style' => 'display: none;'), Q($this->gettext('raz2help')));
+			}
 
-			$field_id = 'rcmfd_spamusedcc';
-			$input_spamtest = new html_checkbox(array('name' => '_spamusedcc', 'id' => $field_id, 'value' => '1'));
-			$data .= $input_spamtest->show($this->user_prefs['use_dcc']) ."&nbsp;". html::label($field_id, Q($this->gettext('usedcc'))) . "<br />";
+			if (!isset($no_override['use_pyzor'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("pyz_help");', 'title' => $this->gettext('help')), $help_button);
 
-			if ($this->user_prefs['skip_rbl_checks'] == "1")
-				$enabled = "0";
-			else
-				$enabled = "1";
+				$field_id = 'rcmfd_spamusepyzor';
+				$input_spamtest = new html_checkbox(array('name' => '_spamusepyzor', 'id' => $field_id, 'value' => '1'));
+				$data .= $input_spamtest->show($this->user_prefs['use_pyzor']) ."&nbsp;". html::label($field_id, Q($this->gettext('usepyzor'))) . $help_button . "<br />";
+				$data .= html::p(array('id' => 'pyz_help', 'style' => 'display: none;'), Q($this->gettext('pyzhelp')));
+			}
 
-			$field_id = 'rcmfd_spamskiprblchecks';
-			$input_spamtest = new html_checkbox(array('name' => '_spamskiprblchecks', 'id' => $field_id, 'value' => '1'));
-			$data .= $input_spamtest->show($enabled) ."&nbsp;". html::label($field_id, Q($this->gettext('skiprblchecks'))) . "<br />";
+			if (!isset($no_override['use_dcc'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("dcc_help");', 'title' => $this->gettext('help')), $help_button);
+
+				$field_id = 'rcmfd_spamusedcc';
+				$input_spamtest = new html_checkbox(array('name' => '_spamusedcc', 'id' => $field_id, 'value' => '1'));
+				$data .= $input_spamtest->show($this->user_prefs['use_dcc']) ."&nbsp;". html::label($field_id, Q($this->gettext('usedcc'))) . $help_button . "<br />";
+				$data .= html::p(array('id' => 'dcc_help', 'style' => 'display: none;'), Q($this->gettext('dcchelp')));
+			}
+
+			if (!isset($no_override['skip_rbl_checks'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("rbl_help");', 'title' => $this->gettext('help')), $help_button);
+
+				if ($this->user_prefs['skip_rbl_checks'] == "1")
+					$enabled = "0";
+				else
+					$enabled = "1";
+
+				$field_id = 'rcmfd_spamskiprblchecks';
+				$input_spamtest = new html_checkbox(array('name' => '_spamskiprblchecks', 'id' => $field_id, 'value' => '1'));
+				$data .= $input_spamtest->show($enabled) ."&nbsp;". html::label($field_id, Q($this->gettext('skiprblchecks'))) . $help_button . "<br />";
+				$data .= html::p(array('id' => 'rbl_help', 'style' => 'display: none;'), Q($this->gettext('rblhelp')));
+			}
 
 			$out = html::tag('fieldset', null, html::tag('legend', null, Q($this->gettext('mainoptions'))) . $data);
+			break;
+
+		// Bayes settings
+		case 'bayes':
+			$data = html::p(null, Q($this->gettext('bayeshelp')));
+
+			if (!isset($no_override['use_bayes'])) {
+				//$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				//$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("bayes_help");', 'title' => $this->gettext('help')), $help_button);
+
+				$field_id = 'rcmfd_spamusebayes';
+				$input_spamtest = new html_checkbox(array('name' => '_spamusebayes', 'id' => $field_id, 'value' => '1'));
+				$data .= $input_spamtest->show($this->user_prefs['use_bayes']) ."&nbsp;". html::label($field_id, Q($this->gettext('usebayes')));
+
+				if (!empty($this->config['bayes_delete_query']))
+					$data .=  "&nbsp;&nbsp;&nbsp;" . html::span(array('id' => 'listcontrols'), $this->api->output->button(array('command' => 'plugin.sauserprefs.purge_bayes', 'type' => 'link', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp')));
+
+				$data .= "<br />";
+				//$data .= html::p(array('id' => 'bayes_help', 'style' => 'display: none;'), Q($this->gettext('bayeshelp')));
+			}
+
+			if (!isset($no_override['use_bayes_rules'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("bayesrules_help");', 'title' => $this->gettext('help')), $help_button);
+
+				$field_id = 'rcmfd_spambayesrules';
+				$input_spamtest = new html_checkbox(array('name' => '_spambayesrules', 'id' => $field_id, 'value' => '1'));
+				$data .= $input_spamtest->show($this->user_prefs['use_bayes_rules']) ."&nbsp;". html::label($field_id, Q($this->gettext('bayesrules'))) . $help_button . "<br />";
+				$data .= html::p(array('id' => 'bayesrules_help', 'style' => 'display: none;'), Q($this->gettext('bayesruleshlp')));
+			}
+
+			if (!isset($no_override['bayes_auto_learn'])) {
+				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
+				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("bayesauto_help");', 'title' => $this->gettext('help')), $help_button);
+
+				$field_id = 'rcmfd_spambayesautolearn';
+				$input_spamtest = new html_checkbox(array('name' => '_spambayesautolearn', 'id' => $field_id, 'value' => '1',
+					'onchange' => JS_OBJECT_NAME . '.sauserprefs_toggle_bayes_auto(this)'));
+				$data .= $input_spamtest->show($this->user_prefs['bayes_auto_learn']) ."&nbsp;". html::label($field_id, Q($this->gettext('bayesautolearn'))) . $help_button . "<br />";
+				$data .= html::p(array('id' => 'bayesauto_help', 'style' => 'display: none;'), Q($this->gettext('bayesautohelp')));
+			}
+
+			$out = html::tag('fieldset', null, html::tag('legend', null, Q($this->gettext('mainoptions'))) . $data);
+
+			$data = "";
+			if (!isset($no_override['bayes_auto_learn_threshold_nonspam'])) {
+				$field_id = 'rcmfd_bayesnonspam';
+				$input_bayesnthres = new html_select(array('name' => '_bayesnonspam', 'id' => $field_id, 'disabled' => $this->user_prefs['bayes_auto_learn']?0:1));
+				$input_bayesnthres->add($this->gettext('defaultscore'), '');
+
+				$decPlaces = 0;
+				if ($this->config['score_inc'] - (int)$this->config['score_inc'] > 0)
+					$decPlaces = strlen($this->config['score_inc'] - (int)$this->config['score_inc']) - 2;
+
+				$score_found = false;
+				for ($i = 1; $i <= 20; $i = $i + $this->config['score_inc']) {
+					$input_bayesnthres->add(number_format($i, $decPlaces), (float)$i);
+
+					if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_nonspam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_nonspam'] == (float)$i)
+						$score_found = true;
+				}
+
+				if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_nonspam'])
+					$input_bayesnthres->add(str_replace('%s', $this->user_prefs['bayes_auto_learn_threshold_nonspam'], $this->gettext('otherscore')), (float)$this->user_prefs['bayes_auto_learn_threshold_nonspam']);
+
+				$table = new html_table(array('class' => 'generalprefstable', 'cols' => 2));
+				$table->add('title', html::label($field_id, Q($this->gettext('bayesnonspam'))));
+				$table->add(null, $input_bayesnthres->show((float)$this->user_prefs['bayes_auto_learn_threshold_nonspam']));
+
+				$data .= $table->show() . Q($this->gettext('bayesnonspamexp')) . '<br /><br />';
+			}
+
+			if (!isset($no_override['bayes_auto_learn_threshold_spam'])) {
+				$field_id = 'rcmfd_bayesspam';
+				$input_bayesthres = new html_select(array('name' => '_bayesspam', 'id' => $field_id, 'disabled' => $this->user_prefs['bayes_auto_learn']?0:1));
+				$input_bayesthres->add($this->gettext('defaultscore'), '');
+
+				$decPlaces = 0;
+				if ($this->config['score_inc'] - (int)$this->config['score_inc'] > 0)
+					$decPlaces = strlen($this->config['score_inc'] - (int)$this->config['score_inc']) - 2;
+
+				$score_found = false;
+				for ($i = 1; $i <= 20; $i = $i + $this->config['score_inc']) {
+					$input_bayesthres->add(number_format($i, $decPlaces), (float)$i);
+
+					if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_spam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_spam'] == (float)$i)
+						$score_found = true;
+				}
+
+				if (!$score_found && $this->user_prefs['required_score'])
+					$input_bayesthres->add(str_replace('%s', $this->user_prefs['bayes_auto_learn_threshold_spam'], $this->gettext('otherscore')), (float)$this->user_prefs['bayes_auto_learn_threshold_spam']);
+
+				$table = new html_table(array('class' => 'generalprefstable', 'cols' => 2));
+				$table->add('title', html::label($field_id, Q($this->gettext('bayesspam'))));
+				$table->add(null, $input_bayesthres->show((float)$this->user_prefs['bayes_auto_learn_threshold_spam']));
+
+				$data .= $table->show() . Q($this->gettext('bayesspamexp')) . '<br />';
+			}
+
+			$out .= html::tag('fieldset', null, html::tag('legend', null, Q($this->gettext('bayesautooptions'))) . $data);
+
 			break;
 
 		// Report settings
 		case 'report':
 			$data = html::p(null, Q($this->gettext('spamreport')));
 
-			$field_id = 'rcmfd_spamreport';
-			$input_spamreport0 = new html_radiobutton(array('name' => '_spamreport', 'id' => $field_id.'_0', 'value' => '0'));
-			$data .= $input_spamreport0->show($this->user_prefs['report_safe']) ."&nbsp;". html::label($field_id .'_0', Q($this->gettext('spamreport0'))) . "<br />";
+			if (!isset($no_override['report_safe'])) {
+				$field_id = 'rcmfd_spamreport';
+				$input_spamreport0 = new html_radiobutton(array('name' => '_spamreport', 'id' => $field_id.'_0', 'value' => '0'));
+				$data .= $input_spamreport0->show($this->user_prefs['report_safe']) ."&nbsp;". html::label($field_id .'_0', Q($this->gettext('spamreport0'))) . "<br />";
 
-			$input_spamreport1 = new html_radiobutton(array('name' => '_spamreport', 'id' => $field_id.'_1', 'value' => '1'));
-			$data .= $input_spamreport1->show($this->user_prefs['report_safe']) ."&nbsp;". html::label($field_id .'_1', Q($this->gettext('spamreport1'))) . "<br />";
+				$input_spamreport1 = new html_radiobutton(array('name' => '_spamreport', 'id' => $field_id.'_1', 'value' => '1'));
+				$data .= $input_spamreport1->show($this->user_prefs['report_safe']) ."&nbsp;". html::label($field_id .'_1', Q($this->gettext('spamreport1'))) . "<br />";
 
-			$input_spamreport2 = new html_radiobutton(array('name' => '_spamreport', 'id' => $field_id.'_2', 'value' => '2'));
-			$data .= $input_spamreport2->show($this->user_prefs['report_safe']) ."&nbsp;". html::label($field_id .'_2', Q($this->gettext('spamreport2'))) . "<br />";
+				$input_spamreport2 = new html_radiobutton(array('name' => '_spamreport', 'id' => $field_id.'_2', 'value' => '2'));
+				$data .= $input_spamreport2->show($this->user_prefs['report_safe']) ."&nbsp;". html::label($field_id .'_2', Q($this->gettext('spamreport2'))) . "<br />";
+			}
 
 			$out = html::tag('fieldset', null, html::tag('legend', null, Q($this->gettext('mainoptions'))) . $data);
 			break;
