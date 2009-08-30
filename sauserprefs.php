@@ -121,10 +121,10 @@ class sauserprefs extends rcube_plugin
 		foreach($this->global_prefs as $key => $val)
 			$this->api->output->set_env(str_replace(" ", "_", $key), $val);
 
+		unset($attrib['form']);
+
 		list($form_start, $form_end) = get_form_tags($attrib, 'plugin.sauserprefs.save', null,
 			array('name' => '_section', 'value' => $this->cur_section));
-
-		unset($attrib['form']);
 
 		$out = $form_start;
 
@@ -548,7 +548,8 @@ class sauserprefs extends rcube_plugin
 
 				$score_found = false;
 				for ($i = 1; $i <= 10; $i = $i + $this->config['score_inc']) {
-					$input_spamthres->add(number_format($i, $decPlaces), (float)$i);
+					$i = number_format($i, $decPlaces);
+					$input_spamthres->add($i, (float)$i);
 
 					if (!$score_found && $this->user_prefs['required_score'] && (float)$this->user_prefs['required_score'] == (float)$i)
 						$score_found = true;
@@ -749,7 +750,8 @@ class sauserprefs extends rcube_plugin
 				//$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("bayes_help");', 'title' => $this->gettext('help')), $help_button);
 
 				$field_id = 'rcmfd_spamusebayes';
-				$input_spamtest = new html_checkbox(array('name' => '_spamusebayes', 'id' => $field_id, 'value' => '1'));
+				$input_spamtest = new html_checkbox(array('name' => '_spamusebayes', 'id' => $field_id, 'value' => '1',
+					'onchange' => JS_OBJECT_NAME . '.sauserprefs_toggle_bayes(this)'));
 				$data .= $input_spamtest->show($this->user_prefs['use_bayes']) ."&nbsp;". html::label($field_id, Q($this->gettext('usebayes')));
 
 				if (!empty($this->config['bayes_delete_query']))
@@ -764,7 +766,7 @@ class sauserprefs extends rcube_plugin
 				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("bayesrules_help");', 'title' => $this->gettext('help')), $help_button);
 
 				$field_id = 'rcmfd_spambayesrules';
-				$input_spamtest = new html_checkbox(array('name' => '_spambayesrules', 'id' => $field_id, 'value' => '1'));
+				$input_spamtest = new html_checkbox(array('name' => '_spambayesrules', 'id' => $field_id, 'value' => '1', 'disabled' => $this->user_prefs['use_bayes']?0:1));
 				$data .= $input_spamtest->show($this->user_prefs['use_bayes_rules']) ."&nbsp;". html::label($field_id, Q($this->gettext('bayesrules'))) . $help_button . "<br />";
 				$data .= html::p(array('id' => 'bayesrules_help', 'style' => 'display: none;'), Q($this->gettext('bayesruleshlp')));
 			}
@@ -775,7 +777,7 @@ class sauserprefs extends rcube_plugin
 
 				$field_id = 'rcmfd_spambayesautolearn';
 				$input_spamtest = new html_checkbox(array('name' => '_spambayesautolearn', 'id' => $field_id, 'value' => '1',
-					'onchange' => JS_OBJECT_NAME . '.sauserprefs_toggle_bayes_auto(this)'));
+					'onchange' => JS_OBJECT_NAME . '.sauserprefs_toggle_bayes_auto(this)', 'disabled' => $this->user_prefs['use_bayes']?0:1));
 				$data .= $input_spamtest->show($this->user_prefs['bayes_auto_learn']) ."&nbsp;". html::label($field_id, Q($this->gettext('bayesautolearn'))) . $help_button . "<br />";
 				$data .= html::p(array('id' => 'bayesauto_help', 'style' => 'display: none;'), Q($this->gettext('bayesautohelp')));
 			}
@@ -785,16 +787,17 @@ class sauserprefs extends rcube_plugin
 			$data = "";
 			if (!isset($no_override['bayes_auto_learn_threshold_nonspam'])) {
 				$field_id = 'rcmfd_bayesnonspam';
-				$input_bayesnthres = new html_select(array('name' => '_bayesnonspam', 'id' => $field_id, 'disabled' => $this->user_prefs['bayes_auto_learn']?0:1));
+				$input_bayesnthres = new html_select(array('name' => '_bayesnonspam', 'id' => $field_id, 'disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0));
 				$input_bayesnthres->add($this->gettext('defaultscore'), '');
 
-				$decPlaces = 0;
-				if ($this->config['score_inc'] - (int)$this->config['score_inc'] > 0)
-					$decPlaces = strlen($this->config['score_inc'] - (int)$this->config['score_inc']) - 2;
+				$decPlaces = 1;
+				//if ($this->config['score_inc'] - (int)$this->config['score_inc'] > 0)
+				//	$decPlaces = strlen($this->config['score_inc'] - (int)$this->config['score_inc']) - 2;
 
 				$score_found = false;
-				for ($i = 1; $i <= 20; $i = $i + $this->config['score_inc']) {
-					$input_bayesnthres->add(number_format($i, $decPlaces), (float)$i);
+				for ($i = -1; $i <= 1; $i = $i + 0.1) {
+					$i = number_format($i, $decPlaces);
+					$input_bayesnthres->add($i, (float)$i);
 
 					if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_nonspam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_nonspam'] == (float)$i)
 						$score_found = true;
@@ -812,7 +815,7 @@ class sauserprefs extends rcube_plugin
 
 			if (!isset($no_override['bayes_auto_learn_threshold_spam'])) {
 				$field_id = 'rcmfd_bayesspam';
-				$input_bayesthres = new html_select(array('name' => '_bayesspam', 'id' => $field_id, 'disabled' => $this->user_prefs['bayes_auto_learn']?0:1));
+				$input_bayesthres = new html_select(array('name' => '_bayesspam', 'id' => $field_id, 'disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0));
 				$input_bayesthres->add($this->gettext('defaultscore'), '');
 
 				$decPlaces = 0;
@@ -821,7 +824,8 @@ class sauserprefs extends rcube_plugin
 
 				$score_found = false;
 				for ($i = 1; $i <= 20; $i = $i + $this->config['score_inc']) {
-					$input_bayesthres->add(number_format($i, $decPlaces), (float)$i);
+					$i = number_format($i, $decPlaces);
+					$input_bayesthres->add($i, (float)$i);
 
 					if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_spam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_spam'] == (float)$i)
 						$score_found = true;

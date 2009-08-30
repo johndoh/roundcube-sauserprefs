@@ -364,6 +364,23 @@ rcmail.sauserprefs_toggle_level_char = function(checkbox) {
 		level_char.disabled = !checkbox.checked;
 }
 
+rcmail.sauserprefs_toggle_bayes = function(checkbox) {
+	var tickbox;
+	var dropdown;
+
+	if (tickbox = rcube_find_object('rcmfd_spambayesrules'))
+		tickbox.disabled = !checkbox.checked;
+
+	if (tickbox = rcube_find_object('rcmfd_spambayesautolearn'))
+		tickbox.disabled = !checkbox.checked;
+
+	if ((dropdown = rcube_find_object('rcmfd_bayesnonspam')) && (tickbox.checked || !checkbox.checked))
+		dropdown.disabled = !checkbox.checked;
+
+	if ((dropdown = rcube_find_object('rcmfd_bayesspam')) && (tickbox.checked || !checkbox.checked))
+		dropdown.disabled = !checkbox.checked;
+}
+
 rcmail.sauserprefs_toggle_bayes_auto = function(checkbox) {
 	var dropdown;
 
