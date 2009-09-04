@@ -47,6 +47,7 @@ $labels['bayesautooptions'] = 'Auto learn options';
 $labels['bayesnonspam'] = 'Non spam threshold';
 $labels['bayesspam'] = 'Spam threshold';
 $labels['bayesrules'] = 'Use Baysian rules';
+$labels['help']  = 'Help';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed spam settings';
@@ -71,7 +72,7 @@ $messages['bayesnonspamexp'] = 'Messages which score below this threshold will b
 $messages['bayesspamexp'] = 'Messages which score above this threshold will be use to improve the systems detection of spam messages.';
 $messages['bayesautohelp'] = 'When Bayes auto learn is enabled the system will automatically use messages which are very likely to be spam/non spam to improve the detection filters.';
 $messages['bayeshelp'] = 'The Bayesian classifier tries to identify spam by looking at words or short character sequences that are commonly found in spam or non spam messages.';
-$messages['rblhelp'] = 'As well as analyzing the content of a message the source of the message will be checked against several \'blacklist\' or lists of known spam sources.';
+$messages['rblhelp'] = 'Server addresses found in hypertext links in a message will be checked against several \'blacklists\' or lists of known spam sources.';
 $messages['dcchelp'] = 'The DCC or Distributed Checksum Clearinghouse is a system of servers collecting and counting checksums of millions of mail messages. The counts can be used to detect spam.';
 $messages['pyzhelp'] = 'Pyzor is a collaborative, networked system to detect and block spam using identifying digests of messages.';
 $messages['raz2help'] = 'Vipul\'s Razor is a distributed, collaborative, spam detection and filtering network based on user submissions of spam. Detection is done with signatures that efficiently spot mutating spam content and user input is validated through reputation assignments.';

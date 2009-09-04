@@ -5,7 +5,7 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
- * @version 1.0-BETA
+ * @version 1.0
  * @author Philip Weir
  * @url http://roundcube.net/plugins/sauserprefs
  */

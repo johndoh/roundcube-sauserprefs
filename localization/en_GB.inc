@@ -39,6 +39,7 @@ $labels['defaultscore'] = 'Default Score';
 $labels['otherscore'] = 'Other (%s)';
 $labels['usedefault'] = 'Restore Default Settings';
 $labels['langoptions'] = 'Language Options';
+$labels['help']  = 'Help';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed spam settings';
