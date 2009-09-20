@@ -54,7 +54,7 @@ html>body*#spam-langs-table[id$="spam-langs-table"]:not([class="none"]) { table-
 
 .blacklist_from
 {
-  color: #2D5986;
+  color: #BB0000;
   text-align: left;
   vertical-align: middle;
 }
@@ -69,7 +69,7 @@ html>body*#spam-langs-table[id$="spam-langs-table"]:not([class="none"]) { table-
 #listcontrols a:active,
 #listcontrols a:visited
 {
-  color: #2D5986;
+  color: #CC0000;
   font-size: 11px;
   text-decoration: none;
 }
