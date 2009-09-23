@@ -76,10 +76,10 @@ $sauserprefs_config['score_inc'] = 1;
 // the query can contain the following macros that will be expanded as follows:
 //      %u is replaced with the username (from the session info)
 // use an array to run multiple queries
-// eg. $sauserprefs_config['bayes_table'] = array(
+// eg. $sauserprefs_config['bayes_delete_query'] = array(
 //												'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
 //												'DELETE FROM bayes_token WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
-//												'DELETE FROM bayes_vars WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
+//												'DELETE FROM bayes_vars WHERE username = %u;',
 //												);
 $sauserprefs_config['bayes_delete_query'] = '';
 

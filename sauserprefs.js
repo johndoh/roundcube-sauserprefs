@@ -421,7 +421,7 @@ rcmail.sauserprefs_addressrule_import = function(address){
 
 	newNode.style.display = "";
 	newNode.cells[0].className = "whitelist_from";
-	newNode.cells[0].innerHTML = "Accept Mail From";
+	newNode.cells[0].innerHTML = rcmail.gettext('whitelist_from','sauserprefs');
 	newNode.cells[1].innerHTML = address;
 	actions[newNode.rowIndex - 2].value = "INSERT";
 	prefs[newNode.rowIndex - 2].value = "whitelist_from";

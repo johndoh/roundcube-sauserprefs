@@ -5,7 +5,7 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
- * @version 1.0
+ * @version 1.1
  * @author Philip Weir
  * @url http://roundcube.net/plugins/sauserprefs
  */
@@ -115,7 +115,8 @@ class sauserprefs extends rcube_plugin
 			'sauserprefs.spamaddressexists', 'sauserprefs.spamenteraddress',
 			'sauserprefs.spamaddresserror', 'sauserprefs.spamaddressdelete',
 			'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
-			'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm', 'sauserprefs.purgebayesconfirm');
+			'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm', 'sauserprefs.purgebayesconfirm',
+			'sauserprefs.whitelist_from');
 
 		// output global prefs as default in env
 		foreach($this->global_prefs as $key => $val)
