@@ -38,6 +38,9 @@ $sauserprefs_config['sql_preference_field'] = "preference";
 // name of the value field in the user prefs table, holds the value of the preference
 $sauserprefs_config['sql_value_field'] = "value";
 
+// username of the "global" or default settings user in the database, normaly $GLOBAL or @GLOBAL
+$sauserprefs_config['global_userid'] = "\$GLOBAL";
+
 // enable the whitelists synchronisation
 // NOTE: To use this your SpamAssassin prefs table must include a field in which the contact_id from the RC address book can be stored
 // check README for more information
@@ -82,6 +85,11 @@ $sauserprefs_config['score_inc'] = 1;
 //												'DELETE FROM bayes_vars WHERE username = %u;',
 //												);
 $sauserprefs_config['bayes_delete_query'] = '';
+
+// Override old or deprecated preferences: 'old name' => 'new name'
+$sauserprefs_config['deprecated_prefs'] = array(
+												'required_hits' => 'required_score'
+											);
 
 // define languages
 $sauserprefs_config['languages'] = array(

@@ -1,6 +1,11 @@
 Roundcube Webmail SpamAssassin User Prefs (SQL)
 ===============================================
 
+2009 09 23
+==========
+ * Make GLOBAL users configable
+ * Allow overriding of prefs name in db (deprecated_prefs)
+
 2009 08 29
 ==========
  * Added panel for Bayes settings
