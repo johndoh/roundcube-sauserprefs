@@ -5,6 +5,7 @@ Roundcube Webmail SpamAssassin User Prefs (SQL)
 ==========
  * Make GLOBAL users configable
  * Allow overriding of prefs name in db (deprecated_prefs)
+ * Fix localisation of scores
 
 2009 08 29
 ==========

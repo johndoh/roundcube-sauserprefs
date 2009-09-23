@@ -1,5 +1,4 @@
 <?php
-
 /**
  * SAUserprefs
  *
@@ -503,6 +502,7 @@ class sauserprefs extends rcube_plugin
 	private function _prefs_block($part, $attrib)
 	{
 		$no_override = array_flip($this->config['dont_override']);
+		$locale_info = localeconv();
 
 		switch ($part)
 		{
@@ -522,8 +522,7 @@ class sauserprefs extends rcube_plugin
 
 				$score_found = false;
 				for ($i = 1; $i <= 10; $i = $i + $this->config['score_inc']) {
-					$i = number_format($i, $decPlaces);
-					$input_spamthres->add($i, (float)$i);
+					$input_spamthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
 
 					if (!$score_found && $this->user_prefs['required_hits'] && (float)$this->user_prefs['required_hits'] == (float)$i)
 						$score_found = true;
@@ -534,7 +533,7 @@ class sauserprefs extends rcube_plugin
 
 				$table = new html_table(array('class' => 'generalprefstable', 'cols' => 2));
 				$table->add('title', html::label($field_id, Q($this->gettext('spamthres'))));
-				$table->add(null, $input_spamthres->show((float)$this->user_prefs['required_hits']));
+				$table->add(null, $input_spamthres->show(number_format($this->user_prefs['required_hits'], $decPlaces, '.', '')));
 
 				$data = $table->show() . Q($this->gettext('spamthresexp')) . '<br /><br />';
 			}
@@ -770,8 +769,7 @@ class sauserprefs extends rcube_plugin
 
 				$score_found = false;
 				for ($i = -1; $i <= 1; $i = $i + 0.1) {
-					$i = number_format($i, $decPlaces);
-					$input_bayesnthres->add($i, (float)$i);
+					$input_bayesnthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
 
 					if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_nonspam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_nonspam'] == (float)$i)
 						$score_found = true;
@@ -782,7 +780,7 @@ class sauserprefs extends rcube_plugin
 
 				$table = new html_table(array('class' => 'generalprefstable', 'cols' => 2));
 				$table->add('title', html::label($field_id, Q($this->gettext('bayesnonspam'))));
-				$table->add(null, $input_bayesnthres->show((float)$this->user_prefs['bayes_auto_learn_threshold_nonspam']));
+				$table->add(null, $input_bayesnthres->show(number_format($this->user_prefs['bayes_auto_learn_threshold_nonspam'], $decPlaces, '.', '')));
 
 				$data .= $table->show() . Q($this->gettext('bayesnonspamexp')) . '<br /><br />';
 			}
@@ -798,8 +796,7 @@ class sauserprefs extends rcube_plugin
 
 				$score_found = false;
 				for ($i = 1; $i <= 20; $i = $i + $this->config['score_inc']) {
-					$i = number_format($i, $decPlaces);
-					$input_bayesthres->add($i, (float)$i);
+					$input_bayesthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
 
 					if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_spam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_spam'] == (float)$i)
 						$score_found = true;
@@ -810,7 +807,7 @@ class sauserprefs extends rcube_plugin
 
 				$table = new html_table(array('class' => 'generalprefstable', 'cols' => 2));
 				$table->add('title', html::label($field_id, Q($this->gettext('bayesspam'))));
-				$table->add(null, $input_bayesthres->show((float)$this->user_prefs['bayes_auto_learn_threshold_spam']));
+				$table->add(null, $input_bayesthres->show(number_format($this->user_prefs['bayes_auto_learn_threshold_spam'], $decPlaces, '.', '')));
 
 				$data .= $table->show() . Q($this->gettext('bayesspamexp')) . '<br />';
 			}
