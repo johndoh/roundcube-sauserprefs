@@ -145,80 +145,130 @@ class sauserprefs extends rcube_plugin
 
 		$no_override = array_flip($this->config['dont_override']);
 		$new_prefs = array();
-
-		if ($this->cur_section == 'general') {
-			if (!isset($no_override['required_hits']))
-				$new_prefs['required_hits'] = $_POST['_spamthres'];
-
-			if (!isset($no_override['rewrite_header Subject']))
-				$new_prefs['rewrite_header Subject'] = $_POST['_spamsubject'];
-
-			if (!isset($no_override['ok_locales']) && !isset($no_override['ok_languages'])) {
-				$new_prefs['ok_locales'] = is_array($_POST['_spamlang']) ? implode(" ", $_POST['_spamlang']) : '';
-				$new_prefs['ok_languages'] = $new_prefs['ok_locales'];
-			}
-		}
-
-		if ($this->cur_section == 'headers') {
-			if (!isset($no_override['fold_headers']))
-				$new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : $_POST['_spamfoldheaders'];
-
-			if (!isset($no_override['add_header all Level'])) {
-				$spamchar = empty($_POST['_spamlevelchar']) ? "*" : $_POST['_spamlevelchar'];
-				if ($_POST['_spamlevelstars'] == "1") {
-					$new_prefs['add_header all Level'] = "_STARS(". $spamchar .")_";
-					$new_prefs['remove_header all'] = "0";
-				}
-				else {
-					$new_prefs['add_header all Level'] = "";
-					$new_prefs['remove_header all'] = "Level";
-				}
-			}
-		}
-
-		if ($this->cur_section == 'tests') {
-			if (!isset($no_override['use_razor1']))
-				$new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? "0" : $_POST['_spamuserazor1'];
-
-			if (!isset($no_override['use_razor2']))
-				$new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? "0" : $_POST['_spamuserazor2'];
-
-			if (!isset($no_override['use_pyzor']))
-				$new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? "0" : $_POST['_spamusepyzor'];
-
-			if (!isset($no_override['use_dcc']))
-				$new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? "0" : $_POST['_spamusedcc'];
-
-			if (!isset($no_override['skip_rbl_checks'])) {
-				if ($_POST['_spamskiprblchecks'] == "1")
-					$new_prefs['skip_rbl_checks'] = "";
-				else
-					$new_prefs['skip_rbl_checks'] = "1";
-			}
-		}
-
-		if ($this->cur_section == 'bayes') {
-			if (!isset($no_override['use_bayes']))
-				$new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? "0" : $_POST['_spamusebayes'];
-
-			if (!isset($no_override['bayes_auto_learn']))
-				$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : $_POST['_spambayesautolearn'];
-
-			if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
-				$new_prefs['bayes_auto_learn_threshold_nonspam'] = $_POST['_bayesnonspam'];
-
-			if (!isset($no_override['bayes_auto_learn_threshold_spam']))
-				$new_prefs['bayes_auto_learn_threshold_spam'] = $_POST['_bayesspam'];
-
-			if (!isset($no_override['use_bayes_rules']))
-				$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : $_POST['_spambayesrules'];
-		}
-
-		if ($this->cur_section == 'report' && !isset($no_override['report_safe']))
-			$new_prefs['report_safe'] = $_POST['_spamreport'];
-
 		$result = true;
-		foreach ($new_prefs as $preference => $value){
+
+  		switch ($this->cur_section)
+		{
+			case 'general':
+				if (!isset($no_override['required_hits']))
+					$new_prefs['required_hits'] = $_POST['_spamthres'];
+
+				if (!isset($no_override['rewrite_header Subject']))
+					$new_prefs['rewrite_header Subject'] = $_POST['_spamsubject'];
+
+				if (!isset($no_override['ok_locales']) && !isset($no_override['ok_languages'])) {
+					$new_prefs['ok_locales'] = is_array($_POST['_spamlang']) ? implode(" ", $_POST['_spamlang']) : '';
+					$new_prefs['ok_languages'] = $new_prefs['ok_locales'];
+				}
+
+				break;
+
+			case 'headers':
+				if (!isset($no_override['fold_headers']))
+					$new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : $_POST['_spamfoldheaders'];
+
+				if (!isset($no_override['add_header all Level'])) {
+					$spamchar = empty($_POST['_spamlevelchar']) ? "*" : $_POST['_spamlevelchar'];
+					if ($_POST['_spamlevelstars'] == "1") {
+						$new_prefs['add_header all Level'] = "_STARS(". $spamchar .")_";
+						$new_prefs['remove_header all'] = "0";
+					}
+					else {
+						$new_prefs['add_header all Level'] = "";
+						$new_prefs['remove_header all'] = "Level";
+					}
+				}
+
+				break;
+
+			case 'tests':
+				if (!isset($no_override['use_razor1']))
+					$new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? "0" : $_POST['_spamuserazor1'];
+
+				if (!isset($no_override['use_razor2']))
+					$new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? "0" : $_POST['_spamuserazor2'];
+
+				if (!isset($no_override['use_pyzor']))
+					$new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? "0" : $_POST['_spamusepyzor'];
+
+				if (!isset($no_override['use_dcc']))
+					$new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? "0" : $_POST['_spamusedcc'];
+
+				if (!isset($no_override['skip_rbl_checks'])) {
+					if ($_POST['_spamskiprblchecks'] == "1")
+						$new_prefs['skip_rbl_checks'] = "";
+					else
+						$new_prefs['skip_rbl_checks'] = "1";
+				}
+
+				break;
+
+			case 'bayes':
+				if (!isset($no_override['use_bayes']))
+					$new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? "0" : $_POST['_spamusebayes'];
+
+				if (!isset($no_override['bayes_auto_learn']))
+					$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : $_POST['_spambayesautolearn'];
+
+				if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
+					$new_prefs['bayes_auto_learn_threshold_nonspam'] = $_POST['_bayesnonspam'];
+
+				if (!isset($no_override['bayes_auto_learn_threshold_spam']))
+					$new_prefs['bayes_auto_learn_threshold_spam'] = $_POST['_bayesspam'];
+
+				if (!isset($no_override['use_bayes_rules']))
+					$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : $_POST['_spambayesrules'];
+
+				break;
+
+			case 'report':
+				if (!isset($no_override['report_safe']))
+					$new_prefs['report_safe'] = $_POST['_spamreport'];
+
+				break;
+
+			case 'addresses':
+				$acts = $_POST['_address_rule_act'];
+				$prefs = $_POST['_address_rule_field'];
+				$vals = $_POST['_address_rule_value'];
+
+				foreach ($acts as $idx => $act){
+					if ($act == "DELETE") {
+						$result = false;
+
+						$this->db->query(
+						  "DELETE FROM ". $this->config['sql_table_name'] ."
+						   WHERE  ". $this->config['sql_username_field'] ." = '". $_SESSION['username'] ."'
+						   AND    ". $this->config['sql_preference_field'] ." = '". $this->_map_pref_name($prefs[$idx]) ."'
+						   AND    ". $this->config['sql_value_field'] ." = '". $vals[$idx] . "';"
+						  );
+
+						$result = $this->db->affected_rows();
+
+						if (!$result)
+							break;
+					}
+					elseif ($act == "INSERT") {
+						$result = false;
+
+						$this->db->query(
+						  "INSERT INTO ". $this->config['sql_table_name'] ."
+						   (".$this->config['sql_username_field'].", ".$this->config['sql_preference_field'].", ".$this->config['sql_value_field'].")
+						   VALUES ('". $_SESSION['username']. "', '". $this->_map_pref_name($prefs[$idx]) . "', '". $vals[$idx] ."')"
+						  );
+
+						$result = $this->db->affected_rows();
+
+						if (!$result)
+							break;
+					}
+				}
+
+				break;
+		}
+
+		// save prefs (other than address rules to db)
+		foreach ($new_prefs as $preference => $value) {
 			if ($value == "" || $value == $this->global_prefs[$preference]) {
 				$result = false;
 
@@ -264,53 +314,10 @@ class sauserprefs extends rcube_plugin
 			}
 		}
 
-		if ($result) {
-			if ($this->cur_section == 'addresses') {
-				$acts = $_POST['_address_rule_act'];
-				$prefs = $_POST['_address_rule_field'];
-				$vals = $_POST['_address_rule_value'];
-
-				foreach ($acts as $idx => $act){
-					if ($act == "DELETE") {
-						$result = false;
-
-						$this->db->query(
-						  "DELETE FROM ". $this->config['sql_table_name'] ."
-						   WHERE  ". $this->config['sql_username_field'] ." = '". $_SESSION['username'] ."'
-						   AND    ". $this->config['sql_preference_field'] ." = '". $this->_map_pref_name($prefs[$idx]) ."'
-						   AND    ". $this->config['sql_value_field'] ." = '". $vals[$idx] . "';"
-						  );
-
-						$result = $this->db->affected_rows();
-
-						if (!$result)
-							break;
-					}
-					elseif ($act == "INSERT") {
-						$result = false;
-
-						$this->db->query(
-						  "INSERT INTO ". $this->config['sql_table_name'] ."
-						   (".$this->config['sql_username_field'].", ".$this->config['sql_preference_field'].", ".$this->config['sql_value_field'].")
-						   VALUES ('". $_SESSION['username']. "', '". $this->_map_pref_name($prefs[$idx]) . "', '". $vals[$idx] ."')"
-						  );
-
-						$result = $this->db->affected_rows();
-
-						if (!$result)
-							break;
-					}
-				}
-			}
-
-			if ($result)
-				$this->api->output->command('display_message', $this->gettext('sauserprefchanged'), 'confirmation');
-			else
-				$this->api->output->command('display_message', $this->gettext('sauserpreffailed'), 'error');
-		}
-		else {
+		if ($result)
+			$this->api->output->command('display_message', $this->gettext('sauserprefchanged'), 'confirmation');
+		else
 			$this->api->output->command('display_message', $this->gettext('sauserpreffailed'), 'error');
-		}
 
 		// go to next step
 		rcmail_overwrite_action('plugin.sauserprefs.edit');
