@@ -5,7 +5,7 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
- * @version 1.1
+ * @version 1.2
  * @author Philip Weir
  * @url http://roundcube.net/plugins/sauserprefs
  */
@@ -18,9 +18,15 @@ class sauserprefs extends rcube_plugin
 	private $cur_section;
 	private $global_prefs;
 	private $user_prefs;
+	private $addressbook = '0';
 
 	function init()
 	{
+		$this->_load_config();
+
+		if (isset($this->config['whitelist_abook_id']))
+			$this->addressbook = $this->config['whitelist_abook_id'];
+
 		if (rcmail::get_instance()->task == 'settings') {
 			$this->add_texts('localization/', array('sauserprefs'));
 
@@ -41,7 +47,7 @@ class sauserprefs extends rcube_plugin
 			$this->register_action('plugin.sauserprefs.purge_bayes', array($this, 'purge_bayes'));
 			$this->include_script('sauserprefs.js');
 		}
-		else {
+		elseif ($this->config['whitelist_sync']) {
 			$this->add_hook('create_contact', array($this, 'contact_add'));
 			$this->add_hook('save_contact', array($this, 'contact_save'));
 			$this->add_hook('delete_contact', array($this, 'contact_delete'));
@@ -50,7 +56,6 @@ class sauserprefs extends rcube_plugin
 
 	function init_html()
 	{
-		$this->_load_config();
 		$this->_db_connect('r');
 		$this->_load_global_prefs();
 		$this->_load_user_prefs();
@@ -73,15 +78,18 @@ class sauserprefs extends rcube_plugin
 	function section_list($attrib)
 	{
 		$rcmail = rcmail::get_instance();
+		$no_override = array_flip($this->config['dont_override']);
 
 		// add id to message list table if not specified
 		if (!strlen($attrib['id']))
 			$attrib['id'] = 'rcmsectionslist';
 
 		$sections = array();
-		$blocks = $attrib['sections'] ? preg_split('/[\s,;]+/', strip_quotes($attrib['sections'])) : array('general','headers','tests','bayes','report','addresses');
-		foreach ($blocks as $block)
-			$sections[$block] = $this->sections[$block];
+		$blocks = $attrib['sections'] ? preg_split('/[\s,;]+/', strip_quotes($attrib['sections'])) : array_keys($this->sections);
+		foreach ($blocks as $block) {
+			if (!isset($no_override['{' . $block . '}']))
+				$sections[$block] = $this->sections[$block];
+		}
 
 		// create XHTML table
 		$out = rcube_table_output($attrib, $sections, array('section'), 'id');
@@ -138,7 +146,6 @@ class sauserprefs extends rcube_plugin
 
 	function save()
 	{
-		$this->_load_config();
 		$this->_db_connect('r');
 		$this->_load_global_prefs();
 		$this->_load_user_prefs();
@@ -269,7 +276,7 @@ class sauserprefs extends rcube_plugin
 
 		// save prefs (other than address rules to db)
 		foreach ($new_prefs as $preference => $value) {
-			if ($value == "" || $value == $this->global_prefs[$preference]) {
+			if (array_key_exists($preference, $this->user_prefs) && ($value == "" || $value == $this->global_prefs[$preference])) {
 				$result = false;
 
 				$this->db->query(
@@ -298,7 +305,7 @@ class sauserprefs extends rcube_plugin
 				if (!$result)
 					break;
 			}
-			elseif ($value != $this->global_prefs[$preference] && $value != $this->user_prefs[$preference]) {
+			elseif (!array_key_exists($preference, $this->user_prefs) && $value != $this->global_prefs[$preference]) {
 				$result = false;
 
 				$this->db->query(
@@ -327,21 +334,22 @@ class sauserprefs extends rcube_plugin
 
 	function whitelist_import()
 	{
-		$contacts = new rcube_contacts(rcmail::get_instance()->db, $_SESSION['user_id']);
-		$contacts->page_size = 0;
+		$contacts = rcmail::get_instance()->get_address_book($this->addressbook);
+		$contacts->page_size = 99;
 		$result = $contacts->list_records();
 
 		if (empty($result) || $result->count == 0)
 			return;
 
-		while ($row = $result->next())
-			$this->api->output->command('sauserprefs_addressrule_import', $row['email'], '', '');
+		$records = $result->records;
+	    foreach ($records as $row_data)
+			$this->api->output->command('sauserprefs_addressrule_import', $row_data['email'], '', '');
+
+		$contacts->close();
 	}
 
 	function purge_bayes()
 	{
-		$this->_load_config();
-
 		if (empty($this->config['bayes_delete_query'])) {
 			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
 			return;
@@ -366,13 +374,9 @@ class sauserprefs extends rcube_plugin
 
 	function contact_add($args)
 	{
-		// only works with default address book
-		if ($args['source'] != 0 && $args['source'] != null)
-			return;
-
-		$this->_load_config();
-		if (!$this->config['whitelist_sync'])
-			return;
+ 		// only works with specified address book
+ 		if ($args['source'] != $this->addressbook && $args['source'] != null)
+ 			return;
 
 		$this->_db_connect('w');
 		$email = $args['record']['email'];
@@ -385,16 +389,12 @@ class sauserprefs extends rcube_plugin
 
 	function contact_save($args)
 	{
-		// only works with default address book
-		if ($args['source'] != 0 && $args['source'] != null)
-			return;
-
-		$this->_load_config();
-		if (!$this->config['whitelist_sync'])
+		// only works with specified address book
+		if ($args['source'] != $this->addressbook && $args['source'] != null)
 			return;
 
 		$this->_db_connect('w');
-		$contacts = new rcube_contacts(rcmail::get_instance()->db, $_SESSION['user_id']);
+		$contacts = rcmail::get_instance()->get_address_book($this->addressbook);
 		$old_email = $contacts->get_record($args['id'], true);
 		$old_email = $old_email['email'];
 		$email = $args['record']['email'];
@@ -403,24 +403,23 @@ class sauserprefs extends rcube_plugin
 		$sql_result = $this->db->query("SELECT value FROM ". $this->config['sql_table_name'] ." WHERE ". $this->config['sql_username_field'] ." = '". $_SESSION['username'] ."' AND ". $this->config['sql_preference_field'] ." = 'whitelist_from' AND ". $this->config['sql_value_field'] ." = '". $email ."';");
 		if ($this->db->num_rows($sql_result) == 0)
 			$this->db->query("UPDATE ". $this->config['sql_table_name'] ." SET ". $this->config['sql_value_field'] ." = '". $email ."' WHERE ". $this->config['sql_username_field'] ." = '". $_SESSION['username'] ."' AND ". $this->config['sql_preference_field'] ." = 'whitelist_from' AND ". $this->config['sql_value_field'] ." = '". $old_email ."';");
+
+		$contacts->close();
 	}
 
 	function contact_delete($args)
 	{
-		// only works with default address book
-		if ($args['source'] != 0 && $args['source'] != null)
-			return;
-
-		$this->_load_config();
-		if (!$this->config['whitelist_sync'])
+		// only works with specified address book
+		if ($args['source'] != $this->addressbook && $args['source'] != null)
 			return;
 
 		$this->_db_connect('w');
-		$contacts = new rcube_contacts(rcmail::get_instance()->db, $_SESSION['user_id']);
+		$contacts = rcmail::get_instance()->get_address_book($this->addressbook);
 		$email = $contacts->get_record($args['id'], true);
 		$email = $email['email'];
 
 		$this->db->query("DELETE FROM ". $this->config['sql_table_name'] ." WHERE ". $this->config['sql_username_field'] ." = '". $_SESSION['username'] ."' AND ". $this->config['sql_preference_field'] ." = 'whitelist_from' AND ". $this->config['sql_value_field'] ." = '". $email ."';");
+		$contacts->close();
 	}
 
 	private function _load_config()

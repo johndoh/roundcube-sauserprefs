@@ -18,6 +18,11 @@ Rename this to plugins/sauserprefs/config.inc.php
 * You must set the database connection string
 * Enter the table name, name of the username field, preference field, and value field
 
+Changing the order of the sections
+==================================
+To change the order of the sections add a sections attribute with the sections listed in the desired order to the sasectionslist object in skins/[skin]/templates/sauserprefs.html
+eg: <roundcube:object name="sasectionslist" id="sections-table" class="records-table" cellspacing="0" sections="general,tests,bayes,headers,report,addresses" />
+
 Whitelist Sync
 ==============
 This plugin contains an option to synchronise changes to your RC address book and your SpamAssassin whitelist.

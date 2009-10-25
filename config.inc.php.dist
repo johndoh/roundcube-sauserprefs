@@ -41,13 +41,16 @@ $sauserprefs_config['sql_value_field'] = "value";
 // username of the "global" or default settings user in the database, normaly $GLOBAL or @GLOBAL
 $sauserprefs_config['global_userid'] = "\$GLOBAL";
 
-// enable the whitelists synchronisation
-// NOTE: To use this your SpamAssassin prefs table must include a field in which the contact_id from the RC address book can be stored
-// check README for more information
+// enable the whitelists synchronisation, check README for more information
 $sauserprefs_config['whitelist_sync'] = FALSE;
+
+// id of the address book to synchronise the whitelist with, null for default RoundCube address book
+$sauserprefs_config['whitelist_abook_id'] = null;
 
 // don't allow these settings to be overriden by the user
 // eg. $sauserprefs_config['dont_override'] = array('required_score','rewrite_header Subject');
+// to disable entire sections enter the secion name surrounded by braces. Sections are: general,tests,bayes,headers,report,addresses
+// eg. $sauserprefs_config['dont_override'] = array('{tests}');
 $sauserprefs_config['dont_override'] = array();
 
 // default settings
