@@ -1,6 +1,10 @@
 Roundcube Webmail SpamAssassin User Prefs (SQL)
 ===============================================
 
+2009 11 04
+==========
+ * Use core config function (WARNING: Complete re-write of config file!)
+
 2009 10 25
 ==========
  * Bug fix: remove error message when saving without changes
