@@ -31,3 +31,8 @@ Delete user bayesian data stored in database
 ============================================
 If the bayesian data is stored in the same database as the user prefs then it is possible for users to delete their data from the UI.
 See config file for example SQL
+
+"SERVICE CURRENTLY NOT AVAILABLE! Error No. [500]" Error Message
+================================================================
+On some setups users might see "SERVICE CURRENTLY NOT AVAILABLE! Error No. [500]" shows up at the top of the sauserprefs screen. In this case there could be a problem with the database connection. Try adding ?new_link=true to the end of the sauserprefs DSN in the config file. For example:
+$rcmail_config['sauserprefs_db_dsnw'] = 'mysql://username:password@localhost/database?new_link=true';
