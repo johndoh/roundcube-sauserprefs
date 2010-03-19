@@ -1,5 +1,5 @@
 <?php
-/* Author : Matteo Cisilino http://matteo.cisilino.com/ */
+/* Author: Matteo Cisilino */
 
 $labels = array();
 $labels['sauserprefs']  = 'Spam';

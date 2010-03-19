@@ -1,5 +1,5 @@
 <?php
-/* Author: Simon Tauber - www.wynsim.org */
+/* Author: Simon Tauber */
 
 $labels = array();
 $labels['sauserprefs']  = 'Spam';
