@@ -7,7 +7,6 @@
  *
  * @version 1.3
  * @author Philip Weir
- * @url http://roundcube.net/plugins/sauserprefs
  */
 class sauserprefs extends rcube_plugin
 {
