@@ -1,4 +1,6 @@
-/* Show sauserprefs plugin script */
+/**
+ * SAUserPrefs plugin script
+ */
 
 if (window.rcmail) {
 	rcmail.addEventListener('init', function(evt) {

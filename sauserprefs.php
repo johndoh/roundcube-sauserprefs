@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SAUserprefs
+ * SAUserPrefs
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
