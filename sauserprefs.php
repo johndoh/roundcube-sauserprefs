@@ -351,7 +351,7 @@ class sauserprefs extends rcube_plugin
 	{
 		$rcmail = rcmail::get_instance();
 
-		if ($rcmail->config->get('sauserprefs_bayes_delete_query', true)) {
+		if (strlen($rcmail->config->get('sauserprefs_bayes_delete_query')) == 0) {
 			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
 			return;
 		}
@@ -720,7 +720,7 @@ class sauserprefs extends rcube_plugin
 					'onchange' => JS_OBJECT_NAME . '.sauserprefs_toggle_bayes(this)'));
 				$data .= $input_spamtest->show($this->user_prefs['use_bayes']) ."&nbsp;". html::label($field_id, Q($this->gettext('usebayes')));
 
-				if ($rcmail->config->get('sauserprefs_bayes_delete_query', false))
+				if (strlen($rcmail->config->get('sauserprefs_bayes_delete_query')) > 0)
 					$data .=  "&nbsp;&nbsp;&nbsp;" . html::span(array('id' => 'listcontrols'), $this->api->output->button(array('command' => 'plugin.sauserprefs.purge_bayes', 'type' => 'link', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp')));
 
 				$data .= "<br />";
