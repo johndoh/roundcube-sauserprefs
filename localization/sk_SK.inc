@@ -1,0 +1,86 @@
+<?php
+/* Author: Michal Michalac */
+
+$labels = array();
+$labels['sauserprefs']  = 'Spam';
+$labels['sauserprefssettings']  = 'Nastavenia Spam-u';
+$labels['spamgeneralsettings']  = 'Všeobecné nastavenia';
+$labels['spamthres']  = 'Hranica skóre';
+$labels['spamsubject']  = 'Značka v predmete';
+$labels['spamsubjectblank']  = '(nechajte prázdne pre žiadnu)';
+$labels['spamlang']  = 'Jazyk správ';
+$labels['enabled']  = 'Povolený';
+$labels['disabled']  = 'Zakázaný';
+$labels['headers'] = 'Hlavičky správ';
+$labels['foldheaders'] = 'Povoliť viacriadkové hlavičky';
+$labels['spamlevelstars'] = 'Vytvárať hlavičku \'Spam Level\' (úroveň spamu)';
+$labels['spamlevelchar'] = 'Znak úrovne spamu';
+$labels['spamtests'] = 'Internetové spam testy';
+$labels['userazor1'] = 'Používať Razor v1';
+$labels['userazor2'] = 'Používať Razor v2';
+$labels['usepyzor'] = 'Používať Pyzor';
+$labels['usebayes'] = 'Používať Bayesovský klasifikátor';
+$labels['usedcc'] = 'Používať DCC';
+$labels['skiprblchecks'] = 'Používať RBL';
+$labels['spamreportsettings']  = 'Nastavenia reportu';
+$labels['spamreport0']  = 'Vkladať informácie len do hlavičiek pôvodného e-mailu';
+$labels['spamreport1']  = 'Vkladať pôvodný e-mail ako MIME prílohu reportu';
+$labels['spamreport2']  = 'Vkladať pôvodný e-mail ako textovú prílohu reportu';
+$labels['spamaddressrules']  = 'Pravidlá adries';
+$labels['whitelist_from']  = 'Prijímať e-maily od';
+$labels['blacklist_from']  = 'Odmietať e-maily od';
+$labels['whitelist_to']  = 'Prijímať e-maily zaslané komu';
+$labels['addrule']  = 'Pridať';
+$labels['rule']  = 'Pravidlo';
+$labels['importfromaddressbook'] = 'Importovať adresy z adresára';
+$labels['deleteall'] = 'Vymazať všetky';
+$labels['autoscore'] = 'Auto';
+$labels['defaultscore'] = 'Predvolená';
+$labels['otherscore'] = 'Iná (%s)';
+$labels['usedefault'] = 'Obnoviť predvolené nastavenia';
+$labels['langoptions'] = 'Jazykové voľby';
+$labels['bayes'] = 'Nastavenia Bayesu';
+$labels['purgingbayes'] = 'Vymazávam Bayesiánsku databázu...';
+$labels['purgebayes'] = 'Vymazať vlastnú Bayesiánsku databázu';
+$labels['bayesautolearn'] = 'Použiť automatické učenie Bayes';
+$labels['bayesautooptions'] = 'Voľby automatického učenia';
+$labels['bayesnonspam'] = 'Hranica pre nespam';
+$labels['bayesspam'] = 'Hranica pre spam';
+$labels['bayesrules'] = 'Využívať Baysiánske pravidlá';
+$labels['help']  = 'Pomoc';
+
+$messages = array();
+$messages['sauserprefchanged'] = 'Nastavenia spamu úspešne zmenené';
+$messages['sauserpreffailed'] = 'Chyba: Nastavenia spamu sa nepodarilo zmeniť';
+$messages['spamthresexp'] = "Všetky maily so skóre vyšším, ako určená hranica, budú označené ako spam.
+Zvýšením tejto hranice sa zväčší počet nerozpoznaných spamov, na druhej strane sa ale zníži počet mailov chybne označených ako spam."; 
+$messages['spamlangexp'] = "Vyberte všetky jazyky v ktorých predpokladáte príjem e-mailov. Všetky prijaté správy napísané v iných jazykoch budú brané ako pravdepodobný spam."; 
+$messages['headersexp'] = "SpamAssassin pridáva do kontrolovaných e-mailov hlavičky s infomráciami o výsledkoch kontroly. Použite nasledujúce voľby na ich prispôsobenie."; 
+$messages['spamtestssexp'] = 'Niektoré testy pri detekcii spamu používajú externé služby na internete. Vyberte tie, ktoré chcete využívať:';
+$messages['spamreport']  = 'Keď je e-mail identifikovaný ako spam, vytvorí sa report o všetkých testoch a ich dosiahnutom skóre...';
+$messages['autowhitelist'] = 'Email addresses in your Address Book are automatically added to the \'Accept Mail From\' list.';
+$messages['whitelistexp'] = "V e-mailových adresách môže byť použitý zástupný znak hviezdička (*). Napr.: *@domena.sk or *@*.domena.sk.";
+$messages['spamaddressexists'] = 'Previdlo pre túto adresu už existuje';
+$messages['spamenteraddress'] = 'Prosím zadajte adresu, ktorú chcete pridať';
+$messages['spamaddresserror'] = 'Chyba: Adresa vyzará neplatná';
+$messages['spamaddressdelete'] = 'Ste si istí, že chcete naozaj vymazať toto pravidlo?';
+$messages['spamaddressdeleteall'] = 'Ste si istí, že chcete naozaj vymazať všetky pravidlá adries?';
+$messages['noaddressrules'] = 'Neboli nájdené žiadne pravidlá adries.';
+$messages['importingaddresses'] = 'Importujem adresy...';
+$messages['usedefaultconfirm'] = 'Ste si istí, že chcete naozaj obnoviť predvolené nastavenia? To vymaže všetky Vaše nastavenia, vrátane pravidiel adries.';
+$messages['purgebayesexp'] = 'Vymaže osobnú Bayesiánsku databázu vytvorenú z Vašich e-mailov';
+$messages['bayesnonspamexp'] = 'E-maily s nižším skóre ako uvedená hranica budú použité na zlepšenie detekcie (naučenie) nespamových správ.';
+$messages['bayesspamexp'] = 'E-maily s vyšším skóre ako uvedená hranica budú použité na zlepšenie detekcie (naučenie) spamových správ.';
+$messages['bayesautohelp'] = 'Keď je automatické učenie zapnuté, systém použije správy ktoré s veľkou istotou prehlási za spam/nespam na zlepšenie detekčných filtrov.';
+$messages['bayeshelp'] = 'Bayesovský klasifikátor sa snaží identifikovať spam podľa slov, alebo zhluku znakov, ktoré sa obvykle vyskytujú v spamových, alebo nespamových e-mailoch.';
+$messages['rblhelp'] = 'IP adresy serverov v hlavičkách, alebo v odkazoch v e-maili budú vyhľadané na niektorých blacklistoch. Blacklisty sú zoznamy známych adries spammerov, ktoré sa aktualizujú v reálnom čase.';
+$messages['dcchelp'] = 'DCC, alebo distribuované výmenné centrum kontrolných súčtov, je systém serverov zbierajúcich a vypočítavajúcich kontrolné súčty (či podpisy) miliónov e-mailov denne. Podľa podobnosti kontrolného súčtu príchodzej správy voči zoznamu evidovaných sa určuje pravdepodobnosť spamu.';
+$messages['pyzhelp'] = 'Pyzor je sieťový systém na detekciu a blokovanie spamu pomocou digestu správ. Digesty sa vypočítavajú niekoľkými spôsobmi tak, aby dokázali tolerovať malú zmenu v obsahu správy.';
+$messages['raz2help'] = 'Vipul\'s Razor je distribuovaná spolupracujúca sieť na detekciu a blokovanie spamu, pracujúca na základe užívateľmi zaslaných spamových vzoriek. Tieto vzorky sú zohľadňované podľa reputácie užívateľa, ktorý ich poskytol. Detekcia sa robí pomocou charakteristík, ktoré efektívne zachytávajú aj meniaci sa obsah spamu.';
+$messages['raz1help'] = 'Vipul\'s Razor je distribuovaná spolupracujúca sieť na detekciu a blokovanie spamu, pracujúca na základe užívateľmi zaslaných spamových vzoriek. Tieto vzorky sú zohľadňované podľa reputácie užívateľa, ktorý ich poskytol. Detekcia sa robí pomocou charakteristík, ktoré efektívne zachytávajú aj meniaci sa obsah spamu. Verzia 1 bola nahradená verziou 2 a nie je už naďalej podporovaná.';
+$messages['levelhelp'] = 'Hlavička \'Spam Level\' zobrazuje opakovaním znaku (napr. hviezdičky) skóre, ktoré kontrolovaný e-mail získal. To môže byť užitočné pri ďalšom spracovaní e-mailu.';
+$messages['foldhelp'] = 'Môžu byť hlavičky pridané do e-mailu SpamAssassinom rozdelené na viac riadkov, namiesto toho, aby boli na jednom veľmi dlhom riadku? Keď je riadok rozdelený, jeho pokračovanie je označené odsadením.';
+$messages['bayesruleshlp'] = 'Predtým, ako môže byt Bayesovský klasifikátor efektívne použitý, musí sa natrénovať správne rozoznávať spam od nespamu. Vypnutím Bayesiánskych pravidiel umožníte systému učiť sa z prichádzajúcich e-mailov, ale nebude sa používať na detekciu spamu..';
+$messages['purgebayesconfirm'] = 'Ste si istí, že chcete naozaj vymazať celú Vašu Bayesiánsku databázu?';
+
+?>
