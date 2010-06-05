@@ -1,5 +1,5 @@
-Roundcube Webmail SpamAssassin User Prefs (SQL)
-===============================================
+Roundcube Webmail SAUserPrefs
+=============================
 This plugin adds the ability for users to edit they SpamAssassin user prefs from within RoundCube. It interacts with preferences storied in a database via SQL.
 Tested with SpamAssassin Version 3.2.3
 Inspiration for this plugin was taken from:
