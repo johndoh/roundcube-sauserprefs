@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2010 06 19
+==========
+ * Skin update after r3757
+
 2009 11 04
 ==========
  * Use core config function (WARNING: Complete re-write of config file!)
