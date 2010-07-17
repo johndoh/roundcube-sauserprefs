@@ -334,8 +334,9 @@ class sauserprefs extends rcube_plugin
 	function whitelist_import()
 	{
 		$contacts = rcmail::get_instance()->get_address_book($this->addressbook);
-		$contacts->page_size = 99;
-		$result = $contacts->list_records();
+		$contacts->set_page(1);
+		$contacts->set_pagesize(99999);
+		$result = $contacts->list_records(null, 0, true);
 
 		if (empty($result) || $result->count == 0)
 			return;
