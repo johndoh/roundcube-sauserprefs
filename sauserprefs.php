@@ -5,7 +5,7 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
- * @version 1.3
+ * @version 1.4
  * @author Philip Weir
  */
 class sauserprefs extends rcube_plugin
@@ -47,9 +47,9 @@ class sauserprefs extends rcube_plugin
 			$this->include_script('sauserprefs.js');
 		}
 		elseif ($rcmail->config->get('sauserprefs_whitelist_sync')) {
-			$this->add_hook('create_contact', array($this, 'contact_add'));
-			$this->add_hook('save_contact', array($this, 'contact_save'));
-			$this->add_hook('delete_contact', array($this, 'contact_delete'));
+			$this->add_hook('contact_create', array($this, 'contact_add'));
+			$this->add_hook('contact_save', array($this, 'contact_save'));
+			$this->add_hook('contact_delete', array($this, 'contact_delete'));
 		}
 	}
 
