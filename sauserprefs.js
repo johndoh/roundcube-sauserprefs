@@ -186,15 +186,15 @@ if (window.rcmail) {
 
 			rcmail.register_command('plugin.sauserprefs.import_whitelist', function(props, obj) {
 				rcmail.set_busy(true, 'sauserprefs.importingaddresses');
-		    	rcmail.http_request('plugin.sauserprefs.whitelist_import', '', true);
+				rcmail.http_request('plugin.sauserprefs.whitelist_import', '', true);
 				return false;
 			}, true);
 
 			rcmail.register_command('plugin.sauserprefs.purge_bayes', function(props, obj) {
 				if (confirm(rcmail.gettext('purgebayesconfirm','sauserprefs'))) {
 					rcmail.set_busy(true, 'sauserprefs.purgingbayes');
-		    		rcmail.http_request('plugin.sauserprefs.purge_bayes', '', true);
-	    		}
+					rcmail.http_request('plugin.sauserprefs.purge_bayes', '', true);
+				}
 
 				return false;
 			}, true);

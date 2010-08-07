@@ -153,7 +153,7 @@ class sauserprefs extends rcube_plugin
 		$new_prefs = array();
 		$result = true;
 
-  		switch ($this->cur_section)
+		switch ($this->cur_section)
 		{
 			case 'general':
 				if (!isset($no_override['required_hits']))
@@ -243,11 +243,11 @@ class sauserprefs extends rcube_plugin
 						$result = false;
 
 						$this->db->query(
-						  "DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-						   WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-						   AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($prefs[$idx]) ."'
-						   AND    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $vals[$idx] . "';"
-						  );
+							"DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+							WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
+							AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($prefs[$idx]) ."'
+							AND    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $vals[$idx] . "';"
+							);
 
 						$result = $this->db->affected_rows();
 
@@ -258,10 +258,10 @@ class sauserprefs extends rcube_plugin
 						$result = false;
 
 						$this->db->query(
-						  "INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-						   (".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
-						   VALUES ('". $_SESSION['username']. "', '". $this->_map_pref_name($prefs[$idx]) . "', '". $vals[$idx] ."')"
-						  );
+							"INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+							(".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
+							VALUES ('". $_SESSION['username']. "', '". $this->_map_pref_name($prefs[$idx]) . "', '". $vals[$idx] ."')"
+							);
 
 						$result = $this->db->affected_rows();
 
@@ -279,10 +279,10 @@ class sauserprefs extends rcube_plugin
 				$result = false;
 
 				$this->db->query(
-				  "DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-				   WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-				   AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($preference) ."';"
-				  );
+					"DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+					WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
+					AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($preference) ."';"
+					);
 
 				$result = $this->db->affected_rows();
 
@@ -293,11 +293,11 @@ class sauserprefs extends rcube_plugin
 				$result = false;
 
 				$this->db->query(
-				  "UPDATE ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-				   SET    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $value ."'
-				   WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-				   AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($preference) ."';"
-				  );
+					"UPDATE ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+					SET    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $value ."'
+					WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
+					AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($preference) ."';"
+					);
 
 				$result = $this->db->affected_rows();
 
@@ -308,10 +308,10 @@ class sauserprefs extends rcube_plugin
 				$result = false;
 
 				$this->db->query(
-				  "INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-				   (".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
-				   VALUES ('". $_SESSION['username'] ."', '". $this->_map_pref_name($preference) ."', '". $value ."')"
-				  );
+					"INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+					(".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
+					VALUES ('". $_SESSION['username'] ."', '". $this->_map_pref_name($preference) ."', '". $value ."')"
+					);
 
 				$result = $this->db->affected_rows();
 
@@ -342,7 +342,7 @@ class sauserprefs extends rcube_plugin
 			return;
 
 		$records = $result->records;
-	    foreach ($records as $row_data)
+		foreach ($records as $row_data)
 			$this->api->output->command('sauserprefs_addressrule_import', $row_data['email'], '', '');
 
 		$contacts->close();
@@ -378,9 +378,9 @@ class sauserprefs extends rcube_plugin
 	{
 		$rcmail = rcmail::get_instance();
 
- 		// only works with specified address book
- 		if ($args['source'] != $this->addressbook && $args['source'] != null)
- 			return;
+		// only works with specified address book
+		if ($args['source'] != $this->addressbook && $args['source'] != null)
+			return;
 
 		$this->_db_connect('w');
 		$email = $args['record']['email'];
@@ -438,10 +438,10 @@ class sauserprefs extends rcube_plugin
 
 		// check DB connections and exit on failure
 		if ($err_str = $this->db->is_error()) {
-		  raise_error(array(
-		    'code' => 603,
-		    'type' => 'db',
-		    'message' => $err_str), FALSE, TRUE);
+			raise_error(array(
+				'code' => 603,
+				'type' => 'db',
+				'message' => $err_str), FALSE, TRUE);
 		}
 	}
 
@@ -463,31 +463,31 @@ class sauserprefs extends rcube_plugin
 		$prefs = array();
 
 		$sql_result = $this->db->query(
-		  "SELECT ". $rcmail->config->get('sauserprefs_sql_preference_field') .", ". $rcmail->config->get('sauserprefs_sql_value_field') ."
-		   FROM   ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-		   WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $user ."'
-		   AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'whitelist_from'
-		   AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'blacklist_from'
-		   AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'whitelist_to';"
-		  );
+			"SELECT ". $rcmail->config->get('sauserprefs_sql_preference_field') .", ". $rcmail->config->get('sauserprefs_sql_value_field') ."
+			FROM   ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+			WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $user ."'
+			AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'whitelist_from'
+			AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'blacklist_from'
+			AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'whitelist_to';"
+			);
 
-	    while ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result))) {
-		    $pref_name = $sql_arr[$rcmail->config->get('sauserprefs_sql_preference_field')];
-		    $pref_name = $this->_map_pref_name($pref_name, true);
-		    $pref_value = $sql_arr[$rcmail->config->get('sauserprefs_sql_value_field')];
+		while ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result))) {
+			$pref_name = $sql_arr[$rcmail->config->get('sauserprefs_sql_preference_field')];
+			$pref_name = $this->_map_pref_name($pref_name, true);
+			$pref_value = $sql_arr[$rcmail->config->get('sauserprefs_sql_value_field')];
 
-		    $prefs[$pref_name] = $pref_value;
+			$prefs[$pref_name] = $pref_value;
 
-		    // update deprecated prefs in db
-		    if ($sql_arr[$rcmail->config->get('sauserprefs_sql_preference_field')] != $this->_map_pref_name($pref_name)) {
- 				$this->db->query(
- 					  "UPDATE ". $rcmail->config->get('sauserprefs_sql_table_name') ."
- 					   SET    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($pref_name) ."'
- 					   WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $user ."'
- 					   AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $sql_arr[$rcmail->config->get('sauserprefs_sql_preference_field')] ."';"
- 					  );
-		    }
-	    }
+			// update deprecated prefs in db
+			if ($sql_arr[$rcmail->config->get('sauserprefs_sql_preference_field')] != $this->_map_pref_name($pref_name)) {
+				$this->db->query(
+					"UPDATE ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+					SET    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($pref_name) ."'
+					WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $user ."'
+					AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $sql_arr[$rcmail->config->get('sauserprefs_sql_preference_field')] ."';"
+					);
+			}
+		}
 
 		return $prefs;
 	}
@@ -869,14 +869,14 @@ class sauserprefs extends rcube_plugin
 			$this->_address_row($address_table, null, null, $attrib);
 
 			$sql_result = $this->db->query(
-			  "SELECT ". $rcmail->config->get('sauserprefs_sql_preference_field') .", ". $rcmail->config->get('sauserprefs_sql_value_field') ."
-			   FROM   ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-			   WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-			   AND   (". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'whitelist_from'
-			   OR     ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'blacklist_from'
-			   OR     ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'whitelist_to')
-			   ORDER BY ". $rcmail->config->get('sauserprefs_sql_value_field') .";"
-			  );
+				"SELECT ". $rcmail->config->get('sauserprefs_sql_preference_field') .", ". $rcmail->config->get('sauserprefs_sql_value_field') ."
+				FROM   ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+				WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
+				AND   (". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'whitelist_from'
+				OR     ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'blacklist_from'
+				OR     ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'whitelist_to')
+				ORDER BY ". $rcmail->config->get('sauserprefs_sql_value_field') .";"
+				);
 
 			if ($sql_result && $this->db->num_rows($sql_result) > 0)
 				$norules = 'display: none;';
