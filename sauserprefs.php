@@ -5,7 +5,7 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
- * @version 1.4
+ * @version 1.5
  * @author Philip Weir
  */
 class sauserprefs extends rcube_plugin
@@ -48,7 +48,7 @@ class sauserprefs extends rcube_plugin
 		}
 		elseif ($rcmail->config->get('sauserprefs_whitelist_sync')) {
 			$this->add_hook('contact_create', array($this, 'contact_add'));
-			$this->add_hook('contact_save', array($this, 'contact_save'));
+			$this->add_hook('contact_update', array($this, 'contact_save'));
 			$this->add_hook('contact_delete', array($this, 'contact_delete'));
 		}
 	}
@@ -171,10 +171,11 @@ class sauserprefs extends rcube_plugin
 
 			case 'headers':
 				if (!isset($no_override['fold_headers']))
-					$new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : $_POST['_spamfoldheaders'];
+					$new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : "1";
 
 				if (!isset($no_override['add_header all Level'])) {
 					$spamchar = empty($_POST['_spamlevelchar']) ? "*" : $_POST['_spamlevelchar'];
+
 					if ($_POST['_spamlevelstars'] == "1") {
 						$new_prefs['add_header all Level'] = "_STARS(". $spamchar .")_";
 						$new_prefs['remove_header all'] = "0";
@@ -189,32 +190,28 @@ class sauserprefs extends rcube_plugin
 
 			case 'tests':
 				if (!isset($no_override['use_razor1']))
-					$new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? "0" : $_POST['_spamuserazor1'];
+					$new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? "0" : "1";
 
 				if (!isset($no_override['use_razor2']))
-					$new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? "0" : $_POST['_spamuserazor2'];
+					$new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? "0" : "1";
 
 				if (!isset($no_override['use_pyzor']))
-					$new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? "0" : $_POST['_spamusepyzor'];
+					$new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? "0" : "1";
 
 				if (!isset($no_override['use_dcc']))
-					$new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? "0" : $_POST['_spamusedcc'];
+					$new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? "0" : "1";
 
-				if (!isset($no_override['skip_rbl_checks'])) {
-					if ($_POST['_spamskiprblchecks'] == "1")
-						$new_prefs['skip_rbl_checks'] = "";
-					else
-						$new_prefs['skip_rbl_checks'] = "1";
-				}
+				if (!isset($no_override['skip_rbl_checks']))
+					$new_prefs['skip_rbl_checks'] = empty($_POST['_spamskiprblchecks']) ? "1" : "0";
 
 				break;
 
 			case 'bayes':
 				if (!isset($no_override['use_bayes']))
-					$new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? "0" : $_POST['_spamusebayes'];
+					$new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? "0" : "1";
 
 				if (!isset($no_override['bayes_auto_learn']))
-					$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : $_POST['_spambayesautolearn'];
+					$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : "1";
 
 				if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
 					$new_prefs['bayes_auto_learn_threshold_nonspam'] = $_POST['_bayesnonspam'];
@@ -223,7 +220,7 @@ class sauserprefs extends rcube_plugin
 					$new_prefs['bayes_auto_learn_threshold_spam'] = $_POST['_bayesspam'];
 
 				if (!isset($no_override['use_bayes_rules']))
-					$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : $_POST['_spambayesrules'];
+					$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : "1";
 
 				break;
 
@@ -694,12 +691,8 @@ class sauserprefs extends rcube_plugin
 				$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
 				$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. JS_OBJECT_NAME .'.sauserprefs_help("rbl_help");', 'title' => $this->gettext('help')), $help_button);
 
-				if ($this->user_prefs['skip_rbl_checks'] == "1")
-					$enabled = "0";
-				else
-					$enabled = "1";
-
 				$field_id = 'rcmfd_spamskiprblchecks';
+				$enabled = $this->user_prefs['skip_rbl_checks'] == "1" ? "0" : "1";
 				$input_spamtest = new html_checkbox(array('name' => '_spamskiprblchecks', 'id' => $field_id, 'value' => '1'));
 				$data .= $input_spamtest->show($enabled) ."&nbsp;". html::label($field_id, Q($this->gettext('skiprblchecks'))) . $help_button . "<br />";
 				$data .= html::p(array('id' => 'rbl_help', 'style' => 'display: none;'), Q($this->gettext('rblhelp')));
