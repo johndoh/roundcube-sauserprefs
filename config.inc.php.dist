@@ -34,7 +34,7 @@ $rcmail_config['sauserprefs_global_userid'] = "\$GLOBAL";
 // enable the whitelists synchronisation, check README for more information
 $rcmail_config['sauserprefs_whitelist_sync'] = FALSE;
 
-// id of the address book to synchronise the whitelist with, null for default RoundCube address book
+// id of the address book to synchronise the whitelist with, null for default Roundcube address book
 $rcmail_config['sauserprefs_whitelist_abook_id'] = null;
 
 // don't allow these settings to be overriden by the user
