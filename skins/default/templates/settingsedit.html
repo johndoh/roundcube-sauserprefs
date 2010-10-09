@@ -10,6 +10,7 @@
 <roundcube:if condition="browser:safari" />
 <link rel="stylesheet" type="text/css" href="/this/safari.css" />
 <roundcube:endif />
+<!--[if lte IE 6]><link rel="stylesheet" type="text/css" href="/this//ie6hacks.css" /><![endif]-->
 <script type="text/javascript" src="/functions.js"></script>
 </head>
 <body class="iframe">
@@ -19,7 +20,7 @@
 <form name="form" action="./" method="post">
 
 <div id="prefs-details" class="boxcontent">
-<roundcube:object name="userprefs" form="form" deleteIcon="/this/delete.png" enableIcon="/this/enabled.png" disableIcon="/this/disabled.png" helpIcon="/this/help.gif" />
+<roundcube:object name="userprefs" form="form" helpIcon="/this/help.gif" />
 </div>
 
 <div id="formfooter">

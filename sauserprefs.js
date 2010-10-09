@@ -22,7 +22,7 @@ if (window.rcmail) {
 					langlist[i].checked = true;
 					obj = rcube_find_object('spam_lang_'+ i);
 					obj.title = rcmail.gettext('enabled','sauserprefs');
-					obj.innerHTML = rcube_find_object('enable_button').innerHTML;
+					obj.className = 'enabled';
 				}
 
 				return false;
@@ -37,13 +37,13 @@ if (window.rcmail) {
 						langlist[i].checked = false;
 						obj = rcube_find_object('spam_lang_'+ i);
 						obj.title = rcmail.gettext('disabled','sauserprefs');
-						obj.innerHTML = rcube_find_object('disable_button').innerHTML;
+						obj.className = 'disabled';
 					}
 					else {
 						langlist[i].checked = true;
 						obj = rcube_find_object('spam_lang_'+ i);
 						obj.title = rcmail.gettext('enabled','sauserprefs');
-						obj.innerHTML = rcube_find_object('enable_button').innerHTML;
+						obj.className = 'enabled';
 					}
 				}
 
@@ -58,7 +58,7 @@ if (window.rcmail) {
 					langlist[i].checked = false;
 					obj = rcube_find_object('spam_lang_'+ i);
 					obj.title = rcmail.gettext('disabled','sauserprefs');
-					obj.innerHTML = rcube_find_object('disable_button').innerHTML;
+					obj.className = 'disabled';
 				}
 
 				return false;
@@ -66,17 +66,17 @@ if (window.rcmail) {
 
 			rcmail.register_command('plugin.sauserprefs.message_lang', function(lang_code, obj) {
 				var langlist = document.getElementsByName('_spamlang[]');
-				var i = obj.parentNode.parentNode.rowIndex - 2;
+				var i = obj.parentNode.parentNode.rowIndex - 1;
 
 				if (langlist[i].checked) {
 					langlist[i].checked = false;
 					obj.title = rcmail.gettext('disabled','sauserprefs');
-					obj.innerHTML = rcube_find_object('disable_button').innerHTML;
+					obj.className = 'disabled';
 				}
 				else {
 					langlist[i].checked = true;
 					obj.title = rcmail.gettext('enabled','sauserprefs');
-					obj.innerHTML = rcube_find_object('enable_button').innerHTML;
+					obj.className = 'enabled';
 				}
 
 				return false;
@@ -220,13 +220,13 @@ if (window.rcmail) {
 						langlist[i].checked = false;
 						obj = rcube_find_object('spam_lang_' + i);
 						obj.title = rcmail.gettext('disabled','sauserprefs');
-						obj.innerHTML = rcube_find_object('disable_button').innerHTML;
+						obj.className = 'disabled';
 
 						if (dlangs.indexOf(" " + langlist[i].value + " ") > -1) {
 							langlist[i].checked = true;
 							obj = rcube_find_object('spam_lang_' + i);
 							obj.title = rcmail.gettext('enabled','sauserprefs');
-							obj.innerHTML = rcube_find_object('enable_button').innerHTML;
+							obj.className = 'enabled';
 						}
 					}
 

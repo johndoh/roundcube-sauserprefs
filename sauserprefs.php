@@ -559,14 +559,8 @@ class sauserprefs extends rcube_plugin
 				$table->add(array('colspan' => 2, 'id' => 'listcontrols'), $this->gettext('select') .":&nbsp;&nbsp;". $select_all ."&nbsp;&nbsp;". $select_invert ."&nbsp;&nbsp;". $select_none);
 				$table->add_row();
 
-				$enable_button = html::img(array('src' => $attrib['enableicon'], 'alt' => $this->gettext('enabled'), 'border' => 0));
-				$disable_button = html::img(array('src' => $attrib['disableicon'], 'alt' => $this->gettext('disabled'), 'border' => 0));
-
 				$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table', 'cellspacing' => '0', 'cols' => 2));
 				$lang_table->add_header(array('colspan' => 2), $this->gettext('language'));
-				$lang_table->set_row_attribs(array('style' => 'display: none;'));
-				$lang_table->add(array('id' => 'enable_button'), $enable_button);
-				$lang_table->add(array('id' => 'disable_button'), $disable_button);
 
 				if ($this->user_prefs['ok_locales'] == "all")
 					$ok_locales = array_keys($rcmail->config->get('sauserprefs_languages'));
@@ -575,14 +569,10 @@ class sauserprefs extends rcube_plugin
 
 				$i = 0;
 				foreach ($rcmail->config->get('sauserprefs_languages') as $lang_code => $name) {
-					if (in_array($lang_code, $ok_locales)) {
-						$button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.enabled', 'label' => '{[button]}'));
-						$button = str_replace('[{[button]}]', $enable_button, $button);
-					}
-					else {
-						$button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.disabled', 'label' => '{[button]}'));
-						$button = str_replace('[{[button]}]', $disable_button, $button);
-					}
+					if (in_array($lang_code, $ok_locales))
+						$button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => 'enabled', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.enabled', 'content' => ' '));
+					else
+						$button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => 'disabled', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.disabled', 'content' => ' '));
 
 					$input_spamlang = new html_checkbox(array('style' => 'display: none;', 'name' => '_spamlang[]', 'value' => $lang_code));
 
@@ -925,8 +915,8 @@ class sauserprefs extends rcube_plugin
 
 		$address_table->add(array('class' => $field), $fieldtxt);
 		$address_table->add(array('class' => 'email'), $value);
-		$del_button = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'image', 'image' => $attrib['deleteicon'], 'alt' => 'delete', 'title' => 'delete'));
-		$address_table->add('control', '&nbsp;' . $del_button . $hidden_action->show() . $hidden_field->show() . $hidden_text->show());
+		$del_button = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'link', 'class' => 'delete', 'label' => 'delete', 'content' => ' '));
+		$address_table->add('control', $del_button . $hidden_action->show() . $hidden_field->show() . $hidden_text->show());
 
 		return $address_table;
 	}

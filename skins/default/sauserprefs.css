@@ -43,6 +43,31 @@ body.spam-langs-table
   vertical-align: middle;
 }
 
+#spam-langs-table td.tick a,
+#address-rules-table td.control a
+{
+  display: block;
+  float: right;
+  width: 16px;
+  height: 16px;
+  background-image: url(icons.png);
+}
+
+#address-rules-table td.control a.delete
+{
+  background-position: 0 0;
+}
+
+#spam-langs-table td.tick a.enabled
+{
+  background-position: 0 -18px;
+}
+
+#spam-langs-table td.tick a.disabled
+{
+  background-position: 0 -36px;
+}
+
 .whitelist_from,
 .whitelist_to
 {
