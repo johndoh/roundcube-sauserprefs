@@ -185,15 +185,15 @@ if (window.rcmail) {
 			}, true);
 
 			rcmail.register_command('plugin.sauserprefs.import_whitelist', function(props, obj) {
-				rcmail.set_busy(true, 'sauserprefs.importingaddresses');
-				rcmail.http_request('plugin.sauserprefs.whitelist_import', '', true);
+				rcmail.env.sauserprefs_whitelist = rcmail.set_busy(true, 'sauserprefs.importingaddresses');
+				rcmail.http_request('plugin.sauserprefs.whitelist_import', '', rcmail.env.sauserprefs_whitelist);
 				return false;
 			}, true);
 
 			rcmail.register_command('plugin.sauserprefs.purge_bayes', function(props, obj) {
 				if (confirm(rcmail.gettext('purgebayesconfirm','sauserprefs'))) {
-					rcmail.set_busy(true, 'sauserprefs.purgingbayes');
-					rcmail.http_request('plugin.sauserprefs.purge_bayes', '', true);
+					var lock = rcmail.set_busy(true, 'sauserprefs.purgingbayes');
+					rcmail.http_request('plugin.sauserprefs.purge_bayes', '', lock);
 				}
 
 				return false;
@@ -394,7 +394,7 @@ rcmail.sauserprefs_toggle_bayes_auto = function(checkbox) {
 }
 
 rcmail.sauserprefs_addressrule_import = function(address) {
-	parent.rcmail.set_busy(false);
+	parent.rcmail.set_busy(false, null, rcmail.env.sauserprefs_whitelist);
 
 	var adrTable = rcube_find_object('address-rules-table').tBodies[0];
 
