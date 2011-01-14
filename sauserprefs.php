@@ -5,7 +5,7 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
- * @version 1.5
+ * @version 1.6
  * @author Philip Weir
  */
 class sauserprefs extends rcube_plugin
@@ -17,6 +17,7 @@ class sauserprefs extends rcube_plugin
 	private $global_prefs;
 	private $user_prefs;
 	private $addressbook = '0';
+	private $sa_locales = array('en', 'ja', 'ko', 'ru', 'th', 'zh');
 
 	function init()
 	{
@@ -162,10 +163,16 @@ class sauserprefs extends rcube_plugin
 				if (!isset($no_override['rewrite_header Subject']))
 					$new_prefs['rewrite_header Subject'] = $_POST['_spamsubject'];
 
-				if (!isset($no_override['ok_locales']) && !isset($no_override['ok_languages'])) {
-					$new_prefs['ok_locales'] = is_array($_POST['_spamlang']) ? implode(" ", $_POST['_spamlang']) : '';
-					$new_prefs['ok_languages'] = $new_prefs['ok_locales'];
+				if (!isset($no_override['ok_locales'])) {
+					$new_prefs['ok_locales'] = '';
+					if (is_array($_POST['_spamlang'])) {
+						$locales = array_intersect($_POST['_spamlang'], $this->sa_locales);
+						$new_prefs['ok_locales'] = implode(" ", $locales);
+					}
 				}
+
+				if (!isset($no_override['ok_languages']))
+					$new_prefs['ok_languages'] = is_array($_POST['_spamlang']) ? implode(" ", $_POST['_spamlang']) : '';
 
 				break;
 
@@ -547,7 +554,7 @@ class sauserprefs extends rcube_plugin
 			if (!empty($data))
 				$out .= html::tag('fieldset', null, html::tag('legend', null, Q($this->gettext('mainoptions'))) . $data);
 
-			if (!isset($no_override['ok_languages']) && !isset($no_override['ok_locales'])) {
+			if (!isset($no_override['ok_languages']) || !isset($no_override['ok_locales'])) {
 				$data = html::p(null, Q($this->gettext('spamlangexp')));
 
 				$table = new html_table(array('class' => 'langprefstable', 'cols' => 2));
@@ -562,14 +569,32 @@ class sauserprefs extends rcube_plugin
 				$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table', 'cellspacing' => '0', 'cols' => 2));
 				$lang_table->add_header(array('colspan' => 2), $this->gettext('language'));
 
-				if ($this->user_prefs['ok_locales'] == "all")
-					$ok_locales = array_keys($rcmail->config->get('sauserprefs_languages'));
-				else
-					$ok_locales = explode(" ", $this->user_prefs['ok_locales']);
+				if (!isset($no_override['ok_locales'])) {
+					if ($this->user_prefs['ok_locales'] == "all")
+						$ok_locales = $this->sa_locales;
+					else
+						$ok_locales = explode(" ", $this->user_prefs['ok_locales']);
+				}
+				else {
+					$ok_locales = array();
+				}
+
+				if (!isset($no_override['ok_languages'])) {
+					if ($this->user_prefs['ok_languages'] == "all")
+						$ok_languages = array_keys($rcmail->config->get('sauserprefs_languages'));
+					else
+						$ok_languages = explode(" ", $this->user_prefs['ok_languages']);
+				}
+				else {
+					$tmp_array = $rcmail->config->get('sauserprefs_languages');
+					$rcmail->config->set('sauserprefs_languages', array_intersect_key($tmp_array, array_flip($this->sa_locales)));
+					$ok_languages = array();
+				}
 
 				$i = 0;
+				$locales_langs = array_merge($ok_locales, $ok_languages);
 				foreach ($rcmail->config->get('sauserprefs_languages') as $lang_code => $name) {
-					if (in_array($lang_code, $ok_locales))
+					if (in_array($lang_code, $locales_langs))
 						$button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => 'enabled', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.enabled', 'content' => ' '));
 					else
 						$button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => 'disabled', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.disabled', 'content' => ' '));
@@ -577,7 +602,7 @@ class sauserprefs extends rcube_plugin
 					$input_spamlang = new html_checkbox(array('style' => 'display: none;', 'name' => '_spamlang[]', 'value' => $lang_code));
 
 					$lang_table->add('lang', $name);
-					$lang_table->add('tick', $button . $input_spamlang->show(in_array($lang_code, $ok_locales) ? $lang_code : ''));
+					$lang_table->add('tick', $button . $input_spamlang->show(in_array($lang_code, $locales_langs) ? $lang_code : ''));
 
 					$i++;
 				}

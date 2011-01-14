@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2011 01 14
+==========
+ * Seperate ok_locales and ok_langs
+
 2010 08 09
 ==========
  * Update hooks (r3883)
