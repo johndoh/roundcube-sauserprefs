@@ -7,11 +7,9 @@ if (window.rcmail) {
 		var tab = $('<span>').attr('id', 'settingstabpluginsauserprefs').addClass('tablink');
 
 		var button = $('<a>').attr('href', rcmail.env.comm_path+'&_action=plugin.sauserprefs').html(rcmail.gettext('sauserprefs','sauserprefs')).appendTo(tab);
-		button.bind('click', function(e) { return rcmail.command('plugin.sauserprefs', this) });
 
 		// add button and register command
 		rcmail.add_element(tab, 'tabs');
-		rcmail.register_command('plugin.sauserprefs', function() { rcmail.goto_url('plugin.sauserprefs') }, true);
 
 		if (rcmail.env.action == 'plugin.sauserprefs.edit') {
 			rcmail.register_command('plugin.sauserprefs.select_all_langs', function() {

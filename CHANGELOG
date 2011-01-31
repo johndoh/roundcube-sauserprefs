@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2011 01 31
+==========
+ * Fix double request when clicking on tab using Firefox (from r4472)
+
 2011 01 14
 ==========
  * Seperate ok_locales and ok_langs
