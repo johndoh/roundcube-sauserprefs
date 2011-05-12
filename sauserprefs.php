@@ -255,8 +255,10 @@ class sauserprefs extends rcube_plugin
 
 						$result = $this->db->affected_rows();
 
-						if (!$result)
+						if (!$result) {
+							write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
 							break;
+						}
 					}
 					elseif ($act == "INSERT") {
 						$result = false;
@@ -269,8 +271,10 @@ class sauserprefs extends rcube_plugin
 
 						$result = $this->db->affected_rows();
 
-						if (!$result)
+						if (!$result) {
+							write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
 							break;
+						}
 					}
 				}
 
@@ -290,8 +294,10 @@ class sauserprefs extends rcube_plugin
 
 				$result = $this->db->affected_rows();
 
-				if (!$result)
+				if (!$result) {
+					write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($preference) . '" for "' . $_SESSION['username']);
 					break;
+				}
 			}
 			elseif (array_key_exists($preference, $this->user_prefs) && $value != $this->user_prefs[$preference]) {
 				$result = false;
@@ -305,8 +311,10 @@ class sauserprefs extends rcube_plugin
 
 				$result = $this->db->affected_rows();
 
-				if (!$result)
+				if (!$result) {
+					write_log('errors', 'sauserprefs error: cannot update "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
 					break;
+				}
 			}
 			elseif (!array_key_exists($preference, $this->user_prefs) && $value != $this->global_prefs[$preference]) {
 				$result = false;
@@ -319,8 +327,10 @@ class sauserprefs extends rcube_plugin
 
 				$result = $this->db->affected_rows();
 
-				if (!$result)
+				if (!$result) {
+					write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
 					break;
+				}
 			}
 		}
 
