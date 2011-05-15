@@ -3,6 +3,7 @@
 
 $labels = array();
 $labels['sauserprefs']  = 'Spam';
+$labels['managespam']  = 'Manage spam detection settings';
 $labels['sauserprefssettings']  = 'Spam settings';
 $labels['spamgeneralsettings']  = 'General Settings';
 $labels['spamthres']  = 'Score threshold';

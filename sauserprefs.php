@@ -28,7 +28,7 @@ class sauserprefs extends rcube_plugin
 			$this->addressbook = $rcmail->config->get('sauserprefs_whitelist_abook_id');
 
 		if ($rcmail->task == 'settings') {
-			$this->add_texts('localization/', array('sauserprefs'));
+			$this->add_texts('localization/', array('sauserprefs', 'managespam'));
 
 			$this->sections = array(
 				'general' => array('id' => 'general', 'section' => $this->gettext('spamgeneralsettings')),

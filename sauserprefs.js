@@ -5,8 +5,7 @@
 if (window.rcmail) {
 	rcmail.addEventListener('init', function(evt) {
 		var tab = $('<span>').attr('id', 'settingstabpluginsauserprefs').addClass('tablink');
-
-		var button = $('<a>').attr('href', rcmail.env.comm_path+'&_action=plugin.sauserprefs').html(rcmail.gettext('sauserprefs','sauserprefs')).appendTo(tab);
+		var button = $('<a>').attr('href', rcmail.env.comm_path+'&_action=plugin.sauserprefs').attr('title', rcmail.gettext('managespam', 'sauserprefs')).html(rcmail.gettext('sauserprefs','sauserprefs')).appendTo(tab);
 
 		// add button and register command
 		rcmail.add_element(tab, 'tabs');
