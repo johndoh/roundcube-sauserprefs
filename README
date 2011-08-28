@@ -62,3 +62,20 @@ be a problem with the database connection. Try adding ?new_link=true to the end
 of the sauserprefs DSN in the config file. For example:
 $rcmail_config['sauserprefs_db_dsnw'] =
 'mysql://username:password@localhost/database?new_link=true';
+
+sauserprefs_save hook
+=====================
+Before prefs are saved to the database the plugin hook sauserprefs_save is
+executed, this allows you to perform any custom actions like extra validation
+or setting specific values.
+Arguments:
+  * section: (string) current prefs section
+  * cur_prefs: (array) the current user preferences
+  * new_prefs: (array) the new preferences
+  * global_prefs: (array) the global preferences
+
+Return:
+  * new_prefs: (array) the new preferences
+  * abort: (boolean) if true the prefs will not be saved
+  * message: (string) optional reason why the prefs were not saved which will be
+    shown to the user

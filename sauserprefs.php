@@ -248,100 +248,109 @@ class sauserprefs extends rcube_plugin
 				break;
 		}
 
-		// save prefs (other than address rules to db)
-		foreach ($new_prefs as $preference => $value) {
-			if ($preference == 'addresses') {
-				foreach ($value as $address) {
-					if ($address['action'] == "DELETE") {
-						$result = false;
+		// allow additional actions before prefs are saved
+		$data = $rcmail->plugins->exec_hook('sauserprefs_save', array(
+			'section' => $this->cur_section, 'cur_prefs' => $this->user_prefs, 'new_prefs' => $new_prefs, 'global_prefs' => $this->global_prefs));
 
-						$this->db->query(
-							"DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-							WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-							AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($address['field']) ."'
-							AND    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $address['value'] . "';"
-							);
+		if (!$data['abort']) {
+			// save prefs
+			foreach ($data['new_prefs'] as $preference => $value) {
+				if ($preference == 'addresses') {
+					foreach ($value as $address) {
+						if ($address['action'] == "DELETE") {
+							$result = false;
 
-						$result = $this->db->affected_rows();
+							$this->db->query(
+								"DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+								WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
+								AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($address['field']) ."'
+								AND    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $address['value'] . "';"
+								);
 
-						if (!$result) {
-							write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
-							break;
+							$result = $this->db->affected_rows();
+
+							if (!$result) {
+								write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
+								break;
+							}
+						}
+						elseif ($address['action'] == "INSERT") {
+							$result = false;
+
+							$this->db->query(
+								"INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+								(".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
+								VALUES ('". $_SESSION['username']. "', '". $this->_map_pref_name($address['field']) . "', '". $address['value'] ."')"
+								);
+
+							$result = $this->db->affected_rows();
+
+							if (!$result) {
+								write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
+								break;
+							}
 						}
 					}
-					elseif ($address['action'] == "INSERT") {
-						$result = false;
+				}
+				elseif (array_key_exists($preference, $this->user_prefs) && ($value == "" || $value == $this->global_prefs[$preference])) {
+					$result = false;
 
-						$this->db->query(
-							"INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-							(".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
-							VALUES ('". $_SESSION['username']. "', '". $this->_map_pref_name($address['field']) . "', '". $address['value'] ."')"
-							);
+					$this->db->query(
+						"DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+						WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
+						AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($preference) ."';"
+						);
 
-						$result = $this->db->affected_rows();
+					$result = $this->db->affected_rows();
 
-						if (!$result) {
-							write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
-							break;
-						}
+					if (!$result) {
+						write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($preference) . '" for "' . $_SESSION['username']);
+						break;
+					}
+				}
+				elseif (array_key_exists($preference, $this->user_prefs) && $value != $this->user_prefs[$preference]) {
+					$result = false;
+
+					$this->db->query(
+						"UPDATE ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+						SET    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $value ."'
+						WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
+						AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($preference) ."';"
+						);
+
+					$result = $this->db->affected_rows();
+
+					if (!$result) {
+						write_log('errors', 'sauserprefs error: cannot update "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
+						break;
+					}
+				}
+				elseif (!array_key_exists($preference, $this->user_prefs) && $value != $this->global_prefs[$preference]) {
+					$result = false;
+
+					$this->db->query(
+						"INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
+						(".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
+						VALUES ('". $_SESSION['username'] ."', '". $this->_map_pref_name($preference) ."', '". $value ."')"
+						);
+
+					$result = $this->db->affected_rows();
+
+					if (!$result) {
+						write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
+						break;
 					}
 				}
 			}
-			elseif (array_key_exists($preference, $this->user_prefs) && ($value == "" || $value == $this->global_prefs[$preference])) {
-				$result = false;
 
-				$this->db->query(
-					"DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-					WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-					AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($preference) ."';"
-					);
-
-				$result = $this->db->affected_rows();
-
-				if (!$result) {
-					write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($preference) . '" for "' . $_SESSION['username']);
-					break;
-				}
-			}
-			elseif (array_key_exists($preference, $this->user_prefs) && $value != $this->user_prefs[$preference]) {
-				$result = false;
-
-				$this->db->query(
-					"UPDATE ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-					SET    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $value ."'
-					WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-					AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($preference) ."';"
-					);
-
-				$result = $this->db->affected_rows();
-
-				if (!$result) {
-					write_log('errors', 'sauserprefs error: cannot update "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
-					break;
-				}
-			}
-			elseif (!array_key_exists($preference, $this->user_prefs) && $value != $this->global_prefs[$preference]) {
-				$result = false;
-
-				$this->db->query(
-					"INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-					(".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
-					VALUES ('". $_SESSION['username'] ."', '". $this->_map_pref_name($preference) ."', '". $value ."')"
-					);
-
-				$result = $this->db->affected_rows();
-
-				if (!$result) {
-					write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
-					break;
-				}
-			}
+			if ($result)
+				$this->api->output->command('display_message', $this->gettext('sauserprefchanged'), 'confirmation');
+			else
+				$this->api->output->command('display_message', $this->gettext('sauserpreffailed'), 'error');
 		}
-
-		if ($result)
-			$this->api->output->command('display_message', $this->gettext('sauserprefchanged'), 'confirmation');
-		else
-			$this->api->output->command('display_message', $this->gettext('sauserpreffailed'), 'error');
+		else {
+				$this->api->output->command('display_message', $data['message'] ? $data['message'] : $this->gettext('sauserpreffailed'), 'error');
+		}
 
 		// go to next step
 		rcmail_overwrite_action('plugin.sauserprefs.edit');

@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2011 08 28
+==========
+ * Add plugin hook sauserprefs_save
+
 2011 01 31
 ==========
  * Fix double request when clicking on tab using Firefox (from r4472)
