@@ -242,15 +242,24 @@ class sauserprefs extends rcube_plugin
 				$prefs = $_POST['_address_rule_field'];
 				$vals = $_POST['_address_rule_value'];
 
-				foreach ($acts as $idx => $act){
-					if ($act == "DELETE") {
+				foreach ($acts as $idx => $act)
+					$new_prefs['addresses'][] = array('field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act);
+
+				break;
+		}
+
+		// save prefs (other than address rules to db)
+		foreach ($new_prefs as $preference => $value) {
+			if ($preference == 'addresses') {
+				foreach ($value as $address) {
+					if ($address['action'] == "DELETE") {
 						$result = false;
 
 						$this->db->query(
 							"DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ."
 							WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-							AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($prefs[$idx]) ."'
-							AND    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $vals[$idx] . "';"
+							AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name($address['field']) ."'
+							AND    ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $address['value'] . "';"
 							);
 
 						$result = $this->db->affected_rows();
@@ -260,13 +269,13 @@ class sauserprefs extends rcube_plugin
 							break;
 						}
 					}
-					elseif ($act == "INSERT") {
+					elseif ($address['action'] == "INSERT") {
 						$result = false;
 
 						$this->db->query(
 							"INSERT INTO ". $rcmail->config->get('sauserprefs_sql_table_name') ."
 							(".$rcmail->config->get('sauserprefs_sql_username_field').", ".$rcmail->config->get('sauserprefs_sql_preference_field').", ".$rcmail->config->get('sauserprefs_sql_value_field').")
-							VALUES ('". $_SESSION['username']. "', '". $this->_map_pref_name($prefs[$idx]) . "', '". $vals[$idx] ."')"
+							VALUES ('". $_SESSION['username']. "', '". $this->_map_pref_name($address['field']) . "', '". $address['value'] ."')"
 							);
 
 						$result = $this->db->affected_rows();
@@ -277,13 +286,8 @@ class sauserprefs extends rcube_plugin
 						}
 					}
 				}
-
-				break;
-		}
-
-		// save prefs (other than address rules to db)
-		foreach ($new_prefs as $preference => $value) {
-			if (array_key_exists($preference, $this->user_prefs) && ($value == "" || $value == $this->global_prefs[$preference])) {
+			}
+			elseif (array_key_exists($preference, $this->user_prefs) && ($value == "" || $value == $this->global_prefs[$preference])) {
 				$result = false;
 
 				$this->db->query(
@@ -479,10 +483,7 @@ class sauserprefs extends rcube_plugin
 		$sql_result = $this->db->query(
 			"SELECT ". $rcmail->config->get('sauserprefs_sql_preference_field') .", ". $rcmail->config->get('sauserprefs_sql_value_field') ."
 			FROM   ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-			WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $user ."'
-			AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'whitelist_from'
-			AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'blacklist_from'
-			AND    ". $rcmail->config->get('sauserprefs_sql_preference_field') ." <> 'whitelist_to';"
+			WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $user ."';"
 			);
 
 		while ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result))) {
@@ -490,7 +491,12 @@ class sauserprefs extends rcube_plugin
 			$pref_name = $this->_map_pref_name($pref_name, true);
 			$pref_value = $sql_arr[$rcmail->config->get('sauserprefs_sql_value_field')];
 
-			$prefs[$pref_name] = $pref_value;
+			if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to') {
+				$prefs['addresses'][] = array('field' => $pref_name, 'value' => $pref_value);
+			}
+			else {
+				$prefs[$pref_name] = $pref_value;
+			}
 
 			// update deprecated prefs in db
 			if ($sql_arr[$rcmail->config->get('sauserprefs_sql_preference_field')] != $this->_map_pref_name($pref_name)) {
@@ -502,6 +508,9 @@ class sauserprefs extends rcube_plugin
 					);
 			}
 		}
+
+		// sort address rules
+		$prefs['addresses'] = $this->_subval_sort($prefs['addresses'], 'value');
 
 		return $prefs;
 	}
@@ -886,31 +895,16 @@ class sauserprefs extends rcube_plugin
 
 			$this->_address_row($address_table, null, null, $attrib);
 
-			$sql_result = $this->db->query(
-				"SELECT ". $rcmail->config->get('sauserprefs_sql_preference_field') .", ". $rcmail->config->get('sauserprefs_sql_value_field') ."
-				FROM   ". $rcmail->config->get('sauserprefs_sql_table_name') ."
-				WHERE  ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."'
-				AND   (". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'whitelist_from'
-				OR     ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'blacklist_from'
-				OR     ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = 'whitelist_to')
-				ORDER BY ". $rcmail->config->get('sauserprefs_sql_value_field') .";"
-				);
-
-			if ($sql_result && $this->db->num_rows($sql_result) > 0)
+			if (sizeof($this->user_prefs['addresses']) > 0)
 				$norules = 'display: none;';
 
 			$address_table->set_row_attribs(array('style' => $norules));
 			$address_table->add(array('colspan' => '3'), rep_specialchars_output($this->gettext('noaddressrules')));
 			$address_table->add_row();
 
-			$this->api->output->set_env('address_rule_count', $this->db->num_rows());
-
-			while ($sql_result && $sql_arr = $this->db->fetch_assoc($sql_result)) {
-				$field = $sql_arr[$rcmail->config->get('sauserprefs_sql_preference_field')];
-				$value = $sql_arr[$rcmail->config->get('sauserprefs_sql_value_field')];
-
-				$this->_address_row($address_table, $field, $value, $attrib);
-			}
+			$this->api->output->set_env('address_rule_count', sizeof($this->user_prefs['addresses']));
+			foreach ($this->user_prefs['addresses'] as $address)
+				$this->_address_row($address_table, $address['field'], $address['value'], $attrib);
 
 			$table->add(array('colspan' => 3), html::div(array('id' => 'address-rules-cont'), $address_table->show()));
 			$table->add_row();
@@ -969,6 +963,22 @@ class sauserprefs extends rcube_plugin
 		}
 
 		return $pref;
+	}
+
+	private function _subval_sort($a, $subkey)
+	{
+		if (sizeof($a) == 0)
+			return array();
+
+		foreach ($a as $k => $v)
+			$b[$k] = strtolower($v[$subkey]);
+
+		asort($b);
+
+		foreach ($b as $k => $v)
+			$c[] = $a[$k];
+
+		return $c;
 	}
 }
 
