@@ -436,6 +436,9 @@ class sauserprefs extends rcube_plugin
 		if ($args['source'] != $this->addressbook && $args['source'] != null)
 			return;
 
+		if (!is_array($args['id']))
+			$args['id'] = array($args['id']);
+
 		$this->_db_connect('w');
 		$contacts = $rcmail->get_address_book($this->addressbook);
 		foreach ($args['id'] as $id) {
