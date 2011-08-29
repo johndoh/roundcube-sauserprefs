@@ -369,8 +369,10 @@ class sauserprefs extends rcube_plugin
 			return;
 
 		$records = $result->records;
-		foreach ($records as $row_data)
-			$this->api->output->command('sauserprefs_addressrule_import', $row_data['email'], '', '');
+		foreach ($records as $row_data) {
+			foreach ($this->_gen_email_arr($row_data) as $email)
+				$this->api->output->command('sauserprefs_addressrule_import', $email, '', '');
+		}
 
 		$contacts->close();
 	}
@@ -442,6 +444,7 @@ class sauserprefs extends rcube_plugin
 			foreach ($emails as $email)
 				$this->db->query("DELETE FROM ". $rcmail->config->get('sauserprefs_sql_table_name') ." WHERE ". $rcmail->config->get('sauserprefs_sql_username_field') ." = '". $_SESSION['username'] ."' AND ". $rcmail->config->get('sauserprefs_sql_preference_field') ." = '". $this->_map_pref_name('whitelist_from') ."' AND ". $rcmail->config->get('sauserprefs_sql_value_field') ." = '". $email ."';");
 		}
+
 		$contacts->close();
 	}
 
