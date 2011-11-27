@@ -994,7 +994,7 @@ class sauserprefs extends rcube_plugin
 
 		foreach ($contact as $key => $value) {
 			if (preg_match('/^email(:(.+))?$/i', $key, $matches)) {
-				foreach ($value as $subkey => $subval) {
+				foreach ((array)$value as $subkey => $subval) {
 					if ($matches[2])
 						$emails[$matches[2] . $subkey] = $subval;
 					else
