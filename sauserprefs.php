@@ -158,21 +158,21 @@ class sauserprefs extends rcube_plugin
 		{
 			case 'general':
 				if (!isset($no_override['required_hits']))
-					$new_prefs['required_hits'] = $_POST['_spamthres'];
+					$new_prefs['required_hits'] = get_input_value('_spamthres', RCUBE_INPUT_POST);
 
 				if (!isset($no_override['rewrite_header Subject']))
-					$new_prefs['rewrite_header Subject'] = $_POST['_spamsubject'];
+					$new_prefs['rewrite_header Subject'] = get_input_value('_spamsubject', RCUBE_INPUT_POST);
 
 				if (!isset($no_override['ok_locales'])) {
 					$new_prefs['ok_locales'] = '';
-					if (is_array($_POST['_spamlang'])) {
-						$locales = array_intersect($_POST['_spamlang'], $this->sa_locales);
+					if (is_array(get_input_value('_spamlang', RCUBE_INPUT_POST))) {
+						$locales = array_intersect(get_input_value('_spamlang', RCUBE_INPUT_POST), $this->sa_locales);
 						$new_prefs['ok_locales'] = implode(" ", $locales);
 					}
 				}
 
 				if (!isset($no_override['ok_languages']))
-					$new_prefs['ok_languages'] = is_array($_POST['_spamlang']) ? implode(" ", $_POST['_spamlang']) : '';
+					$new_prefs['ok_languages'] = is_array(get_input_value('_spamlang', RCUBE_INPUT_POST)) ? implode(" ", get_input_value('_spamlang', RCUBE_INPUT_POST)) : '';
 
 				break;
 
@@ -181,9 +181,9 @@ class sauserprefs extends rcube_plugin
 					$new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : "1";
 
 				if (!isset($no_override['add_header all Level'])) {
-					$spamchar = empty($_POST['_spamlevelchar']) ? "*" : $_POST['_spamlevelchar'];
+					$spamchar = empty($_POST['_spamlevelchar']) ? "*" : get_input_value('_spamlevelchar', RCUBE_INPUT_POST);
 
-					if ($_POST['_spamlevelstars'] == "1") {
+					if (get_input_value('_spamlevelstars', RCUBE_INPUT_POST) == "1") {
 						$new_prefs['add_header all Level'] = "_STARS(". $spamchar .")_";
 						$new_prefs['remove_header all'] = "0";
 					}
@@ -221,10 +221,10 @@ class sauserprefs extends rcube_plugin
 					$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : "1";
 
 				if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
-					$new_prefs['bayes_auto_learn_threshold_nonspam'] = $_POST['_bayesnonspam'];
+					$new_prefs['bayes_auto_learn_threshold_nonspam'] = get_input_value('_bayesnonspam', RCUBE_INPUT_POST);
 
 				if (!isset($no_override['bayes_auto_learn_threshold_spam']))
-					$new_prefs['bayes_auto_learn_threshold_spam'] = $_POST['_bayesspam'];
+					$new_prefs['bayes_auto_learn_threshold_spam'] = get_input_value('_bayesspam', RCUBE_INPUT_POST);
 
 				if (!isset($no_override['use_bayes_rules']))
 					$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : "1";
@@ -233,14 +233,14 @@ class sauserprefs extends rcube_plugin
 
 			case 'report':
 				if (!isset($no_override['report_safe']))
-					$new_prefs['report_safe'] = $_POST['_spamreport'];
+					$new_prefs['report_safe'] = get_input_value('_spamreport', RCUBE_INPUT_POST);
 
 				break;
 
 			case 'addresses':
-				$acts = $_POST['_address_rule_act'];
-				$prefs = $_POST['_address_rule_field'];
-				$vals = $_POST['_address_rule_value'];
+				$acts = get_input_value('_address_rule_act', RCUBE_INPUT_POST);
+				$prefs = get_input_value('_address_rule_field', RCUBE_INPUT_POST);
+				$vals = get_input_value('_address_rule_value', RCUBE_INPUT_POST);
 
 				foreach ($acts as $idx => $act)
 					$new_prefs['addresses'][] = array('field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act);

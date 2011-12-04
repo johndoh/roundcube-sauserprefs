@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2011 12 04
+==========
+ * Use core function to sanitize input
+
 2011 08 28
 ==========
  * Add plugin hook sauserprefs_save
