@@ -104,7 +104,72 @@ body.spam-langs-table
   text-decoration: underline;
 }
 
+table.generalprefstable,
+table.headersprefstable,
+table.testsprefstable,
+table.bayesprefstable,
+table.reportprefstable
+{
+  width: 100%;
+}
+
 table.generalprefstable td.title
 {
-  width: 155px;
+  width: 115px;
+}
+
+table.headersprefstable td.title
+{
+  width: 220px;
+}
+
+table.testsprefstable td.title
+{
+  width: 175px;
+}
+
+table.bayesprefstable td.title
+{
+  width: 220px;
+}
+
+table.reportprefstable td.title
+{
+  width: 320px;
+}
+
+table.generalprefstable td.help,
+table.langprefstable td.help,
+table.headersprefstable td.help,
+table.testsprefstable td.help,
+table.bayesprefstable td.help,
+table.reportprefstable td.help,
+table.addressprefstable td.help
+{
+  text-align: right;
+}
+
+table.addressprefstable td.ruletype
+{
+  width: 180px;
+  padding-bottom: 10px;
+}
+
+table.addressprefstable td.address
+{
+  width: 220px;
+  padding-bottom: 10px;
+}
+
+table.addressprefstable td.action
+{
+  width: 100px;
+  text-align: right;
+  padding-bottom: 10px;
+}
+
+table.langprefstable td.scroller,
+table.addressprefstable td.scroller
+{
+  padding: 0;
 }
