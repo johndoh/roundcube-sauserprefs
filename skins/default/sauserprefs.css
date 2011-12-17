@@ -27,6 +27,16 @@ body.spam-langs-table
   table-layout: fixed;
 }
 
+#address-rules-table thead td.rule
+{
+  width: 180px;
+}
+
+#address-rules-table thead td.control
+{
+  width: 40px;
+}
+
 #spam-langs-table td.lang,
 #address-rules-table td.rule,
 #address-rules-table td.email,

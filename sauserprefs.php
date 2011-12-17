@@ -955,9 +955,9 @@ class sauserprefs extends rcube_plugin
 				$table->add_row();
 
 				$address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table', 'cellspacing' => '0', 'cols' => 3));
-				$address_table->add_header(array('width' => '180px'), $this->gettext('rule'));
-				$address_table->add_header(null, $this->gettext('email'));
-				$address_table->add_header(array('width' => '40px'), '&nbsp;');
+				$address_table->add_header('rule', $this->gettext('rule'));
+				$address_table->add_header('email', $this->gettext('email'));
+				$address_table->add_header('control', '&nbsp;');
 
 				$this->_address_row($address_table, null, null, $attrib);
 
