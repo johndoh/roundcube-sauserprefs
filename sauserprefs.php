@@ -38,7 +38,7 @@ class sauserprefs extends rcube_plugin
 				'report' => array('id' => 'report','section' => $this->gettext('spamreportsettings')),
 				'addresses' => array('id' => 'addresses', 'section' => $this->gettext('spamaddressrules')),
 			);
-			$this->cur_section = rcube_ui::get_input_value('_section', RCUBE_INPUT_GPC);
+			$this->cur_section = rcube_ui::get_input_value('_section', rcube_ui::INPUT_GPC);
 
 			$this->register_action('plugin.sauserprefs', array($this, 'init_html'));
 			$this->register_action('plugin.sauserprefs.edit', array($this, 'init_html'));
@@ -158,21 +158,21 @@ class sauserprefs extends rcube_plugin
 		{
 			case 'general':
 				if (!isset($no_override['required_hits']))
-					$new_prefs['required_hits'] = rcube_ui::get_input_value('_spamthres', RCUBE_INPUT_POST);
+					$new_prefs['required_hits'] = rcube_ui::get_input_value('_spamthres', rcube_ui::INPUT_POST);
 
 				if (!isset($no_override['rewrite_header Subject']))
-					$new_prefs['rewrite_header Subject'] = rcube_ui::get_input_value('_spamsubject', RCUBE_INPUT_POST);
+					$new_prefs['rewrite_header Subject'] = rcube_ui::get_input_value('_spamsubject', rcube_ui::INPUT_POST);
 
 				if (!isset($no_override['ok_locales'])) {
 					$new_prefs['ok_locales'] = '';
-					if (is_array(rcube_ui::get_input_value('_spamlang', RCUBE_INPUT_POST))) {
-						$locales = array_intersect(rcube_ui::get_input_value('_spamlang', RCUBE_INPUT_POST), $this->sa_locales);
+					if (is_array(rcube_ui::get_input_value('_spamlang', rcube_ui::INPUT_POST))) {
+						$locales = array_intersect(rcube_ui::get_input_value('_spamlang', rcube_ui::INPUT_POST), $this->sa_locales);
 						$new_prefs['ok_locales'] = implode(" ", $locales);
 					}
 				}
 
 				if (!isset($no_override['ok_languages']))
-					$new_prefs['ok_languages'] = is_array(rcube_ui::get_input_value('_spamlang', RCUBE_INPUT_POST)) ? implode(" ", rcube_ui::get_input_value('_spamlang', RCUBE_INPUT_POST)) : '';
+					$new_prefs['ok_languages'] = is_array(rcube_ui::get_input_value('_spamlang', rcube_ui::INPUT_POST)) ? implode(" ", rcube_ui::get_input_value('_spamlang', rcube_ui::INPUT_POST)) : '';
 
 				break;
 
@@ -181,9 +181,9 @@ class sauserprefs extends rcube_plugin
 					$new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : "1";
 
 				if (!isset($no_override['add_header all Level'])) {
-					$spamchar = empty($_POST['_spamlevelchar']) ? "*" : rcube_ui::get_input_value('_spamlevelchar', RCUBE_INPUT_POST);
+					$spamchar = empty($_POST['_spamlevelchar']) ? "*" : rcube_ui::get_input_value('_spamlevelchar', rcube_ui::INPUT_POST);
 
-					if (rcube_ui::get_input_value('_spamlevelstars', RCUBE_INPUT_POST) == "1") {
+					if (rcube_ui::get_input_value('_spamlevelstars', rcube_ui::INPUT_POST) == "1") {
 						$new_prefs['add_header all Level'] = "_STARS(". $spamchar .")_";
 						$new_prefs['remove_header all'] = "0";
 					}
@@ -221,10 +221,10 @@ class sauserprefs extends rcube_plugin
 					$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : "1";
 
 				if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
-					$new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_ui::get_input_value('_bayesnonspam', RCUBE_INPUT_POST);
+					$new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_ui::get_input_value('_bayesnonspam', rcube_ui::INPUT_POST);
 
 				if (!isset($no_override['bayes_auto_learn_threshold_spam']))
-					$new_prefs['bayes_auto_learn_threshold_spam'] = rcube_ui::get_input_value('_bayesspam', RCUBE_INPUT_POST);
+					$new_prefs['bayes_auto_learn_threshold_spam'] = rcube_ui::get_input_value('_bayesspam', rcube_ui::INPUT_POST);
 
 				if (!isset($no_override['use_bayes_rules']))
 					$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : "1";
@@ -233,14 +233,14 @@ class sauserprefs extends rcube_plugin
 
 			case 'report':
 				if (!isset($no_override['report_safe']))
-					$new_prefs['report_safe'] = rcube_ui::get_input_value('_spamreport', RCUBE_INPUT_POST);
+					$new_prefs['report_safe'] = rcube_ui::get_input_value('_spamreport', rcube_ui::INPUT_POST);
 
 				break;
 
 			case 'addresses':
-				$acts = rcube_ui::get_input_value('_address_rule_act', RCUBE_INPUT_POST);
-				$prefs = rcube_ui::get_input_value('_address_rule_field', RCUBE_INPUT_POST);
-				$vals = rcube_ui::get_input_value('_address_rule_value', RCUBE_INPUT_POST);
+				$acts = rcube_ui::get_input_value('_address_rule_act', rcube_ui::INPUT_POST);
+				$prefs = rcube_ui::get_input_value('_address_rule_field', rcube_ui::INPUT_POST);
+				$vals = rcube_ui::get_input_value('_address_rule_value', rcube_ui::INPUT_POST);
 
 				foreach ($acts as $idx => $act)
 					$new_prefs['addresses'][] = array('field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act);
