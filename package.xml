@@ -13,8 +13,8 @@
 		<email>roundcube@tehinterweb.co.uk</email>
 		<active>yes</active>
 	</lead>
-	<date>2012-01-15</date>
-	<time>11:36:43</time>
+	<date>2012-01-21</date>
+	<time>11:26:15</time>
 	<version>
 		<release>1.7</release>
 		<api>1.7</api>
@@ -60,8 +60,18 @@
 			<file name="skins/default/iehacks.css" role="data"/>
 			<file name="skins/default/safari.css" role="data"/>
 			<file name="skins/default/sauserprefs.css" role="data"/>
+			<file name="skins/default/tabstyles.css" role="data"/>
 			<file name="skins/default/templates/sauserprefs.html" role="data"/>
 			<file name="skins/default/templates/settingsedit.html" role="data"/>
+			<file name="skins/larry/help.png" role="data"/>
+			<file name="skins/larry/icons.png" role="data"/>
+			<file name="skins/larry/iehacks.css" role="data"/>
+			<file name="skins/larry/listicons.png" role="data"/>
+			<file name="skins/larry/safari.css" role="data"/>
+			<file name="skins/larry/sauserprefs.css" role="data"/>
+			<file name="skins/larry/tabstyles.css" role="data"/>
+			<file name="skins/larry/templates/sauserprefs.html" role="data"/>
+			<file name="skins/larry/templates/settingsedit.html" role="data"/>
 		</dir>
 		<!-- / -->
 	</contents>

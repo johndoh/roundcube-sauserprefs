@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2012 01 21
+==========
+ * Add inital support for Larry
+
 2011 12 04
 ==========
  * Use core function to sanitize input
