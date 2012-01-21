@@ -459,7 +459,7 @@ class sauserprefs extends rcube_plugin
 
 		// check DB connections and exit on failure
 		if ($err_str = $this->db->is_error()) {
-			raise_error(array(
+			rcube_ui::raise_error(array(
 				'code' => 603,
 				'type' => 'db',
 				'message' => $err_str), FALSE, TRUE);
