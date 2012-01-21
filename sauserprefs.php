@@ -29,6 +29,7 @@ class sauserprefs extends rcube_plugin
 
 		if ($rcmail->task == 'settings') {
 			$this->add_texts('localization/', array('sauserprefs', 'managespam'));
+			$this->include_stylesheet($this->local_skin_path() . '/tabstyles.css');
 
 			$this->sections = array(
 				'general' => array('id' => 'general', 'section' => $this->gettext('spamgeneralsettings')),

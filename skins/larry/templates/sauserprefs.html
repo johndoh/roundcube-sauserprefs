@@ -1,0 +1,42 @@
+<roundcube:object name="doctype" value="html5" />
+<html>
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<roundcube:include file="/includes/links.html" />
+<link rel="stylesheet" type="text/css" href="/this/sauserprefs.css" />
+<roundcube:if condition="browser:ie" />
+<link rel="stylesheet" type="text/css" href="/this/iehacks.css" />
+<roundcube:endif />
+<roundcube:if condition="browser:safari" />
+<link rel="stylesheet" type="text/css" href="/this/safari.css" />
+<roundcube:endif />
+</head>
+<body class="noscroll">
+
+<roundcube:include file="/includes/header.html" />
+
+<div id="mainscreen" class="offset">
+
+<roundcube:include file="/includes/settingstabs.html" />
+
+<div id="settings-right">
+
+<div id="sectionslist" class="uibox listbox">
+<div class="scroller">
+	<roundcube:object name="sasectionslist" id="sections-table" class="listing" />
+</div>
+</div>
+
+<div id="preferences-box" class="uibox contentbox">
+<roundcube:object name="saprefsframe" id="preferences-frame" style="width:100%; height:96%" src="/watermark.html" />
+<roundcube:object name="message" id="message" class="statusbar" />
+</div>
+
+</div>
+
+</div>
+
+<roundcube:include file="/includes/footer.html" />
+
+</body>
+</html>
