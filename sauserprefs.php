@@ -941,7 +941,7 @@ class sauserprefs extends rcube_plugin
 				$input_spamaddress = new html_inputfield(array('name' => '_spamaddress', 'id' => $field_id, 'style' => 'width:200px;'));
 
 				$field_id = 'rcmbtn_add_address';
-				$button_addaddress = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_add', 'type' => 'input', 'class' => 'button', 'label' => 'sauserprefs.addrule', 'style' => 'width: 75px;'));
+				$button_addaddress = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_add', 'type' => 'input', 'class' => 'button', 'label' => 'sauserprefs.addrule'));
 
 				$table->add('ruletype', $input_spamaddressrule->show());
 				$table->add('address', $input_spamaddress->show());
