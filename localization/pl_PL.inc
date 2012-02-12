@@ -1,10 +1,13 @@
 <?php
-/* Author: Sylwester Wlodyga */
+/* Author: Bartosz Mierzwiak */
 
 $labels = array();
+$labels['sauserprefs'] = 'Spam';
+$labels['managespam'] = 'Ustawienia wykrywania Spamu';
 $labels['sauserprefssettings'] = 'Ustawienia Spamu';
 $labels['spamgeneralsettings'] = 'Ustawienia Główne';
-$labels['spamsubject'] = 'Załącznik';
+$labels['spamthres'] = 'Próg punktowania';
+$labels['spamsubject'] = 'Znacznik w temacie';
 $labels['spamsubjectblank'] = '(zostaw puste jesli brak)';
 $labels['spamlang'] = 'Język wiadomości';
 $labels['enabled'] = 'Włączony';
@@ -12,6 +15,8 @@ $labels['disabled'] = 'Wyłączony';
 $labels['headers'] = 'Nagłówki Wiadomości';
 $labels['foldheaders'] = 'Zezwalaj na wiele lini w nagłówku';
 $labels['spamlevelstars'] = 'Użyj \'Spam Level\' w nagłówku';
+$labels['spamlevelchar'] = 'Znacznik poziomu spamu';
+$labels['spamtests'] = 'Testy Spamu oparte o internet';
 $labels['userazor1'] = 'Użyj Razor v1';
 $labels['userazor2'] = 'Użyj Razor v2';
 $labels['usepyzor'] = 'Użyj Pyzor';
@@ -30,15 +35,18 @@ $labels['addrule'] = 'Dodaj regułe';
 $labels['rule'] = 'Reguła';
 $labels['importfromaddressbook'] = 'Importuj adresy z książki adresowej';
 $labels['deleteall'] = 'Usuń wszystko';
+$labels['autoscore'] = 'Automatycznie';
 $labels['defaultscore'] = 'Domyślny Wynik';
 $labels['otherscore'] = 'Inny (%s)';
-$labels['usedefault'] = 'Przywruć ustawienia domyślne';
+$labels['usedefault'] = 'Przywróć ustawienia domyślne';
 $labels['langoptions'] = 'Opcje Językowe';
 $labels['bayes'] = 'Ustawienia Bayes';
 $labels['purgingbayes'] = 'Usówanie danych Bayes';
 $labels['purgebayes'] = 'Usówanie osobistych danych Bayes';
 $labels['bayesautolearn'] = 'Użyj Bayes auto lern';
 $labels['bayesautooptions'] = 'Opcje automatycznej nauki';
+$labels['bayesnonspam'] = 'Próg nie spamu';
+$labels['bayesspam'] = 'Próg spamu';
 $labels['bayesrules'] = 'Użyj reguł Bayes';
 $labels['help'] = 'Pomoc';
 
@@ -59,14 +67,20 @@ $messages['spamaddressdelete'] = 'Jesteś pewny(a) że chcesz usunąć tą regu�
 $messages['spamaddressdeleteall'] = 'Jestes pewny(a) że chcesz usunąć wszystkie reguły adresowe?';
 $messages['noaddressrules'] = 'Nie znaleziono reguły adresowej.';
 $messages['importingaddresses'] = 'Wczytywanie adresów...';
-$messages['usedefaultconfirm'] = 'Jesteś pewny(a) że chcesz przywrucić ustawienia domyślne? Usunie to wszystkie Twoje ustaawienia, łącznie z regułami adresacji.';
+$messages['usedefaultconfirm'] = 'Jesteś pewny(a) że chcesz przywrócić ustawienia domyślne? Usunie to wszystkie Twoje ustaawienia, łącznie z regułami adresacji.';
 $messages['purgebayesexp'] = 'Usuń osobiste dane Bayes zgromadzone z Twoich wiadomości';
 $messages['bayesnonspamexp'] = 'Wiadomości z wartością poniżej tego progu będą użyte do poprawienia systemowej detekcji nie-spamu.';
 $messages['bayesspamexp'] = 'Wiadomości z wartością powyżej tego progu będą użyte do poprawienia systemowej detekcji spamu.';
+$messages['bayesautohelp'] = 'Kiedy włączone jest auto-uczenie się filtra słownikowego Bayes, system automatycznie przetworzy wiadomość która prawdopodobnie jest spamem/nie spamem aby ulepszyć filtry skanujące.';
 $messages['bayeshelp'] = 'Klasyfikator Bayesa próbuje zidentyfikować spam patrząc na słowa lub krótkie sekwencje znaków, które są powszechnie spotykane w spamie lub wiadomościach niespamowych.';
 $messages['rblhelp'] = 'Znalezione adresy serwerów zamieszczonych w linkach w hipertekscie, będą sprawdzone z czarną listą serwerów i znanych źródeł spamu.';
-$messages['dcchelp'] = 'DCC inaczej Distributed Checksum Clearinghouse to system serwerów zbierania i liczenia sum kontrolnych milionów wiadomości dziennie. Im większe podobieństwo kontrolne otrzymanej wiadomości jest na liście, tym bardziej prawdopodobne że jest to spam.';
-$messages['pyzhelp'] = 'Pyzor jest to sieciowy system wykrywania i blokowania spamu przy identyfikacji zarysu wiadomości. Zarysy są wytwarzane na wiele różnych sposobów, aby pozwolić na niewielkie różnice w treści wiadomości.';
+$messages['dcchelp'] = 'DCC inaczej Distributed Checksum Clearinghouse, to system serwerów zbierania i liczenia sum kontrolnych milionów wiadomości dziennie. Im większe podobieństwo kontrolne otrzymanej wiadomości jest na liście, tym bardziej prawdopodobne że jest to spam.';
+$messages['pyzhelp'] = 'Pyzor jest to sieciowym systemem wykrywania i blokowania spamu przy identyfikacji zarysu wiadomości. Zarysy są wytwarzane na wiele różnych sposobów, aby pozwolić na niewielkie różnice w treści wiadomości.';
+$messages['raz2help'] = 'Vipul\'s Razor to rozproszona, społecznościowa sieć wykrywająca i filtrująca spam na podstawie zgłoszeń użytkowników. Wykrywanie odbywa się na podstawie sygnatur którymi oznaczane są treści spamu. Znaczniki wiarygodności użytkowników pomagają uwiarygodniać zgłoszenia spamu.';
+$messages['raz1help'] = 'Vipul\'s Razor to rozproszona, społecznościowa sieć wykrywająca i filtrująca spam na podstawie zgłoszeń użytkowników. Wykrywanie odbywa się na podstawie sygnatur którymi oznaczane są treści spamu. Znaczniki wiarygodności użytkowników pomagają uwiarygodniać zgłoszenia spamu. Wersja 1 została zastąpiona przez wersję 2 i nie jest już wspierana.';
+$messages['levelhelp'] = 'Nagłówek \'Poziom Spamu\' może zostać dodany do wiadomości aby uwidocznić punktację jaka otrzymała wiadmość, Znacznik zostanie powtórzony tyle razy ile punktów otrzymała wiadomość. Może to być pomocne przy następnych przetwarzaniach wiadomości.';
+$messages['foldhelp'] = 'Czy zawijać nagłówki dodane przez SpamAssassina? Inaczej mówiąc czy mają być łamane w wielu liniach czy też pozostawione jako jedna długa linia. Kiedy linia jest dzielona zostaje oznaczona jako kontynuacja poprzedniej linii.';
+$messages['bayesruleshlp'] = 'Słownikowy filtr Bayesa przed efektywnym użyciem musi przejść proces "trenowania" aby poprawnie wykrywać spam/nie spam. Wyłączenie reguł filtra Bayesa pozwoli systemowi na "uczenie" się zarówno automatycznie jak i ręcznie z nadchodzących wiadomości, ale wyniki działania filtrów nie będą używane do wykrywania spamu.';
 $messages['purgebayesconfirm'] = 'Czy napewno usunąć wszystkie dane Bayes?';
 
 ?>
