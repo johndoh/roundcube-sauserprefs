@@ -21,7 +21,7 @@ class sauserprefs extends rcube_plugin
 
 	function init()
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 		$this->load_config();
 
 		if ($rcmail->config->get('sauserprefs_whitelist_abook_id', false))
@@ -62,7 +62,7 @@ class sauserprefs extends rcube_plugin
 
 		$this->api->output->set_pagetitle($this->gettext('sauserprefssettings'));
 
-		if (rcmail::get_instance()->action == 'plugin.sauserprefs.edit') {
+		if (rcube::get_instance()->action == 'plugin.sauserprefs.edit') {
 			$this->user_prefs = array_merge($this->global_prefs, $this->user_prefs);
 			$this->api->output->add_handler('userprefs', array($this, 'gen_form'));
 			$this->api->output->add_handler('sectionname', array($this, 'prefs_section_name'));
@@ -77,7 +77,7 @@ class sauserprefs extends rcube_plugin
 
 	function section_list($attrib)
 	{
-		$no_override = array_flip(rcmail::get_instance()->config->get('sauserprefs_dont_override'));
+		$no_override = array_flip(rcube::get_instance()->config->get('sauserprefs_dont_override'));
 
 		// add id to message list table if not specified
 		if (!strlen($attrib['id']))
@@ -145,7 +145,7 @@ class sauserprefs extends rcube_plugin
 
 	function save()
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 		$this->_db_connect('r');
 		$this->_load_global_prefs();
 		$this->_load_user_prefs();
@@ -270,7 +270,7 @@ class sauserprefs extends rcube_plugin
 							$result = $this->db->affected_rows();
 
 							if (!$result) {
-								rcmail::write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
+								rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
 								break;
 							}
 						}
@@ -286,7 +286,7 @@ class sauserprefs extends rcube_plugin
 							$result = $this->db->affected_rows();
 
 							if (!$result) {
-								rcmail::write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
+								rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $_SESSION['username']);
 								break;
 							}
 						}
@@ -304,7 +304,7 @@ class sauserprefs extends rcube_plugin
 					$result = $this->db->affected_rows();
 
 					if (!$result) {
-						rcmail::write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($preference) . '" for "' . $_SESSION['username']);
+						rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $this->_map_pref_name($preference) . '" for "' . $_SESSION['username']);
 						break;
 					}
 				}
@@ -321,7 +321,7 @@ class sauserprefs extends rcube_plugin
 					$result = $this->db->affected_rows();
 
 					if (!$result) {
-						rcmail::write_log('errors', 'sauserprefs error: cannot update "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
+						rcube::write_log('errors', 'sauserprefs error: cannot update "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
 						break;
 					}
 				}
@@ -337,7 +337,7 @@ class sauserprefs extends rcube_plugin
 					$result = $this->db->affected_rows();
 
 					if (!$result) {
-						rcmail::write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
+						rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $this->_map_pref_name($preference) . '" = "' .  $value . '" for ' . $_SESSION['username']);
 						break;
 					}
 				}
@@ -360,7 +360,7 @@ class sauserprefs extends rcube_plugin
 
 	function whitelist_import()
 	{
-		$contacts = rcmail::get_instance()->get_address_book($this->addressbook);
+		$contacts = rcube::get_instance()->get_address_book($this->addressbook);
 		$contacts->set_page(1);
 		$contacts->set_pagesize(99999);
 		$result = $contacts->list_records(null, 0, true);
@@ -379,7 +379,7 @@ class sauserprefs extends rcube_plugin
 
 	function purge_bayes()
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 
 		if (strlen($rcmail->config->get('sauserprefs_bayes_delete_query')) == 0) {
 			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
@@ -405,7 +405,7 @@ class sauserprefs extends rcube_plugin
 
 	function contact_add($args)
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 
 		// only works with specified address book
 		if ($args['source'] != $this->addressbook && $args['source'] != null)
@@ -430,7 +430,7 @@ class sauserprefs extends rcube_plugin
 
 	function contact_delete($args)
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 
 		// only works with specified address book
 		if ($args['source'] != $this->addressbook && $args['source'] != null)
@@ -453,13 +453,13 @@ class sauserprefs extends rcube_plugin
 
 	private function _db_connect($mode)
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 		$this->db = new rcube_mdb2($rcmail->config->get('sauserprefs_db_dsnw'), $rcmail->config->get('sauserprefs_db_dsnr'), $rcmail->config->get('sauserprefs_db_persistent'));
 		$this->db->db_connect($mode);
 
 		// check DB connections and exit on failure
 		if ($err_str = $this->db->is_error()) {
-			rcmail::raise_error(array(
+			rcube::raise_error(array(
 				'code' => 603,
 				'type' => 'db',
 				'message' => $err_str), FALSE, TRUE);
@@ -468,7 +468,7 @@ class sauserprefs extends rcube_plugin
 
 	private function _load_global_prefs()
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 		$this->global_prefs = $this->_load_prefs($rcmail->config->get('sauserprefs_global_userid'));
 		$this->global_prefs = array_merge($rcmail->config->get('sauserprefs_default_prefs'), $this->global_prefs);
 	}
@@ -480,7 +480,7 @@ class sauserprefs extends rcube_plugin
 
 	private function _load_prefs($user)
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 		$prefs = array();
 
 		$sql_result = $this->db->query(
@@ -520,7 +520,7 @@ class sauserprefs extends rcube_plugin
 
 	private function _prefs_block($part, $attrib)
 	{
-		$rcmail = rcmail::get_instance();
+		$rcmail = rcube::get_instance();
 		$no_override = array_flip($rcmail->config->get('sauserprefs_dont_override'));
 		$locale_info = localeconv();
 
@@ -1019,7 +1019,7 @@ class sauserprefs extends rcube_plugin
 
 	private function _map_pref_name($pref, $reverse = false)
 	{
-		$prefs_map = rcmail::get_instance()->config->get('sauserprefs_deprecated_prefs', array());
+		$prefs_map = rcube::get_instance()->config->get('sauserprefs_deprecated_prefs', array());
 		if (!$reverse) {
 			if (array_key_exists($pref, $prefs_map))
 				$pref = $prefs_map[$pref];
