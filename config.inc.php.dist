@@ -77,7 +77,7 @@ $rcmail_config['sauserprefs_score_inc'] = 1;
 
 // delete user bayesian data stored in database
 // the query can contain the following macros that will be expanded as follows:
-//      %u is replaced with the username (from the session info)
+//      %u is replaced with the username from the sauserprefs_userid setting above
 // use an array to run multiple queries
 // eg. $rcmail_config['sauserprefs_bayes_delete_query'] = array(
 //												'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
