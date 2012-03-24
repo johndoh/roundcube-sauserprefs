@@ -28,6 +28,13 @@ $rcmail_config['sauserprefs_sql_preference_field'] = "preference";
 // name of the value field in the user prefs table, holds the value of the preference
 $rcmail_config['sauserprefs_sql_value_field'] = "value";
 
+// username of the current user in the database, normaly %u (username from the session info)
+//      %u is replaced with the username (from the session info)
+//      %l is replaced with the local part of the username (if the username is an email address)
+//      %d is replaced with the domain part of the username (if the username is an email address or default mail domain if not)
+//      %i is replaced with the email address from the user's default identity
+$rcmail_config['sauserprefs_userid'] = "%u";
+
 // username of the "global" or default settings user in the database, normaly $GLOBAL or @GLOBAL
 $rcmail_config['sauserprefs_global_userid'] = "\$GLOBAL";
 

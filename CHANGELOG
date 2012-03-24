@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2012 03 24
+==========
+ * Make username configurable
+
 2012 01 21
 ==========
  * Add inital support for Larry
