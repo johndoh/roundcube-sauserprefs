@@ -1,6 +1,12 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2012 04 08
+==========
+ * Make storage class to handle SQL work
+ * Add new config option sauserprefs_bayes_delete to seperate function from SQL
+ * Remove sauserprefs_deprecated_prefs config option
+
 2012 03 24
 ==========
  * Make username configurable

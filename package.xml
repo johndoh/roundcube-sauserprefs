@@ -13,11 +13,11 @@
 		<email>roundcube@tehinterweb.co.uk</email>
 		<active>yes</active>
 	</lead>
-	<date>2012-01-22</date>
-	<time>10:42:53</time>
+	<date>2012-04-08</date>
+	<time>10:19:14</time>
 	<version>
-		<release>1.8</release>
-		<api>1.8</api>
+		<release>1.9</release>
+		<api>1.9</api>
 	</version>
 	<stability>
 		<release>stable</release>
@@ -38,6 +38,7 @@
 			<file name="config.inc.php.dist" role="data"/>
 			<file name="CHANGELOG" role="data"/>
 			<file name="README" role="data"/>
+			<file name="include/rcube_sauserprefs_storage.php" role="php"/>
 			<file name="localization/de_CH.inc" role="data"/>
 			<file name="localization/de_DE.inc" role="data"/>
 			<file name="localization/en_GB.inc" role="data"/>

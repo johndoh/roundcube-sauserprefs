@@ -75,6 +75,10 @@ $rcmail_config['sauserprefs_default_prefs'] = array(
 // spam score increment - increment values in the the score threshold drop down by this, from 0 to 10
 $rcmail_config['sauserprefs_score_inc'] = 1;
 
+// allow the user to delete bayesian data
+// please also see sauserprefs_bayes_delete_query option
+$rcmail_config['sauserprefs_bayes_delete'] = false;
+
 // delete user bayesian data stored in database
 // the query can contain the following macros that will be expanded as follows:
 //      %u is replaced with the username from the sauserprefs_userid setting above
@@ -85,11 +89,6 @@ $rcmail_config['sauserprefs_score_inc'] = 1;
 //												'DELETE FROM bayes_vars WHERE username = %u;',
 //												);
 $rcmail_config['sauserprefs_bayes_delete_query'] = '';
-
-// Override old or deprecated preferences: 'old name' => 'new name'
-$rcmail_config['sauserprefs_deprecated_prefs'] = array(
-												'required_hits' => 'required_score'
-											);
 
 // define languages
 $rcmail_config['sauserprefs_languages'] = array(
