@@ -97,7 +97,7 @@ class rcube_sauserprefs_storage
 						$result = $this->db->affected_rows();
 
 						if (!$result) {
-							write_log('errors', 'sauserprefs error: cannot delete "' . sauserprefs::map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $this->sa_user);
+							rcube::write_log('errors', 'sauserprefs error: cannot delete "' . sauserprefs::map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $this->sa_user);
 							break;
 						}
 					}
@@ -117,7 +117,7 @@ class rcube_sauserprefs_storage
 						$result = $this->db->affected_rows();
 
 						if (!$result) {
-							write_log('errors', 'sauserprefs error: cannot insert "' . sauserprefs::map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $this->sa_user);
+							rcube::write_log('errors', 'sauserprefs error: cannot insert "' . sauserprefs::map_pref_name($prefs[$idx]) . '" = "' .  $vals[$idx] . '" for ' . $this->sa_user);
 							break;
 						}
 					}
@@ -136,7 +136,7 @@ class rcube_sauserprefs_storage
 				$result = $this->db->affected_rows();
 
 				if (!$result) {
-					write_log('errors', 'sauserprefs error: cannot delete "' . sauserprefs::map_pref_name($preference) . '" for "' . $this->sa_user);
+					rcube::write_log('errors', 'sauserprefs error: cannot delete "' . sauserprefs::map_pref_name($preference) . '" for "' . $this->sa_user);
 					break;
 				}
 			}
@@ -155,7 +155,7 @@ class rcube_sauserprefs_storage
 				$result = $this->db->affected_rows();
 
 				if (!$result) {
-					write_log('errors', 'sauserprefs error: cannot update "' . sauserprefs::map_pref_name($preference) . '" = "' .  $value . '" for ' . $this->sa_user);
+					rcube::write_log('errors', 'sauserprefs error: cannot update "' . sauserprefs::map_pref_name($preference) . '" = "' .  $value . '" for ' . $this->sa_user);
 					break;
 				}
 			}
@@ -175,7 +175,7 @@ class rcube_sauserprefs_storage
 				$result = $this->db->affected_rows();
 
 				if (!$result) {
-					write_log('errors', 'sauserprefs error: cannot insert "' . sauserprefs::map_pref_name($preference) . '" = "' .  $value . '" for ' . $this->sa_user);
+					rcube::write_log('errors', 'sauserprefs error: cannot insert "' . sauserprefs::map_pref_name($preference) . '" = "' .  $value . '" for ' . $this->sa_user);
 					break;
 				}
 			}
