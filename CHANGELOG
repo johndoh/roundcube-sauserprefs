@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+2012 04 14
+==========
+ * Update for Roundcube framework
+
 2012 04 08
 ==========
  * Make storage class to handle SQL work
