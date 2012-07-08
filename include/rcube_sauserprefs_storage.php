@@ -251,7 +251,7 @@ class rcube_sauserprefs_storage
 	private function _db_connect($mode)
 	{
 		if (!$this->db)
-			$this->db = new rcube_mdb2($this->db_dsnw, $this->db_dsnr, $this->db_persistent);
+			$this->db = rcube_db::factory($this->db_dsnw, $this->db_dsnr, $this->db_persistent);
 
 		$this->db->db_connect($mode);
 
