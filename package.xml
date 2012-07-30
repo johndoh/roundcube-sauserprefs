@@ -13,8 +13,8 @@
 		<email>roundcube@tehinterweb.co.uk</email>
 		<active>yes</active>
 	</lead>
-	<date>2012-04-14</date>
-	<time>11:52:04</time>
+	<date>2012-07-30</date>
+	<time>11:41:13</time>
 	<version>
 		<release>1.10</release>
 		<api>1.10</api>
@@ -54,16 +54,16 @@
 			<file name="localization/ru_RU.inc" role="data"/>
 			<file name="localization/sk_SK.inc" role="data"/>
 			<file name="localization/sv_SE.inc" role="data"/>
-			<file name="skins/default/help.gif" role="data"/>
-			<file name="skins/default/icons.gif" role="data"/>
-			<file name="skins/default/icons.png" role="data"/>
-			<file name="skins/default/ie6hacks.css" role="data"/>
-			<file name="skins/default/iehacks.css" role="data"/>
-			<file name="skins/default/safari.css" role="data"/>
-			<file name="skins/default/sauserprefs.css" role="data"/>
-			<file name="skins/default/tabstyles.css" role="data"/>
-			<file name="skins/default/templates/sauserprefs.html" role="data"/>
-			<file name="skins/default/templates/settingsedit.html" role="data"/>
+			<file name="skins/classic/help.gif" role="data"/>
+			<file name="skins/classic/icons.gif" role="data"/>
+			<file name="skins/classic/icons.png" role="data"/>
+			<file name="skins/classic/ie6hacks.css" role="data"/>
+			<file name="skins/classic/iehacks.css" role="data"/>
+			<file name="skins/classic/safari.css" role="data"/>
+			<file name="skins/classic/sauserprefs.css" role="data"/>
+			<file name="skins/classic/tabstyles.css" role="data"/>
+			<file name="skins/classic/templates/sauserprefs.html" role="data"/>
+			<file name="skins/classic/templates/settingsedit.html" role="data"/>
 			<file name="skins/larry/help.png" role="data"/>
 			<file name="skins/larry/icons.png" role="data"/>
 			<file name="skins/larry/iehacks.css" role="data"/>
