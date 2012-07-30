@@ -1,62 +1,47 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
-2012 04 16
-==========
+ * rename default skin to classic (c40419bdfe)
  * rcube_ui > rcube_utils (r6091)
-
-2012 04 14
-==========
  * Update for Roundcube framework
 
-2012 04 08
-==========
+Version 1.9 (2012-07-07, rc-0.8)
+=================================================
+ * Versoin ready for rc-0.8
+
+Version 1.8 (2012-04-08, rc-0.8)
+=================================================
  * Make storage class to handle SQL work
  * Add new config option sauserprefs_bayes_delete to seperate function from SQL
  * Remove sauserprefs_deprecated_prefs config option
-
-2012 03 24
-==========
  * Make username configurable
 
-2012 01 21
-==========
+Version 1.7 (2012-01-22, rc-0.8)
+=================================================
  * Add inital support for Larry
 
-2011 12 04
-==========
+Version 1.6 (2011-12-04, rc-0.7)
+=================================================
  * Use core function to sanitize input
-
-2011 08 28
-==========
  * Add plugin hook sauserprefs_save
-
-2011 01 31
-==========
  * Fix double request when clicking on tab using Firefox (from r4472)
-
-2011 01 14
-==========
  * Seperate ok_locales and ok_langs
 
-2010 08 09
-==========
+Version 1.5 (2011-01-14, rc-0.5)
+=================================================
  * Update hooks (r3883)
 
-2010 08 01
-==========
+Version 1.4 (2010-08-16, rc-0.4)
+=================================================
  * Update hooks (r3840)
 
-2010 06 19
-==========
+Version 1.3 (2010-08-01, rc-0.4)
+=================================================
  * Skin update after r3757
-
-2009 11 04
-==========
  * Use core config function (WARNING: Complete re-write of config file!)
 
-2009 10 25
-==========
+Version 1.2 (2009-11-04, rc-0.4)
+=================================================
  * Bug fix: remove error message when saving without changes
  * Allow disabling of entire sections via dont_override
  * Allow whitelist to synchronise with any address book
@@ -64,51 +49,24 @@ Roundcube Webmail SAUserPrefs
  * Allow overriding of prefs name in db (deprecated_prefs)
  * Fix localisation of scores
 
-2009 08 29
-==========
+Version 1.0 (2009-09-23, rc-0.3)
+=================================================
  * Added panel for Bayes settings
  * Replace general_settings config option with dont_override
  * Added contextual help
-
-2009 08 04
-==========
  * Re-designed interface to match User Preferences
-
-2009 06 27
-==========
  * Added 'Default Score' option to spam score dropdown
  * Added 'Other' option to spam score dropdown (if value is not in the
    available options)
  * Added ability to restore spam settings to default
  * Remove deprecated pref requred_hits and replace with requred_score
-
-2009 06 07
-==========
  * Swap split() for explode(), PHP 5.3 compatibility
-
-2009 05 31
-==========
  * Added invert message language selection
-
-2009 05 30
-==========
  * Added delete icon
-
-2009 05 24
-==========
  * Added support for plugin template system
  * Removed display_order config var, this is now controlled from the template
-
-2009 05 03
-==========
  * Added new contact add/save/delete hooks
  * Removed need for contact_id field in prefs table
  * Added import and delete all functions for address rules
-
-2009 04 27
-==========
  * Small changes to init functions for when labels are added to UI
-
-Version 1.0-BETA
-=================
  * Translated from sauserprefs patch
