@@ -200,7 +200,7 @@ class rcube_sauserprefs_storage
 							sauserprefs::map_pref_name('whitelist_from'),
 							$email);
 
-			if ($this->db->num_rows($sql_result) == 0)
+			if (!$this->db->fetch_array($sql_result))
 				$this->db->query(
 					"INSERT INTO ". $this->table_name.
 					" (". $this->username_field.
@@ -251,7 +251,7 @@ class rcube_sauserprefs_storage
 	private function _db_connect($mode)
 	{
 		if (!$this->db)
-			$this->db = new rcube_mdb2($this->db_dsnw, $this->db_dsnr, $this->db_persistent);
+			$this->db = rcube_db::factory($this->db_dsnw, $this->db_dsnr, $this->db_persistent);
 
 		$this->db->db_connect($mode);
 
