@@ -307,7 +307,7 @@ class sauserprefs extends rcube_plugin
 	{
 		$rcmail = rcube::get_instance();
 
-		if ($rcmail->config->get('sauserprefs_bayes_delete', false)) {
+		if (!$rcmail->config->get('sauserprefs_bayes_delete', false)) {
 			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
 			return;
 		}
