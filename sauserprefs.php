@@ -235,10 +235,10 @@ class sauserprefs extends rcube_plugin
 				if (!isset($no_override['bayes_auto_learn']))
 					$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : "1";
 
-				if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
+				if (!isset($no_override['bayes_auto_learn_threshold_nonspam']) && !empty($_POST['_bayesnonspam']))
 					$new_prefs['bayes_auto_learn_threshold_nonspam'] = get_input_value('_bayesnonspam', RCUBE_INPUT_POST);
 
-				if (!isset($no_override['bayes_auto_learn_threshold_spam']))
+				if (!isset($no_override['bayes_auto_learn_threshold_spam']) && !empty($_POST['_bayesspam']))
 					$new_prefs['bayes_auto_learn_threshold_spam'] = get_input_value('_bayesspam', RCUBE_INPUT_POST);
 
 				if (!isset($no_override['use_bayes_rules']))
@@ -307,7 +307,7 @@ class sauserprefs extends rcube_plugin
 	{
 		$rcmail = rcmail::get_instance();
 
-		if ($rcmail->config->get('sauserprefs_bayes_delete', false)) {
+		if (!$rcmail->config->get('sauserprefs_bayes_delete', false)) {
 			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
 			return;
 		}
