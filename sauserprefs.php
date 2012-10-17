@@ -417,7 +417,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('title', html::label($field_id, rcmail::Q($this->gettext('spamthres'))));
 					$table->add(null, $input_spamthres->show(number_format($this->user_prefs['required_hits'], $decPlaces, '.', '')));
 					$table->add(array('colspan' => 2), rcmail::Q($this->gettext('spamthresexp')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['rewrite_header Subject'])) {
@@ -444,7 +443,6 @@ class sauserprefs extends rcube_plugin
 					$select_invert = $this->api->output->button(array('command' => 'plugin.sauserprefs.select_invert_langs', 'type' => 'link', 'label' => 'invert'));
 
 					$table->add(array('id' => 'listcontrols'), $this->gettext('select') .":&nbsp;&nbsp;". $select_all ."&nbsp;&nbsp;". $select_invert ."&nbsp;&nbsp;". $select_none);
-					$table->add_row();
 
 					$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table', 'cellspacing' => '0', 'cols' => 2));
 					$lang_table->add_header(array('colspan' => 2), $this->gettext('language'));
@@ -488,7 +486,6 @@ class sauserprefs extends rcube_plugin
 					}
 
 					$table->add('scroller', html::div(array('id' => 'spam-langs-cont'), $lang_table->show()));
-					$table->add_row();
 
 					$out .= html::tag('fieldset', null, html::tag('legend', null, rcmail::Q($this->gettext('langoptions'))) . $data . $table->show());
 				}
@@ -513,7 +510,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'fold_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('foldhelp')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['add_header all Level'])) {
@@ -539,7 +535,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'level_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('levelhelp')));
-					$table->add_row();
 
 					$field_id = 'rcmfd_spamlevelchar';
 					$input_spamsubject = new html_inputfield(array('name' => '_spamlevelchar', 'id' => $field_id, 'value' => $char,
@@ -571,7 +566,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'raz1_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('raz1help')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['use_razor2'])) {
@@ -586,7 +580,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'raz2_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('raz2help')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['use_pyzor'])) {
@@ -601,7 +594,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'pyz_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('pyzhelp')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['use_dcc'])) {
@@ -616,7 +608,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'dcc_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('dcchelp')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['skip_rbl_checks'])) {
@@ -632,7 +623,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'rbl_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('rblhelp')));
-					$table->add_row();
 				}
 
 				$out = html::tag('fieldset', null, html::tag('legend', null, rcmail::Q($this->gettext('mainoptions'))) . $data . $table->show());
@@ -660,7 +650,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', '&nbsp;');
 					$table->set_row_attribs(array('id' => 'bayes_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('bayeshelp')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['use_bayes_rules'])) {
@@ -675,7 +664,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'bayesrules_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('bayesruleshlp')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['bayes_auto_learn'])) {
@@ -691,7 +679,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('help', $help_button);
 					$table->set_row_attribs(array('id' => 'bayesauto_help', 'style' => 'display: none;'));
 					$table->add(array('colspan' => '3'), rcmail::Q($this->gettext('bayesautohelp')));
-					$table->add_row();
 				}
 
 				if ($table->size() > 0)
@@ -723,7 +710,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('title', html::label($field_id, rcmail::Q($this->gettext('bayesnonspam'))));
 					$table->add(null, $input_bayesnthres->show(number_format($this->user_prefs['bayes_auto_learn_threshold_nonspam'], $decPlaces, '.', '')));
 					$table->add(array('colspan' => '2'), rcmail::Q($this->gettext('bayesnonspamexp')));
-					$table->add_row();
 				}
 
 				if (!isset($no_override['bayes_auto_learn_threshold_spam'])) {
@@ -749,7 +735,6 @@ class sauserprefs extends rcube_plugin
 					$table->add('title', html::label($field_id, rcmail::Q($this->gettext('bayesspam'))));
 					$table->add(null, $input_bayesthres->show(number_format($this->user_prefs['bayes_auto_learn_threshold_spam'], $decPlaces, '.', '')));
 					$table->add(array('colspan' => '2'), rcmail::Q($this->gettext('bayesspamexp')));
-					$table->add_row();
 				}
 
 				if ($table->size() > 0)
@@ -807,13 +792,11 @@ class sauserprefs extends rcube_plugin
 				$table->add('address', $input_spamaddress->show());
 				$table->add('action', $button_addaddress);
 				$table->add(null, "&nbsp;");
-				$table->add_row();
 
 				$import = $this->api->output->button(array('command' => 'plugin.sauserprefs.import_whitelist', 'type' => 'link', 'label' => 'import', 'title' => 'sauserprefs.importfromaddressbook'));
 				$delete_all = $this->api->output->button(array('command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall'));
 
 				$table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import ."&nbsp;&nbsp;". $delete_all);
-				$table->add_row();
 
 				$address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table', 'cellspacing' => '0', 'cols' => 3));
 				$address_table->add_header('rule', $this->gettext('rule'));
@@ -827,14 +810,12 @@ class sauserprefs extends rcube_plugin
 
 				$address_table->set_row_attribs(array('style' => $norules));
 				$address_table->add(array('colspan' => '3'), rcube_utils::rep_specialchars_output($this->gettext('noaddressrules')));
-				$address_table->add_row();
 
 				$this->api->output->set_env('address_rule_count', sizeof($this->user_prefs['addresses']));
 				foreach ($this->user_prefs['addresses'] as $address)
 					$this->_address_row($address_table, $address['field'], $address['value'], $attrib);
 
 				$table->add(array('colspan' => 4, 'class' => 'scroller'), html::div(array('id' => 'address-rules-cont'), $address_table->show()));
-				$table->add_row();
 
 				if ($table->size())
 					$out = html::tag('fieldset', null, html::tag('legend', null, rcmail::Q($this->gettext('mainoptions'))) . $data . $table->show());
