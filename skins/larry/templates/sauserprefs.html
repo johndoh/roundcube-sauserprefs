@@ -40,5 +40,15 @@
 
 <roundcube:include file="/includes/footer.html" />
 
+<script type="text/javascript">
+/* <![CDATA[ */
+
+$(document).ready(function(){
+	new rcube_splitter({id:'sauserprefssplitter', p1: '#sectionslist', p2: '#preferences-box', orientation: 'v', relative: true, start: 240}).init();
+});
+
+/* ]]> */
+</script>
+
 </body>
 </html>
