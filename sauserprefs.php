@@ -121,12 +121,7 @@ class sauserprefs extends rcube_plugin
 		if (!$attrib['id'])
 			$attrib['id'] = 'rcmprefsframe';
 
-		$attrib['name'] = $attrib['id'];
-
-		$this->api->output->set_env('contentframe', $attrib['name']);
-		$this->api->output->set_env('blankpage', $attrib['src'] ? $this->api->output->abs_url($attrib['src']) : 'program/blank.gif');
-
-		return html::iframe($attrib);
+		return $this->api->output->frame($attrib, true);
 	}
 
 	function gen_form($attrib)
