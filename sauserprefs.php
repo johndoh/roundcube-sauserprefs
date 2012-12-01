@@ -495,7 +495,7 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['fold_headers'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("fold_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("fold_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spamfoldheaders';
 					$input_spamreport = new html_checkbox(array('name' => '_spamfoldheaders', 'id' => $field_id, 'value' => '1'));
@@ -509,7 +509,7 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['add_header all Level'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("level_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("level_help");', 'title' => $this->gettext('help')), $help_button);
 
 					if ($this->user_prefs['remove_header all'] != 'Level') {
 						$enabled = "1";
@@ -523,7 +523,7 @@ class sauserprefs extends rcube_plugin
 
 					$field_id = 'rcmfd_spamlevelstars';
 					$input_spamreport = new html_checkbox(array('name' => '_spamlevelstars', 'id' => $field_id, 'value' => '1',
-						'onchange' => rcmail::JS_OBJECT_NAME . '.sauserprefs_toggle_level_char(this)'));
+						'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_level_char(this)'));
 
 					$table->add('title', html::label($field_id, rcmail::Q($this->gettext('spamlevelstars'))));
 					$table->add(null, $input_spamreport->show($enabled));
@@ -551,7 +551,7 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['use_razor1'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("raz1_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("raz1_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spamuserazor1';
 					$input_spamtest = new html_checkbox(array('name' => '_spamuserazor1', 'id' => $field_id, 'value' => '1'));
@@ -565,7 +565,7 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['use_razor2'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("raz2_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("raz2_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spamuserazor2';
 					$input_spamtest = new html_checkbox(array('name' => '_spamuserazor2', 'id' => $field_id, 'value' => '1'));
@@ -579,7 +579,7 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['use_pyzor'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("pyz_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("pyz_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spamusepyzor';
 					$input_spamtest = new html_checkbox(array('name' => '_spamusepyzor', 'id' => $field_id, 'value' => '1'));
@@ -593,7 +593,7 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['use_dcc'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("dcc_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("dcc_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spamusedcc';
 					$input_spamtest = new html_checkbox(array('name' => '_spamusedcc', 'id' => $field_id, 'value' => '1'));
@@ -607,7 +607,7 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['skip_rbl_checks'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("rbl_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("rbl_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spamskiprblchecks';
 					$enabled = $this->user_prefs['skip_rbl_checks'] == "1" ? "0" : "1";
@@ -631,11 +631,11 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['use_bayes'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("bayes_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("bayes_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spamusebayes';
 					$input_spamtest = new html_checkbox(array('name' => '_spamusebayes', 'id' => $field_id, 'value' => '1',
-						'onchange' => rcmail::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes(this)'));
+						'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes(this)'));
 
 					if ($rcmail->config->get('sauserprefs_bayes_delete', false))
 						$delete_link =  "&nbsp;&nbsp;&nbsp;" . html::span(array('id' => 'listcontrols'), $this->api->output->button(array('command' => 'plugin.sauserprefs.purge_bayes', 'type' => 'link', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp')));
@@ -649,7 +649,7 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['use_bayes_rules'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("bayesrules_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("bayesrules_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spambayesrules';
 					$input_spamtest = new html_checkbox(array('name' => '_spambayesrules', 'id' => $field_id, 'value' => '1', 'disabled' => $this->user_prefs['use_bayes']?0:1));
@@ -663,11 +663,11 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['bayes_auto_learn'])) {
 					$help_button = html::img(array('class' => $imgclass, 'src' => $attrib['helpicon'], 'alt' => $this->gettext('sieveruleheaders'), 'border' => 0, 'style' => 'margin-left: 4px;'));
-					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail::JS_OBJECT_NAME .'.sauserprefs_help("bayesauto_help");', 'title' => $this->gettext('help')), $help_button);
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("bayesauto_help");', 'title' => $this->gettext('help')), $help_button);
 
 					$field_id = 'rcmfd_spambayesautolearn';
 					$input_spamtest = new html_checkbox(array('name' => '_spambayesautolearn', 'id' => $field_id, 'value' => '1',
-						'onchange' => rcmail::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes_auto(this)', 'disabled' => $this->user_prefs['use_bayes']?0:1));
+						'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes_auto(this)', 'disabled' => $this->user_prefs['use_bayes']?0:1));
 
 					$table->add('title', html::label($field_id, rcmail::Q($this->gettext('bayesautolearn'))));
 					$table->add(null, $input_spamtest->show($this->user_prefs['bayes_auto_learn']));
