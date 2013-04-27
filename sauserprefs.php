@@ -34,12 +34,6 @@ class sauserprefs extends rcube_plugin
 		$this->sa_user = str_replace('%d', $rcmail->user->get_username('domain'), $this->sa_user);
 		$this->sa_user = str_replace('%i', $identity, $this->sa_user);
 
-		// init storage
-		include('include/rcube_sauserprefs_storage.php');
-		$this->storage = new rcube_sauserprefs_storage($rcmail->config->get('sauserprefs_db_dsnw'), $rcmail->config->get('sauserprefs_db_dsnr'), $rcmail->config->get('sauserprefs_db_persistent'),
-							$this->sa_user, $rcmail->config->get('sauserprefs_sql_table_name'), $rcmail->config->get('sauserprefs_sql_username_field'), $rcmail->config->get('sauserprefs_sql_preference_field'),
-							$rcmail->config->get('sauserprefs_sql_value_field'), $rcmail->config->get('sauserprefs_bayes_delete_query'));
-
 		if ($rcmail->config->get('sauserprefs_whitelist_abook_id', false))
 			$this->addressbook = $rcmail->config->get('sauserprefs_whitelist_abook_id');
 
@@ -73,6 +67,7 @@ class sauserprefs extends rcube_plugin
 
 	function init_html()
 	{
+		$this->_init_storage();
 		$this->_load_global_prefs();
 		$this->_load_user_prefs();
 
@@ -157,6 +152,7 @@ class sauserprefs extends rcube_plugin
 	function save()
 	{
 		$rcmail = rcube::get_instance();
+		$this->_init_storage();
 		$this->_load_global_prefs();
 		$this->_load_user_prefs();
 
@@ -301,6 +297,7 @@ class sauserprefs extends rcube_plugin
 	function purge_bayes()
 	{
 		$rcmail = rcube::get_instance();
+		$this->_init_storage();
 
 		if (!$rcmail->config->get('sauserprefs_bayes_delete', false)) {
 			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
@@ -316,6 +313,7 @@ class sauserprefs extends rcube_plugin
 	function contact_add($args)
 	{
 		$rcmail = rcube::get_instance();
+		$this->_init_storage();
 
 		// only works with specified address book
 		if ($args['source'] != $this->addressbook && $args['source'] != null)
@@ -334,6 +332,7 @@ class sauserprefs extends rcube_plugin
 	function contact_delete($args)
 	{
 		$rcmail = rcube::get_instance();
+		$this->_init_storage();
 
 		// only works with specified address book
 		if ($args['source'] != $this->addressbook && $args['source'] != null)
@@ -349,6 +348,22 @@ class sauserprefs extends rcube_plugin
 		}
 
 		$contacts->close();
+	}
+
+	private function _init_storage()
+	{
+		if (!$this->storage) {
+			$rcmail = rcube::get_instance();
+
+			// Add include path for internal classes
+			$include_path = $this->home . '/lib' . PATH_SEPARATOR;
+			$include_path .= ini_get('include_path');
+			set_include_path($include_path);
+
+			$this->storage = new rcube_sauserprefs_storage($rcmail->config->get('sauserprefs_db_dsnw'), $rcmail->config->get('sauserprefs_db_dsnr'), $rcmail->config->get('sauserprefs_db_persistent'),
+								$this->sa_user, $rcmail->config->get('sauserprefs_sql_table_name'), $rcmail->config->get('sauserprefs_sql_username_field'), $rcmail->config->get('sauserprefs_sql_preference_field'),
+								$rcmail->config->get('sauserprefs_sql_value_field'), $rcmail->config->get('sauserprefs_bayes_delete_query'));
+		}
 	}
 
 	private function _load_global_prefs()
