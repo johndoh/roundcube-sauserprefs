@@ -1,7 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.11 (2013-05-193, rc-1.0)
+=================================================
  * Change file structure to match core and use include_path
+ **** code branching/tagging no longer sync'd to roundcube versions ****
 
 Version 1.10 (2013-03-03, rc-0.9)
 =================================================
