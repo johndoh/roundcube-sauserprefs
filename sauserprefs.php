@@ -95,7 +95,7 @@ class sauserprefs extends rcube_plugin
 			$attrib['id'] = 'rcmsectionslist';
 
 		$sections = array();
-		$blocks = $attrib['sections'] ? preg_split('/[\s,;]+/', strip_quotes($attrib['sections'])) : array_keys($this->sections);
+		$blocks = $attrib['sections'] ? preg_split('/[\s,;]+/', str_replace(array("'", '"'), '', $attrib['sections'])) : array_keys($this->sections);
 		foreach ($blocks as $block) {
 			if (!isset($no_override['{' . $block . '}']))
 				$sections[$block] = $this->sections[$block];
