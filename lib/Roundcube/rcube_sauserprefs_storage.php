@@ -253,11 +253,12 @@ class rcube_sauserprefs_storage
 		if (!$this->db)
 			$this->db = rcube_db::factory($this->db_dsnw, $this->db_dsnr, $this->db_persistent);
 
+		$this->db->set_debug((bool)rcube::get_instance()->config->get('sql_debug'));
 		$this->db->db_connect($mode);
 
 		// check DB connections and exit on failure
 		if ($err_str = $this->db->is_error()) {
-			raise_error(array(
+			rcube::raise_error(array(
 				'code' => 603,
 				'type' => 'db',
 				'message' => $err_str), false, true);
