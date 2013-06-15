@@ -22,7 +22,7 @@ folder for details on the skin license.
 Install
 -------
 * Place this plugin folder into plugins directory of Roundcube
-* Add sauserprefs to $rcmail_config['plugins'] in your Roundcube config
+* Add sauserprefs to $config['plugins'] in your Roundcube config
 
 **NB:** When downloading the plugin from GitHub you will need to create a
 directory called sauserprefs and place the files in there, ignoring the root
@@ -65,7 +65,7 @@ On some setups users might see "SERVICE CURRENTLY NOT AVAILABLE! Error No.
 be a problem with the database connection. Try adding ?new_link=true to the end
 of the sauserprefs DSN in the config file. For example:
 ```php
-$rcmail_config['sauserprefs_db_dsnw'] =
+$config['sauserprefs_db_dsnw'] =
 'mysql://username:password@localhost/database?new_link=true';
 ```
 
