@@ -83,6 +83,16 @@ rcube_webmail.prototype.sauserprefs_help = function(sel) {
 
 $(document).ready(function() {
 	if (window.rcmail) {
+		if (document.getElementById('spam-langs-table')) {
+			var spam_langs_table = new rcube_list_widget(document.getElementById('spam-langs-table'), {});
+			spam_langs_table.init();
+		}
+
+		if (document.getElementById('address-rules-table')) {
+			var address_rules_table = new rcube_list_widget(document.getElementById('address-rules-table'), {});
+			address_rules_table.init();
+		}
+
 		rcmail.addEventListener('init', function(evt) {
 			var tab = $('<span>').attr('id', 'settingstabpluginsauserprefs').addClass('tablink');
 			var button = $('<a>').attr('href', rcmail.env.comm_path+'&_action=plugin.sauserprefs').attr('title', rcmail.gettext('managespam', 'sauserprefs')).html(rcmail.gettext('sauserprefs','sauserprefs')).appendTo(tab);

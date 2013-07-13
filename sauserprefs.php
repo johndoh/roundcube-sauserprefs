@@ -74,6 +74,7 @@ class sauserprefs extends rcube_plugin
 		$this->api->output->set_pagetitle($this->gettext('sauserprefssettings'));
 
 		if (rcube::get_instance()->action == 'plugin.sauserprefs.edit') {
+			$this->api->output->include_script('list.js');
 			$this->user_prefs = array_merge($this->global_prefs, $this->user_prefs);
 			$this->api->output->add_handler('userprefs', array($this, 'gen_form'));
 			$this->api->output->add_handler('sectionname', array($this, 'prefs_section_name'));
@@ -454,7 +455,7 @@ class sauserprefs extends rcube_plugin
 
 					$table->add(array('id' => 'listcontrols'), $this->gettext('select') .":&nbsp;&nbsp;". $select_all ."&nbsp;&nbsp;". $select_invert ."&nbsp;&nbsp;". $select_none);
 
-					$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table', 'cellspacing' => '0', 'cols' => 2));
+					$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table spam-langs-table fixedheader', 'cellspacing' => '0', 'cols' => 2));
 					$lang_table->add_header(array('colspan' => 2), $this->gettext('language'));
 
 					if (!isset($no_override['ok_locales'])) {
@@ -808,7 +809,7 @@ class sauserprefs extends rcube_plugin
 
 				$table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import ."&nbsp;&nbsp;". $delete_all);
 
-				$address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table', 'cellspacing' => '0', 'cols' => 3));
+				$address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table address-rules-table fixedheader', 'cellspacing' => '0', 'cols' => 3));
 				$address_table->add_header('rule', $this->gettext('rule'));
 				$address_table->add_header('email', $this->gettext('email'));
 				$address_table->add_header('control', '&nbsp;');

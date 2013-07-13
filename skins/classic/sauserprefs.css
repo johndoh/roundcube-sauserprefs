@@ -19,42 +19,44 @@ body.spam-langs-table
   background-color: #F9F9F9;
 }
 
-#address-rules-table,
-#spam-langs-table
+table.address-rules-table,
+table.spam-langs-table
 {
   width: 100%;
   display: table;
   table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0px;
 }
 
-#address-rules-table thead td.rule
+table.address-rules-table thead td.rule
 {
   width: 180px;
 }
 
-#address-rules-table thead td.control
+table.address-rules-table thead td.control
 {
   width: 40px;
 }
 
-#spam-langs-table td.lang,
-#address-rules-table td.rule,
-#address-rules-table td.email,
-#address-rules-table td.email
+table.spam-langs-table td.lang,
+table.address-rules-table td.rule,
+table.address-rules-table td.email,
+table.address-rules-table td.email
 {
   text-align: left;
   vertical-align: middle;
 }
 
-#spam-langs-table td.tick,
-#address-rules-table td.control
+table.spam-langs-table td.tick,
+table.address-rules-table td.control
 {
   text-align: right;
   vertical-align: middle;
 }
 
-#spam-langs-table td.tick a,
-#address-rules-table td.control a
+table.spam-langs-table td.tick a,
+table.address-rules-table td.control a
 {
   display: block;
   float: right;
@@ -63,17 +65,17 @@ body.spam-langs-table
   background-image: url(icons.png);
 }
 
-#address-rules-table td.control a.delete
+table.address-rules-table td.control a.delete
 {
   background-position: 0 0;
 }
 
-#spam-langs-table td.tick a.enabled
+table.spam-langs-table td.tick a.enabled
 {
   background-position: 0 -18px;
 }
 
-#spam-langs-table td.tick a.disabled
+table.spam-langs-table td.tick a.disabled
 {
   background-position: 0 -36px;
 }
