@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Update config file var names to match core
+
 Version 1.11 (2013-05-193, rc-1.0)
 =================================================
  * Change file structure to match core and use include_path
