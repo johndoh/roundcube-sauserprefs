@@ -38,7 +38,7 @@ class sauserprefs extends rcube_plugin
 			$this->addressbook = $rcmail->config->get('sauserprefs_whitelist_abook_id');
 
 		if ($rcmail->task == 'settings') {
-			$this->add_texts('localization/', array('sauserprefs', 'managespam'));
+			$this->add_texts('localization/');
 			$this->include_stylesheet($this->local_skin_path() . '/tabstyles.css');
 
 			$this->sections = array(
@@ -51,6 +51,7 @@ class sauserprefs extends rcube_plugin
 			);
 			$this->cur_section = rcube_utils::get_input_value('_section', rcube_utils::INPUT_GPC);
 
+			$this->add_hook('settings_actions', array($this, 'settings_tab'));
 			$this->register_action('plugin.sauserprefs', array($this, 'init_html'));
 			$this->register_action('plugin.sauserprefs.edit', array($this, 'init_html'));
 			$this->register_action('plugin.sauserprefs.save', array($this, 'save'));
@@ -63,6 +64,13 @@ class sauserprefs extends rcube_plugin
 			$this->add_hook('contact_update', array($this, 'contact_save'));
 			$this->add_hook('contact_delete', array($this, 'contact_delete'));
 		}
+	}
+
+	function settings_tab($p)
+	{
+		// add sauserprefs tab
+		$p['actions'][] = array('action' => 'plugin.sauserprefs', 'class' => 'sauserprefs', 'label' => 'sauserprefs.sauserprefs', 'title' => 'sauserprefs.managespam');
+		return $p;
 	}
 
 	function init_html()
