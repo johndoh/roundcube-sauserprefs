@@ -94,12 +94,6 @@ $(document).ready(function() {
 		}
 
 		rcmail.addEventListener('init', function(evt) {
-			var tab = $('<span>').attr('id', 'settingstabpluginsauserprefs').addClass('tablink');
-			var button = $('<a>').attr('href', rcmail.env.comm_path+'&_action=plugin.sauserprefs').attr('title', rcmail.gettext('managespam', 'sauserprefs')).html(rcmail.gettext('sauserprefs','sauserprefs')).appendTo(tab);
-
-			// add button and register command
-			rcmail.add_element(tab, 'tabs');
-
 			if (rcmail.env.action == 'plugin.sauserprefs.edit') {
 				rcmail.register_command('plugin.sauserprefs.select_all_langs', function() {
 					var langlist = document.getElementsByName('_spamlang[]');
