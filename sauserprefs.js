@@ -341,7 +341,7 @@ $(document).ready(function() {
 						}
 
 						if (rcube_find_object('rcmfd_spamskiprblchecks')) {
-							if (rcmail.env.skip_rbl_checks == '1')
+							if (rcmail.env.skip_rbl_checks == '0')
 								rcube_find_object('rcmfd_spamskiprblchecks').checked = true;
 							else
 								rcube_find_object('rcmfd_spamskiprblchecks').checked = false;
