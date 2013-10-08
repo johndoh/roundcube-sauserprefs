@@ -303,7 +303,7 @@ $(document).ready(function() {
 							obj.title = rcmail.gettext('disabled','sauserprefs');
 							obj.className = 'disabled';
 
-							if (dlangs.indexOf(" " + langlist[i].value + " ") > -1) {
+							if (dlangs.indexOf(" " + langlist[i].value + " ") > -1 || rcmail.env.ok_languages == "all") {
 								langlist[i].checked = true;
 								obj = rcube_find_object('spam_lang_' + i);
 								obj.title = rcmail.gettext('enabled','sauserprefs');
