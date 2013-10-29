@@ -172,7 +172,7 @@ class sauserprefs extends rcube_plugin
 		switch ($this->cur_section)
 		{
 			case 'general':
-				if (!isset($no_override['required_hits']))
+				if (!isset($no_override['required_hits']) && !empty($_POST['_spamthres']))
 					$new_prefs['required_hits'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST);
 
 				if (!isset($no_override['rewrite_header Subject']))
