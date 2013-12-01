@@ -1,10 +1,12 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.12 (2013-12-01, rc-1.0)
+=================================================
  * Use new settings_actions hook to create settings tab (c49c35c)
  * Update config file var names to match core
 
-Version 1.11 (2013-05-193, rc-1.0)
+Version 1.11 (2013-05-19, rc-1.0)
 =================================================
  * Change file structure to match core and use include_path
  **** code branching/tagging no longer sync'd to roundcube versions ****
