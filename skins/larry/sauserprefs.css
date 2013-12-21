@@ -70,7 +70,7 @@ table.address-rules-table td.control a
   float: right;
   width: 16px;
   height: 16px;
-  background-image: url(icons.png);
+  background-image: url(images/icons.png);
   cursor: pointer;
 }
 
@@ -194,60 +194,60 @@ table.addressprefstable td.scroller
 
 #sections-table #rcmrowtests td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 5px -199px;
 }
 
 #sections-table #rcmrowtests.selected td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 5px -225px;
 }
 
 #sections-table #rcmrowbayes td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 5px -248px;
 }
 
 #sections-table #rcmrowbayes.selected td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 5px -270px;
 }
 
 #sections-table #rcmrowheaders td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 5px -99px;
 }
 
 #sections-table #rcmrowheaders.selected td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 5px -124px;
 }
 
 #sections-table #rcmrowreport td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 5px -150px;
 }
 
 #sections-table #rcmrowreport.selected td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 5px -174px;
 }
 
 #sections-table #rcmrowaddresses td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 4px -50px;
 }
 
 #sections-table #rcmrowaddresses.selected td.section
 {
-  background-image: url(listicons.png);
+  background-image: url(images/listicons.png);
   background-position: 4px -74px;
 }
