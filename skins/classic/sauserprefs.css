@@ -62,7 +62,7 @@ table.address-rules-table td.control a
   float: right;
   width: 16px;
   height: 16px;
-  background-image: url(icons.png);
+  background-image: url(images/icons.png);
 }
 
 table.address-rules-table td.control a.delete
