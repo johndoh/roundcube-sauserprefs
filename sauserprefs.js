@@ -377,7 +377,7 @@ $(document).ready(function() {
 
 						// Headers
 						if (rcube_find_object('rcmfd_spamfoldheaders')) {
-							if (rcmail.env.skip_rbl_checks == '1')
+							if (rcmail.env.fold_headers == '1')
 								rcube_find_object('rcmfd_spamfoldheaders').checked = true;
 							else
 								rcube_find_object('rcmfd_spamfoldheaders').checked = false;
