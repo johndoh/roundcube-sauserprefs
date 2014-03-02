@@ -33,6 +33,42 @@ table.spam-langs-table thead td
   color: #000;
 }
 
+table.address-rules-table thead td a,
+table.spam-langs-table thead td a
+{
+  color: #000;
+  padding: 0;
+}
+
+table.spam-langs-table td.lang
+{
+  width: 90%;
+}
+
+table.spam-langs-table td.tick
+{
+  width: 10%;
+}
+
+table.spam-langs-table thead td.tick a
+{
+  padding-right: 24px;
+}
+
+table.address-rules-table thead td.sortedASC a,
+table.spam-langs-table thead td.sortedASC a
+{
+  text-decoration: underline;
+  background: url(images/listicons.png) no-repeat right -298px;
+}
+
+table.address-rules-table thead td.sortedDESC a,
+table.spam-langs-table thead td.sortedDESC a
+{
+  text-decoration: underline;
+  background: url(images/listicons.png) no-repeat right -330px;
+}
+
 table.address-rules-table thead td.rule
 {
   width: 180px;
@@ -63,8 +99,8 @@ table.address-rules-table td.control
   border-right: 0;
 }
 
-table.spam-langs-table td.tick a,
-table.address-rules-table td.control a
+table.spam-langs-table tbody td.tick a,
+table.address-rules-table tbody td.control a
 {
   display: block;
   float: right;

@@ -44,25 +44,16 @@ rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
 	var actions = document.getElementsByName('_address_rule_act[]');
 	var prefs = document.getElementsByName('_address_rule_field[]');
 	var addresses = document.getElementsByName('_address_rule_value[]');
-	var insHere;
 
 	for (var i = 1; i < addresses.length; i++) {
 		if (addresses[i].value == address && actions[i].value != "DELETE") {
 			return false;
 		}
-		else if (addresses[i].value > address) {
-			insHere = adrTable.rows[i + 1];
-			break;
-		}
 	}
 
 	var newNode = adrTable.rows[0].cloneNode(true);
 	adrTable.rows[1].style.display = 'none';
-
-	if (insHere)
-		adrTable.insertBefore(newNode, insHere);
-	else
-		adrTable.appendChild(newNode);
+	adrTable.appendChild(newNode);
 
 	newNode.style.display = "";
 	newNode.cells[0].className = "whitelist_from";
@@ -73,6 +64,7 @@ rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
 	addresses[newNode.rowIndex - 2].value = address;
 
 	rcmail.env.address_rule_count++;
+	rcmail.sauserprefs_table_sort('#spam-langs-table');
 }
 
 rcube_webmail.prototype.sauserprefs_help = function(sel) {
@@ -81,16 +73,62 @@ rcube_webmail.prototype.sauserprefs_help = function(sel) {
 	return false;
 }
 
+rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
+	if (idx == null) {
+		idx = rcmail.env.sauserprefs_sort[id][0];
+		asc = rcmail.env.sauserprefs_sort[id][1] == "true";
+	}
+
+	var table = $(id);
+	var rows = table.find('tbody tr:visible').toArray().sort(
+		function(a, b) {
+			var result;
+
+			if (id == '#spam-langs-table' && $(a).children('td').eq(idx).hasClass('tick') && $(b).children('td').eq(idx).hasClass('tick')) {
+				a = $(a).children('td').eq(idx).children('a:first').hasClass('enabled');
+				b = $(b).children('td').eq(idx).children('a:first').hasClass('enabled');
+
+				result = asc ? b - a : a - b;
+			}
+			else {
+				a = $(a).children('td').eq(idx).html();
+				b = $(b).children('td').eq(idx).html();
+
+				result = asc ? a.localeCompare(b) : b.localeCompare(a);
+			}
+
+			return result;
+		}
+	);
+
+	table.children('tbody').children('tr:visible').remove();
+	for (var i = 0; i < rows.length; i++) {
+		table.children('tbody').append(rows[i]);
+	}
+}
+
 $(document).ready(function() {
 	if (window.rcmail) {
 		if (document.getElementById('spam-langs-table')) {
+			// add classes for sorting
+			$('#spam-langs-table thead td').eq(rcmail.env.sauserprefs_sort['#spam-langs-table'][0]).addClass(rcmail.env.sauserprefs_sort['#spam-langs-table'][1] == "true" ? 'sortedASC' : 'sortedDESC');
+
 			var spam_langs_table = new rcube_list_widget(document.getElementById('spam-langs-table'), {});
 			spam_langs_table.init();
+
+			// sort table according to user prefs
+			rcmail.sauserprefs_table_sort('#spam-langs-table');
 		}
 
 		if (document.getElementById('address-rules-table')) {
+			// add classes for sorting
+			$('#address-rules-table thead td').eq(rcmail.env.sauserprefs_sort['#address-rules-table'][0]).addClass(rcmail.env.sauserprefs_sort['#address-rules-table'][1] == "true" ? 'sortedASC' : 'sortedDESC');
+
 			var address_rules_table = new rcube_list_widget(document.getElementById('address-rules-table'), {});
 			address_rules_table.init();
+
+			// sort table according to user prefs
+			rcmail.sauserprefs_table_sort('#address-rules-table');
 		}
 
 		rcmail.addEventListener('init', function(evt) {
@@ -206,7 +244,6 @@ $(document).ready(function() {
 						var actions = document.getElementsByName('_address_rule_act[]');
 						var prefs = document.getElementsByName('_address_rule_field[]');
 						var addresses = document.getElementsByName('_address_rule_value[]');
-						var insHere;
 
 						for (var i = 1; i < addresses.length; i++) {
 							if (addresses[i].value == input_spamaddress.value && actions[i].value != "DELETE") {
@@ -214,19 +251,11 @@ $(document).ready(function() {
 								input_spamaddress.focus();
 								return false;
 							}
-							else if (addresses[i].value > input_spamaddress.value) {
-								insHere = adrTable.rows[i + 1];
-								break;
-							}
 						}
 
 						var newNode = adrTable.rows[0].cloneNode(true);
 						adrTable.rows[1].style.display = 'none';
-
-						if (insHere)
-							adrTable.insertBefore(newNode, insHere);
-						else
-							adrTable.appendChild(newNode);
+						adrTable.appendChild(newNode);
 
 						newNode.style.display = "";
 						newNode.cells[0].className = input_spamaddressrule.options[selrule].value;
@@ -240,6 +269,7 @@ $(document).ready(function() {
 						input_spamaddress.value = '';
 
 						rcmail.env.address_rule_count++;
+						rcmail.sauserprefs_table_sort('#address-rules-table');
 					}
 				}, true);
 
@@ -433,6 +463,29 @@ $(document).ready(function() {
 							adrTable.rows[1].style.display = '';
 						}
 					}
+				}, true);
+
+				rcmail.register_command('plugin.sauserprefs.table_sort', function(props, obj) {
+					var id = props;
+					var idx = $(obj).parent('td').index();
+					var asc = !$(obj).parent('td').hasClass('sortedASC');
+
+					rcmail.sauserprefs_table_sort(id, idx, asc);
+
+					$(obj).parents('thead:first').find('td').removeClass('sortedASC').removeClass('sortedDESC');
+					if (asc) {
+						$(obj).parent('td').addClass('sortedASC');
+						$(obj).parent('td').removeClass('sortedDESC');
+					}
+					else {
+						$(obj).parent('td').removeClass('sortedASC');
+						$(obj).parent('td').addClass('sortedDESC');
+					}
+
+					rcmail.env.sauserprefs_sort[id] = [idx, asc];
+					rcmail.save_pref({name: 'sauserprefs_sort', value: rcmail.env.sauserprefs_sort, env: true});
+
+					return false;
 				}, true);
 
 				rcmail.enable_command('plugin.sauserprefs.save','plugin.sauserprefs.default', true);

@@ -39,6 +39,48 @@ table.address-rules-table thead td.control
   width: 40px;
 }
 
+table.address-rules-table thead td a,
+table.spam-langs-table thead td a
+{
+  display: block;
+  text-decoration: none;
+}
+
+table.address-rules-table thead td.sortedASC,
+table.address-rules-table thead td.sortedDESC,
+table.spam-langs-table thead td.sortedASC,
+table.spam-langs-table thead td.sortedDESC
+{
+  background-position: 0px -26px;
+}
+
+table.spam-langs-table td.lang
+{
+  width: 80%;
+}
+
+table.spam-langs-table td.tick
+{
+  width: 20%;
+}
+
+table.spam-langs-table thead td.tick a
+{
+  padding-right: 24px;
+}
+
+table.address-rules-table thead tr td.sortedASC a,
+table.spam-langs-table thead tr td.sortedASC a
+{
+  background: url(images/sort.gif) no-repeat right -14px;
+}
+
+table.address-rules-table thead tr td.sortedDESC a,
+table.spam-langs-table thead tr td.sortedDESC a
+{
+  background: url(images/sort.gif) no-repeat right 0;
+}
+
 table.spam-langs-table td.lang,
 table.address-rules-table td.rule,
 table.address-rules-table td.email,
@@ -55,7 +97,7 @@ table.address-rules-table td.control
   vertical-align: middle;
 }
 
-table.spam-langs-table td.tick a,
+table.spam-langs-table tbody td.tick a,
 table.address-rules-table td.control a
 {
   display: block;
