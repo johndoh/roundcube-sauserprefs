@@ -11,6 +11,7 @@
 class sauserprefs extends rcube_plugin
 {
 	public $task = 'mail|addressbook|settings';
+	public $allowed_prefs = array('sauserprefs_sort');
 	private $storage;
 	private $sections = array();
 	private $cur_section;
@@ -136,6 +137,12 @@ class sauserprefs extends rcube_plugin
 			'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
 			'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm', 'sauserprefs.purgebayesconfirm',
 			'sauserprefs.whitelist_from');
+
+		// output table sorting prefs
+		$sorts = rcube::get_instance()->config->get('sauserprefs_sort', array());
+		if (!array_key_exists('#spam-langs-table', $sorts)) $sorts['#spam-langs-table'] = array(0, 'true');
+		if (!array_key_exists('#address-rules-table', $sorts)) $sorts['#address-rules-table'] = array(1, 'true');
+		$this->api->output->set_env('sauserprefs_sort', $sorts);
 
 		// output global prefs as default in env
 		foreach($this->global_prefs as $key => $val)
@@ -393,7 +400,8 @@ class sauserprefs extends rcube_plugin
 		$prefs = $this->storage->load_prefs($user);
 
 		// sort address rules
-		$prefs['addresses'] = $this->_subval_sort($prefs['addresses'], 'value');
+		if (is_array($prefs['addresses']))
+			usort($prefs['addresses'], create_function('$a, $b', 'return strnatcasecmp($a["value"], $b["value"]);'));
 
 		return $prefs;
 	}
@@ -464,7 +472,8 @@ class sauserprefs extends rcube_plugin
 					$table->add(array('id' => 'listcontrols'), $this->gettext('select') .":&nbsp;&nbsp;". $select_all ."&nbsp;&nbsp;". $select_invert ."&nbsp;&nbsp;". $select_none);
 
 					$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table spam-langs-table fixedheader', 'cellspacing' => '0', 'cols' => 2));
-					$lang_table->add_header(array('colspan' => 2), $this->gettext('language'));
+					$lang_table->add_header('lang', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'language')));
+					$lang_table->add_header('tick', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'sauserprefs.enabled')));
 
 					if (!isset($no_override['ok_locales'])) {
 						if ($this->user_prefs['ok_locales'] == "all")
@@ -818,8 +827,8 @@ class sauserprefs extends rcube_plugin
 				$table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import ."&nbsp;&nbsp;". $delete_all);
 
 				$address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table address-rules-table fixedheader', 'cellspacing' => '0', 'cols' => 3));
-				$address_table->add_header('rule', $this->gettext('rule'));
-				$address_table->add_header('email', $this->gettext('email'));
+				$address_table->add_header('rule', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'sauserprefs.rule')));
+				$address_table->add_header('email', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'email')));
 				$address_table->add_header('control', '&nbsp;');
 
 				$this->_address_row($address_table, null, null, $attrib);
@@ -890,22 +899,6 @@ class sauserprefs extends rcube_plugin
 		}
 
 		return $pref;
-	}
-
-	private function _subval_sort($a, $subkey)
-	{
-		if (sizeof($a) == 0)
-			return array();
-
-		foreach ($a as $k => $v)
-			$b[$k] = strtolower($v[$subkey]);
-
-		asort($b);
-
-		foreach ($b as $k => $v)
-			$c[] = $a[$k];
-
-		return $c;
 	}
 
 	private function _gen_email_arr($contact)

@@ -44,25 +44,16 @@ rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
 	var actions = document.getElementsByName('_address_rule_act[]');
 	var prefs = document.getElementsByName('_address_rule_field[]');
 	var addresses = document.getElementsByName('_address_rule_value[]');
-	var insHere;
 
 	for (var i = 1; i < addresses.length; i++) {
 		if (addresses[i].value == address && actions[i].value != "DELETE") {
 			return false;
 		}
-		else if (addresses[i].value > address) {
-			insHere = adrTable.rows[i + 1];
-			break;
-		}
 	}
 
 	var newNode = adrTable.rows[0].cloneNode(true);
 	adrTable.rows[1].style.display = 'none';
-
-	if (insHere)
-		adrTable.insertBefore(newNode, insHere);
-	else
-		adrTable.appendChild(newNode);
+	adrTable.appendChild(newNode);
 
 	newNode.style.display = "";
 	newNode.cells[0].className = "whitelist_from";
@@ -73,6 +64,7 @@ rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
 	addresses[newNode.rowIndex - 2].value = address;
 
 	rcmail.env.address_rule_count++;
+	rcmail.sauserprefs_table_sort('#spam-langs-table');
 }
 
 rcube_webmail.prototype.sauserprefs_help = function(sel) {
@@ -81,16 +73,105 @@ rcube_webmail.prototype.sauserprefs_help = function(sel) {
 	return false;
 }
 
+rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
+	if (idx == null) {
+		idx = rcmail.env.sauserprefs_sort[id][0];
+		asc = rcmail.env.sauserprefs_sort[id][1] == "true";
+	}
+
+	var table = $(id);
+	var rows = table.find('tbody tr:visible').toArray().sort(
+		function(a, b) {
+			var result;
+
+			if (id == '#spam-langs-table' && $(a).children('td').eq(idx).hasClass('tick') && $(b).children('td').eq(idx).hasClass('tick')) {
+				a = $(a).children('td').eq(idx).children('a:first').hasClass('enabled');
+				b = $(b).children('td').eq(idx).children('a:first').hasClass('enabled');
+
+				result = asc ? b - a : a - b;
+			}
+			else {
+				a = $(a).children('td').eq(idx).html();
+				b = $(b).children('td').eq(idx).html();
+
+				result = asc ? a.localeCompare(b) : b.localeCompare(a);
+			}
+
+			return result;
+		}
+	);
+
+	table.children('tbody').children('tr:visible').remove();
+	for (var i = 0; i < rows.length; i++) {
+		table.children('tbody').append(rows[i]);
+	}
+}
+
+function sauserprefs_check_email(input) {
+	if (input && window.RegExp) {
+		// check for *.example.com
+		var qtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]',
+			dtext = '[^\\x0d\\x5b-\\x5d\\x80-\\xff]',
+			atom = '[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+',
+			quoted_pair = '\\x5c[\\x00-\\x7f]',
+			quoted_string = '\\x22('+qtext+'|'+quoted_pair+')*\\x22',
+			ipv4 = '\\[(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}\\]',
+			ipv6 = '\\[IPv6:[0-9a-f:.]+\\]',
+			ip_addr = '(' + ipv4 + ')|(' + ipv6 + ')',
+			// Use simplified domain matching, because we need to allow Unicode characters here
+			// So, e-mail address should be validated also on server side after idn_to_ascii() use
+			//domain_literal = '\\x5b('+dtext+'|'+quoted_pair+')*\\x5d',
+			//sub_domain = '('+atom+'|'+domain_literal+')',
+			// allow punycode/unicode top-level domain
+			domain = '(('+ip_addr+')|(([^@\\x2e]+\\x2e)+([^\\x00-\\x40\\x5b-\\x60\\x7b-\\x7f]{2,}|xn--[a-z0-9]{2,})))',
+			// ICANN e-mail test (http://idn.icann.org/E-mail_test)
+			icann_domains = [
+				'\\u0645\\u062b\\u0627\\u0644\\x2e\\u0625\\u062e\\u062a\\u0628\\u0627\\u0631',
+				'\\u4f8b\\u5b50\\x2e\\u6d4b\\u8bd5',
+				'\\u4f8b\\u5b50\\x2e\\u6e2c\\u8a66',
+				'\\u03c0\\u03b1\\u03c1\\u03ac\\u03b4\\u03b5\\u03b9\\u03b3\\u03bc\\u03b1\\x2e\\u03b4\\u03bf\\u03ba\\u03b9\\u03bc\\u03ae',
+				'\\u0909\\u0926\\u093e\\u0939\\u0930\\u0923\\x2e\\u092a\\u0930\\u0940\\u0915\\u094d\\u0937\\u093e',
+				'\\u4f8b\\u3048\\x2e\\u30c6\\u30b9\\u30c8',
+				'\\uc2e4\\ub840\\x2e\\ud14c\\uc2a4\\ud2b8',
+				'\\u0645\\u062b\\u0627\\u0644\\x2e\\u0622\\u0632\\u0645\\u0627\\u06cc\\u0634\u06cc',
+				'\\u043f\\u0440\\u0438\\u043c\\u0435\\u0440\\x2e\\u0438\\u0441\\u043f\\u044b\\u0442\\u0430\\u043d\\u0438\\u0435',
+				'\\u0b89\\u0ba4\\u0bbe\\u0bb0\\u0ba3\\u0bae\\u0bcd\\x2e\\u0baa\\u0bb0\\u0bbf\\u0b9f\\u0bcd\\u0b9a\\u0bc8',
+				'\\u05d1\\u05f2\\u05b7\\u05e9\\u05e4\\u05bc\\u05d9\\u05dc\\x2e\\u05d8\\u05e2\\u05e1\\u05d8'
+			],
+			icann_addr = '\\x2a\\x2e('+icann_domains.join('|')+')',
+			addr_spec = '((\\x2a\\x2e'+domain+')|('+icann_addr+'))',
+			reg1 = new RegExp('^'+addr_spec+'$', 'i');
+
+		if (reg1.test(input)) {
+			return true;
+		}
+	}
+
+	return rcube_check_email(input, false);
+}
+
 $(document).ready(function() {
 	if (window.rcmail) {
 		if (document.getElementById('spam-langs-table')) {
+			// add classes for sorting
+			$('#spam-langs-table thead td').eq(rcmail.env.sauserprefs_sort['#spam-langs-table'][0]).addClass(rcmail.env.sauserprefs_sort['#spam-langs-table'][1] == "true" ? 'sortedASC' : 'sortedDESC');
+
 			var spam_langs_table = new rcube_list_widget(document.getElementById('spam-langs-table'), {});
 			spam_langs_table.init();
+
+			// sort table according to user prefs
+			rcmail.sauserprefs_table_sort('#spam-langs-table');
 		}
 
 		if (document.getElementById('address-rules-table')) {
+			// add classes for sorting
+			$('#address-rules-table thead td').eq(rcmail.env.sauserprefs_sort['#address-rules-table'][0]).addClass(rcmail.env.sauserprefs_sort['#address-rules-table'][1] == "true" ? 'sortedASC' : 'sortedDESC');
+
 			var address_rules_table = new rcube_list_widget(document.getElementById('address-rules-table'), {});
 			address_rules_table.init();
+
+			// sort table according to user prefs
+			rcmail.sauserprefs_table_sort('#address-rules-table');
 		}
 
 		rcmail.addEventListener('init', function(evt) {
@@ -197,7 +278,7 @@ $(document).ready(function() {
 						input_spamaddress.focus();
 						return false;
 					}
-					else if (!rcube_check_email(input_spamaddress.value.replace(/^\s+/, '').replace(/[\s,;]+$/, ''), true)) {
+					else if (!sauserprefs_check_email(input_spamaddress.value.replace(/^\s+/, '').replace(/[\s,;]+$/, ''))) {
 						alert(rcmail.gettext('spamaddresserror','sauserprefs'));
 						input_spamaddress.focus();
 						return false;
@@ -206,7 +287,6 @@ $(document).ready(function() {
 						var actions = document.getElementsByName('_address_rule_act[]');
 						var prefs = document.getElementsByName('_address_rule_field[]');
 						var addresses = document.getElementsByName('_address_rule_value[]');
-						var insHere;
 
 						for (var i = 1; i < addresses.length; i++) {
 							if (addresses[i].value == input_spamaddress.value && actions[i].value != "DELETE") {
@@ -214,19 +294,11 @@ $(document).ready(function() {
 								input_spamaddress.focus();
 								return false;
 							}
-							else if (addresses[i].value > input_spamaddress.value) {
-								insHere = adrTable.rows[i + 1];
-								break;
-							}
 						}
 
 						var newNode = adrTable.rows[0].cloneNode(true);
 						adrTable.rows[1].style.display = 'none';
-
-						if (insHere)
-							adrTable.insertBefore(newNode, insHere);
-						else
-							adrTable.appendChild(newNode);
+						adrTable.appendChild(newNode);
 
 						newNode.style.display = "";
 						newNode.cells[0].className = input_spamaddressrule.options[selrule].value;
@@ -240,6 +312,7 @@ $(document).ready(function() {
 						input_spamaddress.value = '';
 
 						rcmail.env.address_rule_count++;
+						rcmail.sauserprefs_table_sort('#address-rules-table');
 					}
 				}, true);
 
@@ -433,6 +506,29 @@ $(document).ready(function() {
 							adrTable.rows[1].style.display = '';
 						}
 					}
+				}, true);
+
+				rcmail.register_command('plugin.sauserprefs.table_sort', function(props, obj) {
+					var id = props;
+					var idx = $(obj).parent('td').index();
+					var asc = !$(obj).parent('td').hasClass('sortedASC');
+
+					rcmail.sauserprefs_table_sort(id, idx, asc);
+
+					$(obj).parents('thead:first').find('td').removeClass('sortedASC').removeClass('sortedDESC');
+					if (asc) {
+						$(obj).parent('td').addClass('sortedASC');
+						$(obj).parent('td').removeClass('sortedDESC');
+					}
+					else {
+						$(obj).parent('td').removeClass('sortedASC');
+						$(obj).parent('td').addClass('sortedDESC');
+					}
+
+					rcmail.env.sauserprefs_sort[id] = [idx, asc];
+					rcmail.save_pref({name: 'sauserprefs_sort', value: rcmail.env.sauserprefs_sort, env: true});
+
+					return false;
 				}, true);
 
 				rcmail.enable_command('plugin.sauserprefs.save','plugin.sauserprefs.default', true);
