@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Support the address format *.exmaple.com for black/white listing
+
 Version 1.12 (2013-12-01, rc-1.0)
 =================================================
  * Use new settings_actions hook to create settings tab (c49c35c)
