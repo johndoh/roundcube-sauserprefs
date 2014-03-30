@@ -1,7 +1,15 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.13 (2014-03-30, rc-1.0)
+=================================================
  * Support the address format *.exmaple.com for black/white listing
+ * Make address and langs tables user sortable
+
+Version 1.12.1 (2014-01-30, rc-1.0)
+=================================================
+ * Fix default setting for fold headers option (typo)
+ * Correct skin folder structure for Roundcube packaging
 
 Version 1.12 (2013-12-01, rc-1.0)
 =================================================
