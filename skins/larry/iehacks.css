@@ -1,9 +1,0 @@
-/**
- * SAUserPrefs plugin styles (IE hacks)
- */
-
-#address-rules-table,
-#spam-langs-table
-{
-  width: expression('auto');
-}
