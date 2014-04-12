@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Drop IE6 support
+
 Version 1.13 (2014-03-30, rc-1.0)
 =================================================
  * Support the address format *.exmaple.com for black/white listing

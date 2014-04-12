@@ -1,9 +1,0 @@
-/**
- * SAUserPrefs plugin styles (IE6 hacks)
- */
-
-#spam-langs-table td.tick a,
-#address-rules-table td.control a
-{
-  background-image: url(images/icons.gif);
-}
