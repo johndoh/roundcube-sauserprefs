@@ -236,11 +236,6 @@ table.addressprefstable .scroller
   padding: 0;
 }
 
-#sections-table th
-{
-  text-align: left;
-}
-
 #sections-table #rcmrowtests td.section
 {
   background-image: url(images/listicons.png);
