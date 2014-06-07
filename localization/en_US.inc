@@ -49,6 +49,7 @@ $labels['bayesnonspam'] = 'Non spam threshold';
 $labels['bayesspam'] = 'Spam threshold';
 $labels['bayesrules'] = 'Use Baysian rules';
 $labels['help'] = 'Help';
+$labels['arialabelspamform'] = 'Spam settings form';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed spam settings';
