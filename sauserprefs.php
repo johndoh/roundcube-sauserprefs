@@ -70,7 +70,7 @@ class sauserprefs extends rcube_plugin
 	function settings_tab($p)
 	{
 		// add sauserprefs tab
-		$p['actions'][] = array('action' => 'plugin.sauserprefs', 'class' => 'sauserprefs', 'label' => 'sauserprefs.sauserprefs', 'title' => 'sauserprefs.managespam');
+		$p['actions'][] = array('action' => 'plugin.sauserprefs', 'class' => 'sauserprefs', 'label' => 'sauserprefs.sauserprefs', 'title' => 'sauserprefs.managespam', 'role' => 'button', 'aria-disabled' => 'false', 'tabindex' => '0');
 		return $p;
 	}
 

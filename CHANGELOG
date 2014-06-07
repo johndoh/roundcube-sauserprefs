@@ -1,6 +1,7 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Update after dev-accessibility merged to RC master
  * Drop IE6 support
 
 Version 1.13 (2014-03-30, rc-1.0)

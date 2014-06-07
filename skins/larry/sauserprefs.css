@@ -25,64 +25,72 @@ table.spam-langs-table
   border: 0;
 }
 
-table.address-rules-table thead td,
-table.spam-langs-table thead td
+table.address-rules-table thead th,
+table.spam-langs-table thead th
 {
+  background: none;
   background-color: #CCC;
   font-weight: bold;
   color: #000;
 }
 
-table.address-rules-table thead td a,
-table.spam-langs-table thead td a
+table.address-rules-table thead th a,
+table.spam-langs-table thead th a
 {
   color: #000;
   padding: 0;
 }
 
-table.spam-langs-table td.lang
+table.address-rules-table thead th a:focus,
+table.spam-langs-table thead th a:focus
+{
+  color: #000;
+  font-weight: normal;
+  background-color: none;
+}
+
+table.spam-langs-table .lang
 {
   width: 90%;
 }
 
-table.spam-langs-table td.tick
+table.spam-langs-table .tick
 {
   width: 10%;
 }
 
-table.spam-langs-table thead td.tick a
+table.spam-langs-table thead th.tick a
 {
   padding-right: 24px;
 }
 
-table.address-rules-table thead td.sortedASC a,
-table.spam-langs-table thead td.sortedASC a
+table.address-rules-table thead th.sortedASC a,
+table.spam-langs-table thead th.sortedASC a
 {
   text-decoration: underline;
   background: url(images/listicons.png) no-repeat right -298px;
 }
 
-table.address-rules-table thead td.sortedDESC a,
-table.spam-langs-table thead td.sortedDESC a
+table.address-rules-table thead th.sortedDESC a,
+table.spam-langs-table thead th.sortedDESC a
 {
   text-decoration: underline;
   background: url(images/listicons.png) no-repeat right -330px;
 }
 
-table.address-rules-table thead td.rule
+table.address-rules-table thead th.rule
 {
   width: 180px;
 }
 
-table.address-rules-table thead td.control
+table.address-rules-table thead th.control
 {
   width: 40px;
 }
 
-table.spam-langs-table td.lang,
-table.address-rules-table td.rule,
-table.address-rules-table td.email,
-table.address-rules-table td.email
+table.spam-langs-table .lang,
+table.address-rules-table .rule,
+table.address-rules-table .email
 {
   text-align: left;
   vertical-align: middle;
@@ -90,8 +98,8 @@ table.address-rules-table td.email
   border-right: 0;
 }
 
-table.spam-langs-table td.tick,
-table.address-rules-table td.control
+table.spam-langs-table .tick,
+table.address-rules-table .control
 {
   text-align: right;
   vertical-align: middle;
@@ -110,17 +118,17 @@ table.address-rules-table tbody td.control a
   cursor: pointer;
 }
 
-table.address-rules-table td.control a.delete
+table.address-rules-table .control a.delete
 {
   background-position: 0 -1px;
 }
 
-table.spam-langs-table td.tick a.enabled
+table.spam-langs-table .tick a.enabled
 {
   background-position: 0 -18px;
 }
 
-table.spam-langs-table td.tick a.disabled
+table.spam-langs-table .tick a.disabled
 {
   background-position: 0 -36px;
 }
@@ -192,13 +200,13 @@ table.addressprefstable td
   width: auto;
 }
 
-table.generalprefstable td.title,
-table.langprefstable td.title,
-table.headersprefstable td.title,
-table.testsprefstable td.title,
-table.bayesprefstable td.title,
-table.reportprefstable td.title,
-table.addressprefstable td.title
+table.generalprefstable .title,
+table.langprefstable .title,
+table.headersprefstable .title,
+table.testsprefstable .title,
+table.bayesprefstable .title,
+table.reportprefstable .title,
+table.addressprefstable .title
 {
   width: 20%;
   color: #333;
@@ -206,26 +214,32 @@ table.addressprefstable td.title
   white-space: nowrap;
 }
 
-table.addressprefstable td.ruletype
+table.addressprefstable .ruletype
 {
   width: 180px;
 }
 
-table.addressprefstable td.address
+table.addressprefstable .address
 {
   width: 220px;
 }
 
-table.addressprefstable td.action
+table.addressprefstable .action
 {
   width: 100px;
   text-align: right;
 }
 
-table.langprefstable td.scroller,
-table.addressprefstable td.scroller
+table.langprefstable .scroller,
+table.addressprefstable .scroller
 {
   padding: 0;
+}
+
+#sections-table th
+{
+  height: 15px;
+  text-align: left;
 }
 
 #sections-table #rcmrowtests td.section
