@@ -47,6 +47,7 @@ table.spam-langs-table thead th a:focus
   color: #000;
   font-weight: normal;
   background-color: transparent;
+  text-shadow: none;
 }
 
 table.spam-langs-table tr > .lang
