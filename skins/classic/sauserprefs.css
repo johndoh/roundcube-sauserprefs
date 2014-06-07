@@ -54,12 +54,12 @@ table.spam-langs-table thead th.sortedDESC
   background-position: 0px -26px;
 }
 
-table.spam-langs-table .lang
+table.spam-langs-table tr > .lang
 {
   width: 80%;
 }
 
-table.spam-langs-table .tick
+table.spam-langs-table tr > .tick
 {
   width: 20%;
 }
@@ -81,23 +81,23 @@ table.spam-langs-table thead tr th.sortedDESC a
   background: url(images/sort.gif) no-repeat right 0;
 }
 
-table.spam-langs-table .lang,
-table.address-rules-table .rule,
-table.address-rules-table .email
+table.spam-langs-table tr > .lang,
+table.address-rules-table tr > .rule,
+table.address-rules-table tr > .email
 {
   text-align: left;
   vertical-align: middle;
 }
 
-table.spam-langs-table .tick,
-table.address-rules-table .control
+table.spam-langs-table tr > .tick,
+table.address-rules-table tr > .control
 {
   text-align: right;
   vertical-align: middle;
 }
 
 table.spam-langs-table tbody td.tick a,
-table.address-rules-table .control a
+table.address-rules-table tr > .control a
 {
   display: block;
   float: right;
@@ -106,17 +106,17 @@ table.address-rules-table .control a
   background-image: url(images/icons.png);
 }
 
-table.address-rules-table .control a.delete
+table.address-rules-table tr > .control a.delete
 {
   background-position: 0 0;
 }
 
-table.spam-langs-table .tick a.enabled
+table.spam-langs-table tr > .tick a.enabled
 {
   background-position: 0 -18px;
 }
 
-table.spam-langs-table .tick a.disabled
+table.spam-langs-table tr > .tick a.disabled
 {
   background-position: 0 -36px;
 }
@@ -166,63 +166,63 @@ table.reportprefstable
   width: 100%;
 }
 
-table.generalprefstable .title
+table.generalprefstable tr > .title
 {
   width: 115px;
 }
 
-table.headersprefstable .title
+table.headersprefstable tr > .title
 {
   width: 220px;
 }
 
-table.testsprefstable .title
+table.testsprefstable tr > .title
 {
   width: 175px;
 }
 
-table.bayesprefstable .title
+table.bayesprefstable tr > .title
 {
   width: 220px;
 }
 
-table.reportprefstable .title
+table.reportprefstable tr > .title
 {
   width: 320px;
 }
 
-table.generalprefstable .help,
-table.langprefstable .help,
-table.headersprefstable .help,
-table.testsprefstable .help,
-table.bayesprefstable .help,
-table.reportprefstable .help,
-table.addressprefstable .help
+table.generalprefstable tr > .help,
+table.langprefstable tr > .help,
+table.headersprefstable tr > .help,
+table.testsprefstable tr > .help,
+table.bayesprefstable tr > .help,
+table.reportprefstable tr > .help,
+table.addressprefstable tr > .help
 {
   text-align: right;
 }
 
-table.addressprefstable .ruletype
+table.addressprefstable tr > .ruletype
 {
   width: 180px;
   padding-bottom: 10px;
 }
 
-table.addressprefstable .address
+table.addressprefstable tr > .address
 {
   width: 220px;
   padding-bottom: 10px;
 }
 
-table.addressprefstable .action
+table.addressprefstable tr > .action
 {
   width: 100px;
   text-align: right;
   padding-bottom: 10px;
 }
 
-table.langprefstable .scroller,
-table.addressprefstable .scroller
+table.langprefstable tr > .scroller,
+table.addressprefstable tr > .scroller
 {
   padding: 0;
 }
