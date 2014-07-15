@@ -424,15 +424,27 @@ class sauserprefs extends rcube_plugin
 				if (!isset($no_override['required_hits'])) {
 					$field_id = 'rcmfd_spamthres';
 					$input_spamthres = new html_select(array('name' => '_spamthres', 'id' => $field_id));
-					$input_spamthres->add($this->gettext('defaultscore'), '');
+					$score_found = false;
+					$selected_value = $this->user_prefs['required_hits'];
 
 					$decPlaces = 0;
 					if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
 						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
 
-					$score_found = false;
-					for ($i = 1; $i <= 10; $i = $i + $rcmail->config->get('sauserprefs_score_inc')) {
-						$input_spamthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
+					if (empty($selected_value)) {
+						$selected_value = 5;
+					}
+					
+					foreach($rcmail->config->get('sauserprefs_scores') as $i){
+						$label = $this->gettext(sprintf('spamthresh_%d', $i));
+						if ($label == sprintf('[spamthresh_%d]', $i)) {
+							$text = sprintf('%d', $i);
+						}
+						else {
+							$text = number_format($i, $decPlaces, '.', '') . ": " . $label;
+						}
+						$input_spamthres->add($text, number_format($i, $decPlaces, $locale_info['decimal_point'], ''));
+						
 
 						if (!$score_found && $this->user_prefs['required_hits'] && (float)$this->user_prefs['required_hits'] == (float)$i)
 							$score_found = true;
@@ -442,7 +454,7 @@ class sauserprefs extends rcube_plugin
 						$input_spamthres->add(str_replace('%s', $this->user_prefs['required_hits'], $this->gettext('otherscore')), (float)$this->user_prefs['required_hits']);
 
 					$table->add('title', html::label($field_id, rcmail::Q($this->gettext('spamthres'))));
-					$table->add(null, $input_spamthres->show(number_format($this->user_prefs['required_hits'], $decPlaces, '.', '')));
+					$table->add(null, $input_spamthres->show(number_format($selected_value, $decPlaces, '.', '')));
 					$table->add(array('colspan' => 2), rcmail::Q($this->gettext('spamthresexp')));
 				}
 

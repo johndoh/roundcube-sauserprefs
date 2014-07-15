@@ -49,6 +49,11 @@ $labels['bayesnonspam'] = 'Seuil des messages légitimes';
 $labels['bayesspam'] = 'Seuil des spams';
 $labels['bayesrules'] = 'Utiliser le filtre bayésien pour la détection';
 $labels['help'] = 'Aide';
+$labels['spamthresh_2']  = 'Très agressif';
+$labels['spamthresh_5']  = 'Standard';
+$labels['spamthresh_7']  = 'Plutôt faible';
+$labels['spamthresh_10']  = 'Faible';
+$labels['spamthresh_15']  = 'Très faible';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Préférences modifiées avec succès';

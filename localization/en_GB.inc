@@ -50,6 +50,11 @@ $labels['bayesspam'] = 'Spam threshold';
 $labels['bayesrules'] = 'Use Bayesian rules';
 $labels['help'] = 'Help';
 $labels['arialabelspamform'] = 'Spam settings form';
+$labels['spamthresh_2']  = 'Very aggressive';
+$labels['spamthresh_5']  = 'Default';
+$labels['spamthresh_7']  = 'Rather weak';
+$labels['spamthresh_10']  = 'Weak';
+$labels['spamthresh_15']  = 'Very weak';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed spam settings';
