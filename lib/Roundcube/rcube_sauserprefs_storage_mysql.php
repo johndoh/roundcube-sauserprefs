@@ -7,7 +7,7 @@
  *
  * @author Philip Weir
  */
-class rcube_sauserprefs_storage
+class rcube_sauserprefs_storage_mysql
 {
 	private $db;
 	private $db_dsnw;
