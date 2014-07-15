@@ -20,17 +20,17 @@ class rcube_sauserprefs_storage
 	private $value_field;
 	private $bayes_delete_query;
 
-	function __construct($db_dsnw, $db_dsnr, $db_persistent, $sa_user, $table_name, $username_field, $preference_field, $value_field, $bayes_delete_query)
+	function __construct($db_config, $sa_user) 
 	{
-		$this->db_dsnw = $db_dsnw;
-		$this->db_dsnr = $db_dsnr;
-		$this->db_persistent = $db_persistent;
+		$this->db_dsnw = $db_config['dsnw'];
+		$this->db_dsnr = $db_config['dsnr'];
+		$this->db_persistent = $db_config['persistent'];
 		$this->sa_user = $sa_user;
-		$this->table_name = $table_name;
-		$this->username_field = $username_field;
-		$this->preference_field = $preference_field;
-		$this->value_field = $value_field;
-		$this->bayes_delete_query = $bayes_delete_query;
+		$this->table_name = $db_config['sql_table_name'];
+		$this->username_field = $db_config['sql_username_field'];
+		$this->preference_field = $db_config['sql_preference_field'];
+		$this->value_field = $db_config['sql_value_field'];
+		$this->bayes_delete_query = $db_config['bayes_delete_query'];
 	}
 
 	function load_prefs($user)
