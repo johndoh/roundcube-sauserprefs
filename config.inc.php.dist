@@ -27,7 +27,7 @@ $config['sauserprefs_db'] = array(
 			  'sql_value_field' => 'value',
 			  // delete user bayesian data stored in database
 			  // the query can contain the following macros that will be expanded as follows:
-			  //      %u is replaced with the username from the sauserprefs_userid setting above
+			  //      %u is replaced with the username from the sauserprefs_userid setting below
 			  // use an array to run multiple queries
 			  // eg. 'bayes_delete_query' = array(
 			  //	'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
@@ -36,6 +36,30 @@ $config['sauserprefs_db'] = array(
 			  //	),
 			  'bayes_delete_query' => ''
 );
+
+// alternative LDAP spamassassin database settings
+//$config['sauserprefs_db'] = array(
+//			  // backend. one of mysql | ldap
+//			  'backend' => 'ldap',
+//			  // LDAP server address
+//			  'uri' => 'ldap://example.com/',
+//			  // TLS negotiation
+//			  'use_tls' => true,
+//			  // LDAP protocol version
+//			  'protocol_version' => 3,
+//			  // DN for authorization
+//			  'bind_dn' => 'cn=rc,dc=example,dc=com',
+//			  // password associated with a given bind_dn
+//			  'password' => 'passwd',
+//			  // base DN for search
+//			  'base_dn' => 'ou=accounts,ou=email,dc=ima,dc=pl',
+//			  // scope to be used for search
+//			  'scope' => 'sub',
+//			  // name of attribute holding the configuration
+//			  'attribute' => 'description',
+//			  // filter expression. __USERNAME__ is swapped for the userid
+//			  'filter_expr' => 'uid=__USERNAME__'
+//);
 
 // username of the current user in the database, normaly %u (username from the session info)
 //      %u is replaced with the username (from the session info)

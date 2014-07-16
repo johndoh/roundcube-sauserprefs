@@ -32,6 +32,8 @@ class rcube_sauserprefs_storage_ldap
 	function __construct($db_config, $sa_user) 
 	{
         $this->uri = $db_config['uri'];
+        $this->use_tls = $db_config['use_tls'];
+        $this->protocol_version = $db_config['protocol_version'];
         $this->bind_dn = $db_config['bind_dn'];
         $this->password = $db_config['password'];
         $this->base_dn = $db_config['base_dn'];
@@ -268,14 +270,19 @@ class rcube_sauserprefs_storage_ldap
 
         $ldap_connection = ldap_connect($this->uri);
         
-        ldap_set_option($ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($ldap_connection, LDAP_OPT_PROTOCOL_VERSION, $this->protocol_version);
         
         $ldap_bind = false;
         if ($ldap_connection) {
-            $ldap_bind = ldap_bind($ldap_connection, $this->bind_dn, $this->password);
+            if (!$this->use_tls || ($this->use_tls && ldap_start_tls($ldap_connection))) {
+                $ldap_bind = ldap_bind($ldap_connection, $this->bind_dn, $this->password);
+            }
         }
         
         if (!$ldap_connection || !$ldap_bind) {
+            if ($ldap_connection) {
+                ldap_unbind($ldap_connection);
+            }
             rcube::raise_error(array(
                 'code' => 100, 'type' => 'ldap',
                 'file' => __FILE__, 'line' => __LINE__,
