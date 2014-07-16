@@ -64,7 +64,8 @@ class rcube_sauserprefs_storage_ldap
         foreach ($prefs as $pref) {
             // avoid adding empty preferences
             if (count($pref) == 2 && strlen($pref[0]) != 0) {
-                $rows[] = implode(' ', $pref);
+                list($preference, $value) = $pref;
+                $rows[] = sauserprefs::map_pref_name($preference).' '.$value;
             }
         }
 
@@ -107,7 +108,7 @@ class rcube_sauserprefs_storage_ldap
             $orig_pref_name = implode(' ', $parts);
         }
 
-        $pref_name = sauserprefs::map_pref_name($orig_pref_name);
+        $pref_name = sauserprefs::map_pref_name($orig_pref_name, true);
         $deprecated = $orig_pref_name != $pref_name;
         return array($pref_name, $deprecated, $pref_value);
     }
@@ -170,14 +171,13 @@ class rcube_sauserprefs_storage_ldap
         $effective_prefs = array_merge($global_prefs, $cur_prefs);
         
         foreach ($new_prefs as $preference => $value) {
-            $preference = sauserprefs::map_pref_name($preference);
 			if ($preference == 'addresses') {
                 if (empty($effective_prefs['addresses'])) {
                     $effective_prefs['addresses'] = array();
                 }
 
 				foreach ($value as $address) {
-                    $field = sauserprefs::map_pref_name($address['field']);
+                    $field = $address['field'];
                     $value = $address['value'];
                     $current_address = array('field' => $field, 'value' => $value);
                     if ($address['action'] == 'INSERT') {
@@ -210,7 +210,7 @@ class rcube_sauserprefs_storage_ldap
 	{
 		$this->_db_connect();
         
-        $field = sauserprefs::map_pref_name('whitelist_from');
+        $field = 'whitelist_from';
         
         list($dn, $attributes) = $this->_ldap_search($this->sa_user);
 
@@ -234,7 +234,7 @@ class rcube_sauserprefs_storage_ldap
 	{
 		$this->_db_connect();
 
-        $field = sauserprefs::map_pref_name('whitelist_from');
+        $field = 'whitelist_from';
         
         list($dn, $attributes) = $this->_ldap_search($this->sa_user);
 
