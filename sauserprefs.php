@@ -376,9 +376,11 @@ class sauserprefs extends rcube_plugin
 			$include_path .= ini_get('include_path');
 			set_include_path($include_path);
 
-			$this->storage = new rcube_sauserprefs_storage($rcmail->config->get('sauserprefs_db_dsnw'), $rcmail->config->get('sauserprefs_db_dsnr'), $rcmail->config->get('sauserprefs_db_persistent'),
-								$this->sa_user, $rcmail->config->get('sauserprefs_sql_table_name'), $rcmail->config->get('sauserprefs_sql_username_field'), $rcmail->config->get('sauserprefs_sql_preference_field'),
-								$rcmail->config->get('sauserprefs_sql_value_field'), $rcmail->config->get('sauserprefs_bayes_delete_query'));
+			$db_config = $rcmail->config->get('sauserprefs_db');
+			$backend = $db_config['backend'];
+			$storage_class = 'rcube_sauserprefs_storage_'.$backend;
+
+			$this->storage = new $storage_class($db_config, $this->sa_user);
 		}
 	}
 

@@ -5,28 +5,61 @@
  */
 
 // spamassassin database settings
-$config['sauserprefs_db_dsnw'] = 'mysql://username:password@localhost/database';
+$config['sauserprefs_db'] = array(
+			  // backend. one of mysql | ldap
+			  'backend' => 'mysql',
+			  // DSN for write database
+			  'dsnw' => 'mysql://username:password@localhost/database',
+			  // PEAR database DSN for read only operations (if empty write database will be used)
+			  // useful for database replication
+			  'dsnr' => '',
+			  // use persistent db-connections
+			  // beware this will not "always" work as expected
+			  // see: http://www.php.net/manual/en/features.persistent-connections.php
+			  'persistent' => FALSE,
+			  // table that holds user prefs
+			  'sql_table_name' => 'userpref',
+			  // name of the username field in the user prefs table
+			  'sql_username_field' => 'username',
+			  // name of the preference field in the user prefs table, holds the name of the preference
+			  'sql_preference_field' => 'preference',
+			  // name of the value field in the user prefs table, holds the value of the preference
+			  'sql_value_field' => 'value',
+			  // delete user bayesian data stored in database
+			  // the query can contain the following macros that will be expanded as follows:
+			  //      %u is replaced with the username from the sauserprefs_userid setting below
+			  // use an array to run multiple queries
+			  // eg. 'bayes_delete_query' = array(
+			  //	'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
+			  //	'DELETE FROM bayes_token WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
+			  //	'DELETE FROM bayes_vars WHERE username = %u;',
+			  //	),
+			  'bayes_delete_query' => ''
+);
 
-// PEAR database DSN for read only operations (if empty write database will be used)
-// useful for database replication
-$config['sauserprefs_db_dsnr'] = '';
-
-// use persistent db-connections
-// beware this will not "always" work as expected
-// see: http://www.php.net/manual/en/features.persistent-connections.php
-$config['sauserprefs_db_persistent'] = FALSE;
-
-// table that holds user prefs
-$config['sauserprefs_sql_table_name'] = "userpref";
-
-// name of the username field in the user prefs table
-$config['sauserprefs_sql_username_field'] = "username";
-
-// name of the preference field in the user prefs table, holds the name of the preference
-$config['sauserprefs_sql_preference_field'] = "preference";
-
-// name of the value field in the user prefs table, holds the value of the preference
-$config['sauserprefs_sql_value_field'] = "value";
+// alternative LDAP spamassassin database settings
+//$config['sauserprefs_db'] = array(
+//			  // backend. one of mysql | ldap
+//			  'backend' => 'ldap',
+//			  // LDAP server address
+//			  'uri' => 'ldap://example.com/',
+//			  // TLS negotiation
+//			  'use_tls' => true,
+//			  // LDAP protocol version
+//			  'protocol_version' => 3,
+//			  // DN for authorization
+//			  'bind_dn' => 'cn=rc,dc=example,dc=com',
+//			  // password associated with a given bind_dn
+//			  'password' => 'passwd',
+//			  // base DN for search
+//			  'base_dn' => 'ou=accounts,ou=email,dc=ima,dc=pl',
+//			  // scope to be used for search
+//			  'scope' => 'sub',
+//			  // name of attribute holding the configuration
+//			  'attribute' => 'description',
+//			  // filter expression. __USERNAME__ is swapped for the userid
+//			  'filter_expr' => 'uid=__USERNAME__'
+//);
 
 // username of the current user in the database, normaly %u (username from the session info)
 //      %u is replaced with the username (from the session info)
@@ -78,17 +111,6 @@ $config['sauserprefs_score_inc'] = 1;
 // allow the user to delete bayesian data
 // please also see sauserprefs_bayes_delete_query option
 $config['sauserprefs_bayes_delete'] = false;
-
-// delete user bayesian data stored in database
-// the query can contain the following macros that will be expanded as follows:
-//      %u is replaced with the username from the sauserprefs_userid setting above
-// use an array to run multiple queries
-// eg. $config['sauserprefs_bayes_delete_query'] = array(
-//												'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
-//												'DELETE FROM bayes_token WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
-//												'DELETE FROM bayes_vars WHERE username = %u;',
-//												);
-$config['sauserprefs_bayes_delete_query'] = '';
 
 // define languages
 $config['sauserprefs_languages'] = array(
