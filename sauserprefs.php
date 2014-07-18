@@ -375,10 +375,10 @@ class sauserprefs extends rcube_plugin
 			$include_path = $this->home . '/lib' . PATH_SEPARATOR;
 			$include_path .= ini_get('include_path');
 			set_include_path($include_path);
-            
-            $db_config = $rcmail->config->get('sauserprefs_db');
-            $backend = $db_config['backend'];
-            $storage_class = 'rcube_sauserprefs_storage_'.$backend;
+
+			$db_config = $rcmail->config->get('sauserprefs_db');
+			$backend = $db_config['backend'];
+			$storage_class = 'rcube_sauserprefs_storage_'.$backend;
 
 			$this->storage = new $storage_class($db_config, $this->sa_user);
 		}

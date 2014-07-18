@@ -14,7 +14,7 @@ class rcube_sauserprefs_storage_ldap
         'onelevel' => 'ldap_list',
         'base' => 'ldap_find'
     );
-    
+
     private $preference_offsets = array(
         'rewrite_header' => 2,
         'add_header' => 3
@@ -28,9 +28,9 @@ class rcube_sauserprefs_storage_ldap
     private $attribute;
     private $filter_expr;
     private $db;
-    
-	function __construct($db_config, $sa_user) 
-	{
+
+    function __construct($db_config, $sa_user)
+    {
         $this->uri = $db_config['uri'];
         $this->use_tls = $db_config['use_tls'];
         $this->protocol_version = $db_config['protocol_version'];
@@ -41,12 +41,12 @@ class rcube_sauserprefs_storage_ldap
         $this->sa_user = $sa_user;
         $this->attribute = $db_config['attribute'];
         $this->filter_expr = $db_config['filter_expr'];
-	}
-    
+    }
+
     private function _flatten_preferences($prefs)
     {
         $flat_prefs = array();
-        
+
         foreach ($prefs as $preference => $value) {
             if ($preference == 'addresses') {
                 foreach ($value as $address) {
@@ -59,7 +59,7 @@ class rcube_sauserprefs_storage_ldap
 
         return $flat_prefs;
     }
-    
+
     private function _write_preferences($dn, $prefs)
     {
         $rows = array();
@@ -77,10 +77,10 @@ class rcube_sauserprefs_storage_ldap
         $result = ldap_modify($this->db, $dn, $entry);
 
         rcube::write_log('errors', 'sauserprefs error: cannot write preferences for ' . $this->sa_user);
-        
+
         return $result === true;
     }
-    
+
     private function _extract_preferences($dn, $entry)
     {
         $deprecated_present = false;
@@ -90,18 +90,18 @@ class rcube_sauserprefs_storage_ldap
             $deprecated_present = $deprecated_present || $deprecated;
             $prefs[] = array($pref_name, $pref_value);
         }
-        
+
         if ($deprecated_present) {
             $this->_write_preferences($dn, $prefs);
         }
-        
+
         return $prefs;
     }
 
     private function _extract_preference($value)
     {
         list($orig_pref_name, $pref_value) = preg_split('/\s+/', $value, 2);
-        
+
         // taking into account exceptions in preference names
         if (!empty($this->preference_offsets[$orig_pref_name])) {
             $limit = $this->preference_offsets[$orig_pref_name] + 1;
@@ -114,15 +114,15 @@ class rcube_sauserprefs_storage_ldap
         $deprecated = $orig_pref_name != $pref_name;
         return array($pref_name, $deprecated, $pref_value);
     }
-    
+
     private function _ldap_search($user)
     {
         $search_function = $this->scope_to_function[$this->scope];
-        
+
         $result = $search_function(
-            $this->db, 
-            $this->base_dn, 
-            preg_replace('/__USERNAME__/', $user, $this->filter_expr), 
+            $this->db,
+            $this->base_dn,
+            preg_replace('/__USERNAME__/', $user, $this->filter_expr),
             array('dn', $this->attribute)
         );
 
@@ -135,15 +135,15 @@ class rcube_sauserprefs_storage_ldap
             $attributes = $entries[0][$this->attribute];
             // remove meta data from output
             unset($attributes['count']);
-        } 
+        }
 
         return array($dn, $attributes);
     }
 
-	function load_prefs($user)
-	{
-		$this->_db_connect();
-		$prefs = array();
+    function load_prefs($user)
+    {
+        $this->_db_connect();
+        $prefs = array();
 
         list($dn, $attributes) = $this->_ldap_search($user);
 
@@ -155,30 +155,30 @@ class rcube_sauserprefs_storage_ldap
         $prefs = array();
         foreach ($flat_prefs as $pref_entry) {
             list($pref_name, $pref_value) = $pref_entry;
-            
-			if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to') {
-				$prefs['addresses'][] = array('field' => $pref_name, 'value' => $pref_value);
-			} else {
-				$prefs[$pref_name] = $pref_value;
+
+            if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to') {
+                $prefs['addresses'][] = array('field' => $pref_name, 'value' => $pref_value);
+            } else {
+                $prefs[$pref_name] = $pref_value;
             }
         }
-        
+
         return $prefs;
-	}
-    
-	function save_prefs($new_prefs, $cur_prefs, $global_prefs)
-	{
-		$this->_db_connect();
-        
+    }
+
+    function save_prefs($new_prefs, $cur_prefs, $global_prefs)
+    {
+        $this->_db_connect();
+
         $effective_prefs = array_merge($global_prefs, $cur_prefs);
-        
+
         foreach ($new_prefs as $preference => $value) {
-			if ($preference == 'addresses') {
+            if ($preference == 'addresses') {
                 if (empty($effective_prefs['addresses'])) {
                     $effective_prefs['addresses'] = array();
                 }
 
-				foreach ($value as $address) {
+                foreach ($value as $address) {
                     $field = $address['field'];
                     $value = $address['value'];
                     $current_address = array('field' => $field, 'value' => $value);
@@ -200,20 +200,20 @@ class rcube_sauserprefs_storage_ldap
                 $effective_prefs[$preference] = $value;
             }
         }
-        
+
         $flat_prefs = $this->_flatten_preferences($effective_prefs);
 
         list($dn, $_) = $this->_ldap_search($this->sa_user);
         $result = $this->_write_preferences($dn, $flat_prefs);
         return $result;
-	}
+    }
 
-	function whitelist_add($emails)
-	{
-		$this->_db_connect();
-        
+    function whitelist_add($emails)
+    {
+        $this->_db_connect();
+
         $field = 'whitelist_from';
-        
+
         list($dn, $attributes) = $this->_ldap_search($this->sa_user);
 
         if ($dn !== null) {
@@ -227,17 +227,17 @@ class rcube_sauserprefs_storage_ldap
                     $flat_prefs[] = $new_value;
                 }
             }
-            
+
             $this->_write_preferences($dn, $flat_prefs);
         }
-	}
+    }
 
-	function whitelist_delete($emails)
-	{
-		$this->_db_connect();
+    function whitelist_delete($emails)
+    {
+        $this->_db_connect();
 
         $field = 'whitelist_from';
-        
+
         list($dn, $attributes) = $this->_ldap_search($this->sa_user);
 
         if ($dn !== null) {
@@ -251,34 +251,34 @@ class rcube_sauserprefs_storage_ldap
                     unset($flat_prefs[$idx_to_remove]);
                 }
             }
-            
+
             $this->_write_preferences($dn, $flat_prefs);
         }
-	}
+    }
 
-	function purge_bayes()
-	{
+    function purge_bayes()
+    {
         // not implemented for LDAP
         return false;
-	}
+    }
 
-	private function _db_connect()
-	{
+    private function _db_connect()
+    {
         if ($this->db) {
             return;
         }
 
         $ldap_connection = ldap_connect($this->uri);
-        
+
         ldap_set_option($ldap_connection, LDAP_OPT_PROTOCOL_VERSION, $this->protocol_version);
-        
+
         $ldap_bind = false;
         if ($ldap_connection) {
             if (!$this->use_tls || ($this->use_tls && ldap_start_tls($ldap_connection))) {
                 $ldap_bind = ldap_bind($ldap_connection, $this->bind_dn, $this->password);
             }
         }
-        
+
         if (!$ldap_connection || !$ldap_bind) {
             if ($ldap_connection) {
                 ldap_unbind($ldap_connection);
@@ -290,9 +290,9 @@ class rcube_sauserprefs_storage_ldap
             ),
             false, true);
         }
-        
+
         $this->db = $ldap_connection;
-	}
+    }
 }
 
 ?>
