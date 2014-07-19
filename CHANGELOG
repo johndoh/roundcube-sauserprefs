@@ -1,6 +1,7 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Improve extensibility of storage class, add override options
  * Update after dev-accessibility merged to RC master
  * Drop IE6 support
 

@@ -7,7 +7,7 @@
  *
  * @author Philip Weir
  */
-class rcube_sauserprefs_storage
+class rcube_sauserprefs_storage_sql
 {
 	private $db;
 	private $db_dsnw;
@@ -20,7 +20,7 @@ class rcube_sauserprefs_storage
 	private $value_field;
 	private $bayes_delete_query;
 
-	function __construct($db_dsnw, $db_dsnr, $db_persistent, $sa_user, $table_name, $username_field, $preference_field, $value_field, $bayes_delete_query)
+	function __construct($db_dsnw, $db_dsnr, $db_persistent, $table_name, $username_field, $preference_field, $value_field, $bayes_delete_query, $sa_user)
 	{
 		$this->db_dsnw = $db_dsnw;
 		$this->db_dsnr = $db_dsnr;

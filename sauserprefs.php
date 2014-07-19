@@ -376,9 +376,25 @@ class sauserprefs extends rcube_plugin
 			$include_path .= ini_get('include_path');
 			set_include_path($include_path);
 
-			$this->storage = new rcube_sauserprefs_storage($rcmail->config->get('sauserprefs_db_dsnw'), $rcmail->config->get('sauserprefs_db_dsnr'), $rcmail->config->get('sauserprefs_db_persistent'),
-								$this->sa_user, $rcmail->config->get('sauserprefs_sql_table_name'), $rcmail->config->get('sauserprefs_sql_username_field'), $rcmail->config->get('sauserprefs_sql_preference_field'),
-								$rcmail->config->get('sauserprefs_sql_value_field'), $rcmail->config->get('sauserprefs_bayes_delete_query'));
+			if ($className = $rcmail->config->get('sauserprefs_storage')) {
+				// custom storage class
+				$constArgs = $rcmail->config->get('sauserprefs_storage_args');
+				$args = array();
+				foreach ($constArgs as $arg) {
+					$args[] = $rcmail->config->get($arg);
+				}
+
+				// add userid (always the last arg)
+				$args[] = $this->sa_user;
+
+				$class = new ReflectionClass($className);
+				$this->storage = $class->newInstanceArgs($args);
+			}
+			else {
+				$this->storage = new rcube_sauserprefs_storage_sql($rcmail->config->get('sauserprefs_db_dsnw'), $rcmail->config->get('sauserprefs_db_dsnr'), $rcmail->config->get('sauserprefs_db_persistent'),
+										$rcmail->config->get('sauserprefs_sql_table_name'), $rcmail->config->get('sauserprefs_sql_username_field'), $rcmail->config->get('sauserprefs_sql_preference_field'),
+										$rcmail->config->get('sauserprefs_sql_value_field'), $rcmail->config->get('sauserprefs_bayes_delete_query'), $this->sa_user);
+			}
 		}
 	}
 

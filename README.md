@@ -95,6 +95,15 @@ Return:
 * message: (string) optional reason why the prefs were not saved which will be
   shown to the user
 
+Replacing the storage class
+---------------------------
+To replace the default sql storage class with your own you need to set 2
+special config options:
+ * sauserprefs_storage: (string) the name of the storage class
+ * sauserprefs_storage_args: (array) names of the config vars to pass to the
+   storage class constructor, the username of the current user will always be
+   the last arg
+
 [usingsql]: http://wiki.apache.org/spamassassin/UsingSQL
 [webuserprefs]: http://sourceforge.net/projects/webuserprefs/
 [rcplugrepo]: http://plugins.roundcube.net/packages/johndoh/sauserprefs
