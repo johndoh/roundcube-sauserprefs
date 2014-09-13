@@ -39,10 +39,7 @@ class rcube_sauserprefs_storage_sql
 		$prefs = array();
 
 		$sql_result = $this->db->query(
-			"SELECT ". $this->preference_field.
-			", ". $this->value_field.
-			" FROM ". $this->table_name.
-			" WHERE ". $this->username_field ." = ?;",
+			"SELECT {$this->preference_field}, {$this->value_field} FROM {$this->table_name} WHERE {$this->username_field} = ?;",
 			$user);
 
 		while ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result))) {
@@ -60,10 +57,7 @@ class rcube_sauserprefs_storage_sql
 				$this->_db_connect('w');
 
 				$this->db->query(
-					"UPDATE ". $this->table_name.
-					" SET ". $this->preference_field ." = ?".
-					" WHERE ". $this->username_field ." = ?".
-					" AND ". $this->preference_field ." = ?;",
+					"UPDATE {$this->table_name} SET {$this->preference_field} = ? WHERE {$this->username_field} = ? AND {$this->preference_field} = ?;",
 					sauserprefs::map_pref_name($pref_name),
 					$user,
 					$sql_arr[$this->preference_field]);
@@ -86,10 +80,7 @@ class rcube_sauserprefs_storage_sql
 						$result = false;
 
 						$this->db->query(
-							"DELETE FROM ". $this->table_name.
-							" WHERE ". $this->username_field ." = ?".
-							" AND ". $this->preference_field ." = ?".
-							" AND ". $this->value_field ." = ?;",
+							"DELETE FROM {$this->table_name} WHERE {$this->username_field} = ? AND {$this->preference_field} = ? AND {$this->value_field} = ?;",
 							$this->sa_user,
 							sauserprefs::map_pref_name($address['field']),
 							$address['value']);
@@ -105,11 +96,7 @@ class rcube_sauserprefs_storage_sql
 						$result = false;
 
 						$this->db->query(
-							"INSERT INTO ". $this->table_name.
-							" (". $this->username_field.
-							", ". $this->preference_field.
-							", ". $this->value_field.
-							") VALUES (?, ?, ?);",
+							"INSERT INTO {$this->table_name} ({$this->username_field}, {$this->preference_field}, {$this->value_field}) VALUES (?, ?, ?);",
 							$this->sa_user,
 							sauserprefs::map_pref_name($address['field']),
 							$address['value']);
@@ -127,9 +114,7 @@ class rcube_sauserprefs_storage_sql
 				$result = false;
 
 				$this->db->query(
-					"DELETE FROM ". $this->table_name.
-					" WHERE ". $this->username_field ." = ?".
-					" AND ". $this->preference_field ." = ?;",
+					"DELETE FROM {$this->table_name} WHERE {$this->username_field} = ? AND {$this->preference_field} = ?;",
 					$this->sa_user,
 					sauserprefs::map_pref_name($preference));
 
@@ -144,10 +129,7 @@ class rcube_sauserprefs_storage_sql
 				$result = false;
 
 				$this->db->query(
-					"UPDATE ". $this->table_name.
-					" SET ". $this->value_field ." = ?".
-					" WHERE ". $this->username_field ." = ?".
-					" AND ". $this->preference_field ." = ?;",
+					"UPDATE {$this->table_name} SET {$this->value_field} = ? WHERE {$this->username_field} = ? AND {$this->preference_field} = ?;",
 					$value,
 					$this->sa_user,
 					sauserprefs::map_pref_name($preference));
@@ -163,11 +145,7 @@ class rcube_sauserprefs_storage_sql
 				$result = false;
 
 				$this->db->query(
-					"INSERT INTO ". $this->table_name.
-					" (". $this->username_field.
-					", ". $this->preference_field.
-					", ". $this->value_field.
-					") VALUES (?, ?, ?);",
+					"INSERT INTO {$this->table_name} ({$this->username_field}, {$this->preference_field}, {$this->value_field}) VALUES (?, ?, ?);",
 					$this->sa_user,
 					sauserprefs::map_pref_name($preference),
 					$value);
@@ -191,22 +169,14 @@ class rcube_sauserprefs_storage_sql
 		foreach ($emails as $email) {
 			// check address is not already whitelisted
 			$sql_result = $this->db->query(
-							"SELECT ". $this->value_field.
-							" FROM ". $this->table_name.
-							" WHERE ". $this->username_field ." = ?".
-							" AND ". $this->preference_field ." = ?".
-							" AND ". $this->value_field ." = ?;",
+							"SELECT {$this->value_field} FROM {$this->table_name} WHERE {$this->username_field} = ? AND {$this->preference_field} = ? AND {$this->value_field} = ?;",
 							$this->sa_user,
 							sauserprefs::map_pref_name('whitelist_from'),
 							$email);
 
 			if (!$this->db->fetch_array($sql_result))
 				$this->db->query(
-					"INSERT INTO ". $this->table_name.
-					" (". $this->username_field.
-					", ". $this->preference_field.
-					", ". $this->value_field.
-					") VALUES (?, ?, ?);",
+					"INSERT INTO {$this->table_name} ({$this->username_field}, {$this->preference_field}, {$this->value_field}) VALUES (?, ?, ?);",
 					$this->sa_user,
 					sauserprefs::map_pref_name('whitelist_from'),
 					$email);
@@ -217,16 +187,13 @@ class rcube_sauserprefs_storage_sql
 	{
 		$this->_db_connect('w');
 
-		foreach ($emails as $email)
+		foreach ($emails as $email) {
 			$this->db->query(
-				"DELETE FROM ". $this->table_name.
-				" WHERE ". $this->username_field ." = ?".
-				" AND ". $this->preference_field ." = ?".
-				" AND ". $this->value_field ." = ?;",
+				"DELETE FROM {$this->table_name} WHERE {$this->username_field} = ? AND {$this->preference_field} = ? AND {$this->value_field} = ?;",
 				$this->sa_user,
 				sauserprefs::map_pref_name('whitelist_from'),
 				$email);
-
+		}
 	}
 
 	function purge_bayes()
