@@ -49,6 +49,11 @@ $labels['bayesnonspam'] = '"Kein Spam" Schwellenwert';
 $labels['bayesspam'] = '"Spam" Schwellenwert';
 $labels['bayesrules'] = 'Bayesische Regeln verwenden';
 $labels['help'] = 'Hilfe';
+$labels['spamthresh_2']  = 'Sehr Aggressiv';
+$labels['spamthresh_5']  = 'Standard';
+$labels['spamthresh_7']  = 'Eher Schwach';
+$labels['spamthresh_10']  = 'Schwach';
+$labels['spamthresh_15']  = 'Sehr schwach';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Spam Einstellungen erfolgreich geändert';

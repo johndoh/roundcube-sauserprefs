@@ -72,8 +72,10 @@ $config['sauserprefs_default_prefs'] = array(
 									"use_bayes_rules" => "1"
 								);
 
-// spam score increment - increment values in the the score threshold drop down by this, from 0 to 10
-$config['sauserprefs_score_inc'] = 1;
+// spam scores - array of scores shown in selectbox. 
+// you can add a text explanation to scores by adding matching lines to localization files:
+// $labels['spamthresh_2']  = 'Very aggressive';
+$config['sauserprefs_scores'] = array(2, 5, 7, 10, 15);
 
 // allow the user to delete bayesian data
 // please also see sauserprefs_bayes_delete_query option
