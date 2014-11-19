@@ -20,7 +20,7 @@ class sauserprefs extends rcube_plugin
 	private $addressbook = '0';
 	private $sa_locales = array('en', 'ja', 'ko', 'ru', 'th', 'zh');
 	private $sa_user;
-	static $deprecated_prefs = array('required_hits' => 'required_score');
+	static $deprecated_prefs = array('required_hits' => 'required_score'); // old => new
 
 	function init()
 	{
@@ -179,8 +179,8 @@ class sauserprefs extends rcube_plugin
 		switch ($this->cur_section)
 		{
 			case 'general':
-				if (!isset($no_override['required_hits']) && !empty($_POST['_spamthres']))
-					$new_prefs['required_hits'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST);
+				if (!isset($no_override['required_score']))
+					$new_prefs['required_score'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST);
 
 				if (!isset($no_override['rewrite_header Subject']))
 					$new_prefs['rewrite_header Subject'] = rcube_utils::get_input_value('_spamsubject', rcube_utils::INPUT_POST);
@@ -437,7 +437,7 @@ class sauserprefs extends rcube_plugin
 
 				$table = new html_table(array('class' => 'generalprefstable', 'cols' => 2));
 
-				if (!isset($no_override['required_hits'])) {
+				if (!isset($no_override['required_score'])) {
 					$field_id = 'rcmfd_spamthres';
 					$input_spamthres = new html_select(array('name' => '_spamthres', 'id' => $field_id));
 					$input_spamthres->add($this->gettext('defaultscore'), '');
@@ -450,15 +450,15 @@ class sauserprefs extends rcube_plugin
 					for ($i = 1; $i <= 10; $i = $i + $rcmail->config->get('sauserprefs_score_inc')) {
 						$input_spamthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
 
-						if (!$score_found && $this->user_prefs['required_hits'] && (float)$this->user_prefs['required_hits'] == (float)$i)
+						if (!$score_found && $this->user_prefs['required_score'] && (float)$this->user_prefs['required_score'] == (float)$i)
 							$score_found = true;
 					}
 
-					if (!$score_found && $this->user_prefs['required_hits'])
-						$input_spamthres->add(str_replace('%s', $this->user_prefs['required_hits'], $this->gettext('otherscore')), (float)$this->user_prefs['required_hits']);
+					if (!$score_found && $this->user_prefs['required_score'])
+						$input_spamthres->add(str_replace('%s', $this->user_prefs['required_score'], $this->gettext('otherscore')), (float)$this->user_prefs['required_score']);
 
 					$table->add('title', html::label($field_id, rcmail::Q($this->gettext('spamthres'))));
-					$table->add(null, $input_spamthres->show(number_format($this->user_prefs['required_hits'], $decPlaces, '.', '')));
+					$table->add(null, $input_spamthres->show(number_format($this->user_prefs['required_score'], $decPlaces, '.', '')));
 					$table->add(array('colspan' => 2), rcmail::Q($this->gettext('spamthresexp')));
 				}
 
@@ -773,7 +773,7 @@ class sauserprefs extends rcube_plugin
 							$score_found = true;
 					}
 
-					if (!$score_found && $this->user_prefs['required_hits'])
+					if (!$score_found && $this->user_prefs['required_score'])
 						$input_bayesthres->add(str_replace('%s', $this->user_prefs['bayes_auto_learn_threshold_spam'], $this->gettext('otherscore')), (float)$this->user_prefs['bayes_auto_learn_threshold_spam']);
 
 					$table->add('title', html::label($field_id, rcmail::Q($this->gettext('bayesspam'))));
