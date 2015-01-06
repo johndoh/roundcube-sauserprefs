@@ -1,7 +1,9 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
- * Fix setting requried_scroe to default
+Version 1.14 (2015-01-06, rc-1.1)
+=================================================
+ * Fix setting requried_score to default
  * Improve extensibility of storage class, add override options
  * Update after dev-accessibility merged to RC master
  * Drop IE6 support
