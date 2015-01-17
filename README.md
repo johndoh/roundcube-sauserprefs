@@ -95,6 +95,38 @@ Return:
 * message: (string) optional reason why the prefs were not saved which will be
   shown to the user
 
+sauserprefs_sections_list hook
+------------------------------
+This allows you to modify the sections list.
+Arguments:
+* list: (array) the current setions array
+* cols: (array) column names to display
+
+Return:
+* list: (array) the new setions array
+* cols: (array) column names to display
+
+sauserprefs_section_name hook
+-----------------------------
+This allows you to modify the title displayed at top of the preferences screen.
+Arguments:
+* section: (string) selected section of the prefs
+* title: (string) the title for the current section
+
+Return:
+* title: (string) the title for the current section
+
+sauserprefs_list hook
+---------------------
+This allows you to modify the elements of the preferences screen before they
+are displayed.
+Arguments:
+* section: (string) selected section of the prefs
+* block: (array) array containing preferences blocks/options
+
+Return:
+* block: (array) array containing preferences blocks/options
+
 Replacing the storage class
 ---------------------------
 To replace the default sql storage class with your own you need to set 2
