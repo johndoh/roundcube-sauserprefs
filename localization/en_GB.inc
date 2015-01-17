@@ -47,7 +47,7 @@ $labels['bayesautolearn'] = 'Use Bayes auto learn';
 $labels['bayesautooptions'] = 'Auto learn options';
 $labels['bayesnonspam'] = 'Non spam threshold';
 $labels['bayesspam'] = 'Spam threshold';
-$labels['bayesrules'] = 'Use Baysian rules';
+$labels['bayesrules'] = 'Use Bayesian rules';
 $labels['help'] = 'Help';
 $labels['arialabelspamform'] = 'Spam settings form';
 
