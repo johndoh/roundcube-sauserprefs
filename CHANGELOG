@@ -4,6 +4,7 @@ Roundcube Webmail SAUserPrefs
  * Add plugin hook sauserprefs_sections_list
  * Add plugin hook sauserprefs_section_name
  * Add plugin hook sauserprefs_list
+ * Remove unnecessary config option sauserprefs_bayes_delete
 
 Version 1.14 (2015-01-06, rc-1.1)
 =================================================

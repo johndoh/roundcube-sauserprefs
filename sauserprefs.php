@@ -20,6 +20,7 @@ class sauserprefs extends rcube_plugin
 	private $addressbook = '0';
 	private $sa_locales = array('en', 'ja', 'ko', 'ru', 'th', 'zh');
 	private $sa_user;
+	private $bayes_query;
 	static $deprecated_prefs = array('required_hits' => 'required_score'); // old => new
 
 	function init()
@@ -37,6 +38,11 @@ class sauserprefs extends rcube_plugin
 
 		if ($rcmail->config->get('sauserprefs_whitelist_abook_id', false))
 			$this->addressbook = $rcmail->config->get('sauserprefs_whitelist_abook_id');
+
+		$this->bayes_query = $rcmail->config->get('sauserprefs_bayes_delete_query');
+		// backwards compatibility sauserprefs_bayes_delete removed 20150117
+		if ($rcmail->config->get('sauserprefs_bayes_delete') === false)
+			$this->bayes_query = null;
 
 		if ($rcmail->task == 'settings') {
 			$this->add_texts('localization/');
@@ -329,7 +335,7 @@ class sauserprefs extends rcube_plugin
 		$rcmail = rcube::get_instance();
 		$this->_init_storage();
 
-		if (!$rcmail->config->get('sauserprefs_bayes_delete', false)) {
+		if (empty($this->bayes_query)) {
 			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
 			return;
 		}
@@ -407,7 +413,7 @@ class sauserprefs extends rcube_plugin
 			else {
 				$this->storage = new rcube_sauserprefs_storage_sql($rcmail->config->get('sauserprefs_db_dsnw'), $rcmail->config->get('sauserprefs_db_dsnr'), $rcmail->config->get('sauserprefs_db_persistent'),
 										$rcmail->config->get('sauserprefs_sql_table_name'), $rcmail->config->get('sauserprefs_sql_username_field'), $rcmail->config->get('sauserprefs_sql_preference_field'),
-										$rcmail->config->get('sauserprefs_sql_value_field'), $rcmail->config->get('sauserprefs_bayes_delete_query'), $this->sa_user);
+										$rcmail->config->get('sauserprefs_sql_value_field'), $this->bayes_query, $this->sa_user);
 			}
 		}
 	}
@@ -755,7 +761,7 @@ class sauserprefs extends rcube_plugin
 					$input_spamtest = new html_checkbox(array('name' => '_spamusebayes', 'id' => $field_id, 'value' => '1',
 						'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes(this)'));
 
-					if ($rcmail->config->get('sauserprefs_bayes_delete', false))
+					if (!empty($this->bayes_query))
 						$delete_link = "&nbsp;&nbsp;&nbsp;" . html::span(array('id' => 'listcontrols'), $this->api->output->button(array('command' => 'plugin.sauserprefs.purge_bayes', 'type' => 'link', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp')));
 
 					$blocks['main']['options']['spamusebayes'] = array(

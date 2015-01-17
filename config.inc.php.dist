@@ -75,20 +75,17 @@ $config['sauserprefs_default_prefs'] = array(
 // spam score increment - increment values in the the score threshold drop down by this, from 0 to 10
 $config['sauserprefs_score_inc'] = 1;
 
-// allow the user to delete bayesian data
-// please also see sauserprefs_bayes_delete_query option
-$config['sauserprefs_bayes_delete'] = false;
-
 // delete user bayesian data stored in database
 // the query can contain the following macros that will be expanded as follows:
 //      %u is replaced with the username from the sauserprefs_userid setting above
 // use an array to run multiple queries
+// set to null to disable this option
 // eg. $config['sauserprefs_bayes_delete_query'] = array(
 //												'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
 //												'DELETE FROM bayes_token WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
 //												'DELETE FROM bayes_vars WHERE username = %u;',
 //												);
-$config['sauserprefs_bayes_delete_query'] = '';
+$config['sauserprefs_bayes_delete_query'] = null;
 
 // define languages
 $config['sauserprefs_languages'] = array(
