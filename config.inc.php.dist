@@ -42,14 +42,14 @@ $config['sauserprefs_global_userid'] = "\$GLOBAL";
 // possible values:
 //   false - synchronisation disabled
 //   true - synchronise with default address book
-//   array - an array of address book ids to synchronise with e.g. array(0, 'global')
+//   array - an array of address book ids to synchronise with e.g. array('0', 'global'); '0' = the default address book
 $config['sauserprefs_abook_sync'] = FALSE;
 
 // set to false to disable address book import
 // possible values:
 //   false - address import disabled
 //   true - import addresses from default address book
-//   array - an array of address book ids to import e.g. array(0, 'global')
+//   array - an array of address book ids to import e.g. array('0', 'global'); '0' = the default address book
 $config['sauserprefs_abook_import'] = FALSE;
 
 // don't allow these settings to be overriden by the user
