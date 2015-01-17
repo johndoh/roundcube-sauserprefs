@@ -17,7 +17,8 @@ class sauserprefs extends rcube_plugin
 	private $cur_section;
 	private $global_prefs;
 	private $user_prefs;
-	private $addressbook = '0';
+	private $addressbook_import;
+	private $addressbook_sync;
 	private $sa_locales = array('en', 'ja', 'ko', 'ru', 'th', 'zh');
 	private $sa_user;
 	private $bayes_query;
@@ -36,8 +37,27 @@ class sauserprefs extends rcube_plugin
 		$this->sa_user = str_replace('%d', $rcmail->user->get_username('domain'), $this->sa_user);
 		$this->sa_user = str_replace('%i', $identity, $this->sa_user);
 
-		if ($rcmail->config->get('sauserprefs_whitelist_abook_id', false))
-			$this->addressbook = $rcmail->config->get('sauserprefs_whitelist_abook_id');
+		// backwards compatibility sauserprefs_whitelist_abook_id and sauserprefs_whitelist_sync removed 20150117
+		if ($rcmail->config->get('sauserprefs_whitelist_sync', false)) {
+			$this->addressbook_sync = array($rcmail->config->get('sauserprefs_whitelist_abook_id'), 0);
+			$this->addressbook_import = array($rcmail->config->get('sauserprefs_whitelist_abook_id'), 0);
+		}
+
+		$abook_sync = $rcmail->config->get('sauserprefs_abook_sync');
+		if ($abook_sync === true) {
+			$this->addressbook_sync = array(0);
+		}
+		elseif ($abook_sync !== false) {
+			$this->addressbook_sync = !is_array($abook_sync) ? array($abook_sync) : $abook_sync;
+		}
+
+		$abook_import = $rcmail->config->get('sauserprefs_abook_import');
+		if ($abook_import === true) {
+			$this->addressbook_import = array(0);
+		}
+		elseif ($abook_import !== false) {
+			$this->addressbook_import = !is_array($abook_import) ? array($abook_import) : $abook_import;
+		}
 
 		$this->bayes_query = $rcmail->config->get('sauserprefs_bayes_delete_query');
 		// backwards compatibility sauserprefs_bayes_delete removed 20150117
@@ -66,7 +86,7 @@ class sauserprefs extends rcube_plugin
 			$this->register_action('plugin.sauserprefs.purge_bayes', array($this, 'purge_bayes'));
 			$this->include_script('sauserprefs.js');
 		}
-		elseif ($rcmail->config->get('sauserprefs_whitelist_sync')) {
+		elseif (sizeof($this->addressbook_sync) > 0) {
 			$this->add_hook('contact_create', array($this, 'contact_add'));
 			$this->add_hook('contact_update', array($this, 'contact_save'));
 			$this->add_hook('contact_delete', array($this, 'contact_delete'));
@@ -313,21 +333,23 @@ class sauserprefs extends rcube_plugin
 
 	function whitelist_import()
 	{
-		$contacts = rcube::get_instance()->get_address_book($this->addressbook);
-		$contacts->set_page(1);
-		$contacts->set_pagesize(99999);
-		$result = $contacts->list_records(null, 0, true);
+		foreach ($this->addressbook_import as $aid) {
+			$contacts = rcube::get_instance()->get_address_book($aid);
+			$contacts->set_page(1);
+			$contacts->set_pagesize(99999);
+			$result = $contacts->list_records(null, 0, true);
 
-		if (empty($result) || $result->count == 0)
-			return;
+			if (empty($result) || $result->count == 0)
+				return;
 
-		$records = $result->records;
-		foreach ($records as $row_data) {
-			foreach ($this->_gen_email_arr($row_data) as $email)
-				$this->api->output->command('sauserprefs_addressrule_import', $email, '', '');
+			$records = $result->records;
+			foreach ($records as $row_data) {
+				foreach ($this->_gen_email_arr($row_data) as $email)
+					$this->api->output->command('sauserprefs_addressrule_import', $email, '', '');
+			}
+
+			$contacts->close();
 		}
-
-		$contacts->close();
 	}
 
 	function purge_bayes()
@@ -348,15 +370,13 @@ class sauserprefs extends rcube_plugin
 
 	function contact_add($args)
 	{
-		$rcmail = rcube::get_instance();
-		$this->_init_storage();
+		if (in_array($args['source'], $this->addressbook_sync)) {
+			$rcmail = rcube::get_instance();
+			$this->_init_storage();
 
-		// only works with specified address book
-		if ($args['source'] != $this->addressbook && $args['source'] != null)
-			return;
-
-		$emails = $this->_gen_email_arr($args['record']);
-		$this->storage->whitelist_add($emails);
+			$emails = $this->_gen_email_arr($args['record']);
+			$this->storage->whitelist_add($emails);
+		}
 	}
 
 	function contact_save($args)
@@ -367,23 +387,21 @@ class sauserprefs extends rcube_plugin
 
 	function contact_delete($args)
 	{
-		$rcmail = rcube::get_instance();
-		$this->_init_storage();
+		if (in_array($args['source'], $this->addressbook_sync)) {
+			$rcmail = rcube::get_instance();
+			$this->_init_storage();
 
-		// only works with specified address book
-		if ($args['source'] != $this->addressbook && $args['source'] != null)
-			return;
+			if (!is_array($args['id']))
+				$args['id'] = array($args['id']);
 
-		if (!is_array($args['id']))
-			$args['id'] = array($args['id']);
+			$contacts = $rcmail->get_address_book($args['source']);
+			foreach ($args['id'] as $id) {
+				$emails = $this->_gen_email_arr($contacts->get_record($id, true));
+				$this->storage->whitelist_delete($emails);
+			}
 
-		$contacts = $rcmail->get_address_book($this->addressbook);
-		foreach ($args['id'] as $id) {
-			$emails = $this->_gen_email_arr($contacts->get_record($id, true));
-			$this->storage->whitelist_delete($emails);
+			$contacts->close();
 		}
-
-		$contacts->close();
 	}
 
 	private function _init_storage()
@@ -913,7 +931,7 @@ class sauserprefs extends rcube_plugin
 
 				$data = html::p(null, rcmail::Q($this->gettext('whitelistexp')));
 
-				if ($rcmail->config->get('sauserprefs_whitelist_sync'))
+				if (sizeof($this->addressbook_sync) > 0)
 					$data .= rcmail::Q($this->gettext('autowhitelist')) . "<br /><br />";
 
 				$blocks['main']['intro'] = $data;
@@ -937,7 +955,7 @@ class sauserprefs extends rcube_plugin
 				$table->add('action', $button_addaddress);
 				$table->add(null, "&nbsp;");
 
-				$import = $this->api->output->button(array('command' => 'plugin.sauserprefs.import_whitelist', 'type' => 'link', 'label' => 'import', 'title' => 'sauserprefs.importfromaddressbook'));
+				$import = sizeof($this->addressbook_import) > 0 ? $this->api->output->button(array('command' => 'plugin.sauserprefs.import_whitelist', 'type' => 'link', 'label' => 'import', 'title' => 'sauserprefs.importfromaddressbook')) : '';
 				$delete_all = $this->api->output->button(array('command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall'));
 
 				$table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import ."&nbsp;&nbsp;". $delete_all);

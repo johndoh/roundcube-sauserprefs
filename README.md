@@ -56,11 +56,6 @@ skins/[skin]/templates/sauserprefs.html. For example:
   sections="general,tests,bayes,headers,report,addresses" />
 ```
 
-Whitelist Sync
---------------
-This plugin contains an option to synchronise changes to your RC address book
-and your SpamAssassin whitelist.
-
 Delete user bayesian data stored in database
 --------------------------------------------
 If the bayesian data is stored in the same database as the user prefs then it
