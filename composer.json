@@ -5,7 +5,7 @@
   "homepage": "http://github.com/JohnDoh/Roundcube-Plugin-SpamAssassin-User-Prefs-SQL/",
   "license": "GPL-3.0",
   "type": "roundcube-plugin",
-  "version": "1.14-git",
+  "version": "1.15-git",
   "authors": [
     {
       "name": "Philip Weir",
