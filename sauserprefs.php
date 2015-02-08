@@ -84,7 +84,10 @@ class sauserprefs extends rcube_plugin
 			$this->register_action('plugin.sauserprefs.save', array($this, 'save'));
 			$this->register_action('plugin.sauserprefs.whitelist_import', array($this, 'whitelist_import'));
 			$this->register_action('plugin.sauserprefs.purge_bayes', array($this, 'purge_bayes'));
-			$this->include_script('sauserprefs.js');
+
+			if (strpos($rcmail->action, 'plugin.sauserprefs') === 0) {
+				$this->include_script('sauserprefs.js');
+			}
 		}
 		elseif (sizeof($this->addressbook_sync) > 0) {
 			$this->add_hook('contact_create', array($this, 'contact_add'));
