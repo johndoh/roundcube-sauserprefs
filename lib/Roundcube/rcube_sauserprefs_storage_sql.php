@@ -30,24 +30,22 @@ class rcube_sauserprefs_storage_sql
 	private $db_dsnw;
 	private $db_dsnr;
 	private $db_persistent;
-	private $sa_user;
 	private $table_name;
 	private $username_field;
 	private $preference_field;
 	private $value_field;
 	private $bayes_delete_query;
 
-	function __construct($db_dsnw, $db_dsnr, $db_persistent, $table_name, $username_field, $preference_field, $value_field, $bayes_delete_query, $sa_user)
+	function __construct($config)
 	{
-		$this->db_dsnw = $db_dsnw;
-		$this->db_dsnr = $db_dsnr;
-		$this->db_persistent = $db_persistent;
-		$this->sa_user = $sa_user;
-		$this->table_name = $table_name;
-		$this->username_field = $username_field;
-		$this->preference_field = $preference_field;
-		$this->value_field = $value_field;
-		$this->bayes_delete_query = $bayes_delete_query;
+		$this->db_dsnw = $config->get('sauserprefs_db_dsnw');
+		$this->db_dsnr = $config->get('sauserprefs_db_dsnr');
+		$this->db_persistent = $config->get('sauserprefs_db_persistent');
+		$this->table_name = $config->get('sauserprefs_sql_table_name');
+		$this->username_field = $config->get('sauserprefs_sql_username_field');
+		$this->preference_field = $config->get('sauserprefs_sql_preference_field');
+		$this->value_field = $config->get('sauserprefs_sql_value_field');
+		$this->bayes_delete_query = $config->get('sauserprefs_bayes_delete_query');
 	}
 
 	function load_prefs($user)
@@ -84,7 +82,7 @@ class rcube_sauserprefs_storage_sql
 		return $prefs;
 	}
 
-	function save_prefs($new_prefs, $cur_prefs, $global_prefs)
+	function save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs)
 	{
 		$this->_db_connect('w');
 		$result = true;
@@ -98,14 +96,14 @@ class rcube_sauserprefs_storage_sql
 
 						$this->db->query(
 							"DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ? AND `{$this->value_field}` = ?;",
-							$this->sa_user,
+							$user_id,
 							$address['field'],
 							$address['value']);
 
 						$result = $this->db->affected_rows();
 
 						if (!$result) {
-							rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $prefs[$idx] . '" = "' .  $vals[$idx] . '" for ' . $this->sa_user);
+							rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $prefs[$idx] . '" = "' .  $vals[$idx] . '" for ' . $user_id);
 							break;
 						}
 					}
@@ -114,14 +112,14 @@ class rcube_sauserprefs_storage_sql
 
 						$this->db->query(
 							"INSERT INTO `{$this->table_name}` (`{$this->username_field}`, `{$this->preference_field}`, `{$this->value_field}`) VALUES (?, ?, ?);",
-							$this->sa_user,
+							$user_id,
 							$address['field'],
 							$address['value']);
 
 						$result = $this->db->affected_rows();
 
 						if (!$result) {
-							rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $prefs[$idx] . '" = "' .  $vals[$idx] . '" for ' . $this->sa_user);
+							rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $prefs[$idx] . '" = "' .  $vals[$idx] . '" for ' . $user_id);
 							break;
 						}
 					}
@@ -132,13 +130,13 @@ class rcube_sauserprefs_storage_sql
 
 				$this->db->query(
 					"DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
-					$this->sa_user,
+					$user_id,
 					$preference);
 
 				$result = $this->db->affected_rows();
 
 				if (!$result) {
-					rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $preference . '" for "' . $this->sa_user);
+					rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $preference . '" for "' . $user_id);
 					break;
 				}
 			}
@@ -148,13 +146,13 @@ class rcube_sauserprefs_storage_sql
 				$this->db->query(
 					"UPDATE `{$this->table_name}` SET `{$this->value_field}` = ? WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
 					$value,
-					$this->sa_user,
+					$user_id,
 					$preference);
 
 				$result = $this->db->affected_rows();
 
 				if (!$result) {
-					rcube::write_log('errors', 'sauserprefs error: cannot update "' . $preference . '" = "' .  $value . '" for ' . $this->sa_user);
+					rcube::write_log('errors', 'sauserprefs error: cannot update "' . $preference . '" = "' .  $value . '" for ' . $user_id);
 					break;
 				}
 			}
@@ -163,14 +161,14 @@ class rcube_sauserprefs_storage_sql
 
 				$this->db->query(
 					"INSERT INTO `{$this->table_name}` (`{$this->username_field}`, `{$this->preference_field}`, `{$this->value_field}`) VALUES (?, ?, ?);",
-					$this->sa_user,
+					$user_id,
 					$preference,
 					$value);
 
 				$result = $this->db->affected_rows();
 
 				if (!$result) {
-					rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $preference . '" = "' .  $value . '" for ' . $this->sa_user);
+					rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $preference . '" = "' .  $value . '" for ' . $user_id);
 					break;
 				}
 			}
@@ -179,7 +177,7 @@ class rcube_sauserprefs_storage_sql
 		return $result;
 	}
 
-	function whitelist_add($emails)
+	function whitelist_add($user_id, $emails)
 	{
 		$this->_db_connect('w');
 
@@ -187,39 +185,39 @@ class rcube_sauserprefs_storage_sql
 			// check address is not already whitelisted
 			$sql_result = $this->db->query(
 							"SELECT `{$this->value_field}` FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ? AND `{$this->value_field}` = ?;",
-							$this->sa_user,
+							$user_id,
 							sauserprefs::map_pref_name('whitelist_from'),
 							$email);
 
 			if (!$this->db->fetch_array($sql_result))
 				$this->db->query(
 					"INSERT INTO `{$this->table_name}` (`{$this->username_field}`, `{$this->preference_field}`, `{$this->value_field}`) VALUES (?, ?, ?);",
-					$this->sa_user,
+					$user_id,
 					sauserprefs::map_pref_name('whitelist_from'),
 					$email);
 		}
 	}
 
-	function whitelist_delete($emails)
+	function whitelist_delete($user_id, $emails)
 	{
 		$this->_db_connect('w');
 
 		foreach ($emails as $email) {
 			$this->db->query(
 				"DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ? AND `{$this->value_field}` = ?;",
-				$this->sa_user,
+				$user_id,
 				sauserprefs::map_pref_name('whitelist_from'),
 				$email);
 		}
 	}
 
-	function purge_bayes()
+	function purge_bayes($user_id)
 	{
 		$this->_db_connect('w');
 		$queries = !is_array($this->bayes_delete_query) ? array($this->bayes_delete_query) : $this->bayes_delete_query;
 
 		foreach ($queries as $sql) {
-			$sql = str_replace('%u', $this->db->quote($this->sa_user, 'text'), $sql);
+			$sql = str_replace('%u', $this->db->quote($user_id, 'text'), $sql);
 			$this->db->query($sql);
 
 			if ($this->db->is_error())

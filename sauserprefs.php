@@ -338,7 +338,7 @@ class sauserprefs extends rcube_plugin
 
 		if (!$data['abort']) {
 			// save prefs
-			if ($this->storage->save_prefs($data['new_prefs'], $this->user_prefs, $this->global_prefs))
+			if ($this->storage->save_prefs($this->sa_user, $data['new_prefs'], $this->user_prefs, $this->global_prefs))
 				$this->api->output->command('display_message', $this->gettext('sauserprefchanged'), 'confirmation');
 			else
 				$this->api->output->command('display_message', $this->gettext('sauserpreffailed'), 'error');
@@ -384,7 +384,7 @@ class sauserprefs extends rcube_plugin
 			return;
 		}
 
-		if ($this->storage->purge_bayes())
+		if ($this->storage->purge_bayes($this->sa_user))
 			$this->api->output->command('display_message', $this->gettext('done'), 'confirmation');
 		else
 			$this->api->output->command('display_message', $this->gettext('servererror'), 'error');
@@ -397,7 +397,7 @@ class sauserprefs extends rcube_plugin
 			$this->_init_storage();
 
 			$emails = $this->_gen_email_arr($args['record']);
-			$this->storage->whitelist_add($emails);
+			$this->storage->whitelist_add($this->sa_user, $emails);
 		}
 	}
 
@@ -419,7 +419,7 @@ class sauserprefs extends rcube_plugin
 			$contacts = $rcmail->get_address_book($args['source']);
 			foreach ($args['id'] as $id) {
 				$emails = $this->_gen_email_arr($contacts->get_record($id, true));
-				$this->storage->whitelist_delete($emails);
+				$this->storage->whitelist_delete($this->sa_user, $emails);
 			}
 
 			$contacts->close();
@@ -436,24 +436,19 @@ class sauserprefs extends rcube_plugin
 			$include_path .= ini_get('include_path');
 			set_include_path($include_path);
 
-			if ($className = $rcmail->config->get('sauserprefs_storage')) {
-				// custom storage class
-				$constArgs = $rcmail->config->get('sauserprefs_storage_args');
-				$args = array();
-				foreach ($constArgs as $arg) {
-					$args[] = $rcmail->config->get($arg);
-				}
+			$class = $rcmail->config->get('sauserprefs_storage', 'sql');
+			$class = "rcube_sauserprefs_storage_" . $class;
 
-				// add userid (always the last arg)
-				$args[] = $this->sa_user;
-
-				$class = new ReflectionClass($className);
-				$this->storage = $class->newInstanceArgs($args);
+			// try to instantiate class
+			if(class_exists($class)) {
+				$this->storage = new $class($rcmail->config);
 			}
 			else {
-				$this->storage = new rcube_sauserprefs_storage_sql($rcmail->config->get('sauserprefs_db_dsnw'), $rcmail->config->get('sauserprefs_db_dsnr'), $rcmail->config->get('sauserprefs_db_persistent'),
-										$rcmail->config->get('sauserprefs_sql_table_name'), $rcmail->config->get('sauserprefs_sql_username_field'), $rcmail->config->get('sauserprefs_sql_preference_field'),
-										$rcmail->config->get('sauserprefs_sql_value_field'), $this->bayes_query, $this->sa_user);
+				// no storage found, raise error
+				rcube::raise_error(array('code' => 604, 'type' => 'sauserprefs',
+					'line' => __LINE__, 'file' => __FILE__,
+					'message' => "Failed to find storage driver. Check sauserprefs_storage config option"),
+					true, true);
 			}
 		}
 	}
