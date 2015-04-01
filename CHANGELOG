@@ -10,6 +10,7 @@ Roundcube Webmail SAUserPrefs
  * Split address book sync and import options
  * Allow for syncing and importing of multiple address books
  * Improve extensibility of storage class (again)
+ * Fix setting default score for bayes learn thresholds
 
 Version 1.14 (2015-01-06, rc-1.1)
 =================================================
