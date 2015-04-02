@@ -5,7 +5,7 @@ from within Roundcube. It interacts with preferences storied in a database via
 SQL. For more information on setting up SpamAssassin to work with a database
 please see the [SpamAssassin Wiki][usingsql].
 
-Tested with SpamAssassin Version 3.2.3
+Tested with SpamAssassin Version 3.3
 
 Inspiration for this plugin was taken from:
 [WebUserPrefs][webuserprefs]
@@ -47,11 +47,6 @@ skins/[skin]/templates/sauserprefs.html. For example:
   sections="general,tests,bayes,headers,report,addresses" />
 ```
 
-Whitelist Sync
---------------
-This plugin contains an option to synchronise changes to your RC address book
-and your SpamAssassin whitelist.
-
 Delete user bayesian data stored in database
 --------------------------------------------
 If the bayesian data is stored in the same database as the user prefs then it
@@ -86,14 +81,45 @@ Return:
 * message: (string) optional reason why the prefs were not saved which will be
   shown to the user
 
+sauserprefs_sections_list hook
+------------------------------
+This allows you to modify the sections list.
+Arguments:
+* list: (array) the current setions array
+* cols: (array) column names to display
+
+Return:
+* list: (array) the new setions array
+* cols: (array) column names to display
+
+sauserprefs_section_name hook
+-----------------------------
+This allows you to modify the title displayed at top of the preferences screen.
+Arguments:
+* section: (string) selected section of the prefs
+* title: (string) the title for the current section
+
+Return:
+* title: (string) the title for the current section
+
+sauserprefs_list hook
+---------------------
+This allows you to modify the elements of the preferences screen before they
+are displayed.
+Arguments:
+* section: (string) selected section of the prefs
+* block: (array) array containing preferences blocks/options
+
+Return:
+* block: (array) array containing preferences blocks/options
+
 Replacing the storage class
 ---------------------------
-To replace the default sql storage class with your own you need to set 2
+To replace the default sql storage class with your own you need to set a
 special config options:
- * sauserprefs_storage: (string) the name of the storage class
- * sauserprefs_storage_args: (array) names of the config vars to pass to the
-   storage class constructor, the username of the current user will always be
-   the last arg
+ * sauserprefs_storage: (string) the suffix of the storage class
+   e.g. 'sql' for the default sql storage class
+The Roundcube config object is passed to the constructor of the class
 
 [usingsql]: http://wiki.apache.org/spamassassin/UsingSQL
 [webuserprefs]: http://sourceforge.net/projects/webuserprefs/

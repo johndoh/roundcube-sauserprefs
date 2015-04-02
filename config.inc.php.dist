@@ -38,11 +38,19 @@ $config['sauserprefs_userid'] = "%u";
 // username of the "global" or default settings user in the database, normaly $GLOBAL or @GLOBAL
 $config['sauserprefs_global_userid'] = "\$GLOBAL";
 
-// enable the whitelists synchronisation, check README for more information
-$config['sauserprefs_whitelist_sync'] = FALSE;
+// enable address whitelist synchronisation with address book(s)
+// possible values:
+//   false - synchronisation disabled
+//   true - synchronise with default address book
+//   array - an array of address book ids to synchronise with e.g. array('0', 'global'); '0' = the default address book
+$config['sauserprefs_abook_sync'] = FALSE;
 
-// id of the address book to synchronise the whitelist with, null for default Roundcube address book
-$config['sauserprefs_whitelist_abook_id'] = null;
+// set to false to disable address book import
+// possible values:
+//   false - address import disabled
+//   true - import addresses from default address book
+//   array - an array of address book ids to import e.g. array('0', 'global'); '0' = the default address book
+$config['sauserprefs_abook_import'] = FALSE;
 
 // don't allow these settings to be overriden by the user
 // eg. $config['sauserprefs_dont_override'] = array('required_score','rewrite_header Subject');
@@ -75,20 +83,17 @@ $config['sauserprefs_default_prefs'] = array(
 // spam score increment - increment values in the the score threshold drop down by this, from 0 to 10
 $config['sauserprefs_score_inc'] = 1;
 
-// allow the user to delete bayesian data
-// please also see sauserprefs_bayes_delete_query option
-$config['sauserprefs_bayes_delete'] = false;
-
 // delete user bayesian data stored in database
 // the query can contain the following macros that will be expanded as follows:
 //      %u is replaced with the username from the sauserprefs_userid setting above
 // use an array to run multiple queries
+// set to null to disable this option
 // eg. $config['sauserprefs_bayes_delete_query'] = array(
 //												'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
 //												'DELETE FROM bayes_token WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
 //												'DELETE FROM bayes_vars WHERE username = %u;',
 //												);
-$config['sauserprefs_bayes_delete_query'] = '';
+$config['sauserprefs_bayes_delete_query'] = null;
 
 // define languages
 $config['sauserprefs_languages'] = array(
