@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.15 (2015-04-02, rc-1.1)
+=================================================
  * Add plugin hook sauserprefs_sections_list
  * Add plugin hook sauserprefs_section_name
  * Add plugin hook sauserprefs_list
