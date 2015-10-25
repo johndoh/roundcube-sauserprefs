@@ -70,7 +70,7 @@ rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
 
 	newNode.style.display = "";
 	newNode.cells[0].className = "whitelist_from";
-	newNode.cells[0].innerHTML = rcmail.gettext('whitelist_from','sauserprefs');
+	newNode.cells[0].innerHTML = rcmail.get_label('whitelist_from','sauserprefs');
 	newNode.cells[1].innerHTML = address;
 	actions[newNode.rowIndex - 2].value = "INSERT";
 	prefs[newNode.rowIndex - 2].value = "whitelist_from";
@@ -196,7 +196,7 @@ $(document).ready(function() {
 					for (var i = 0; i < langlist.length; i++) {
 						langlist[i].checked = true;
 						obj = rcube_find_object('spam_lang_'+ i);
-						obj.title = rcmail.gettext('enabled','sauserprefs');
+						obj.title = rcmail.get_label('enabled','sauserprefs');
 						obj.className = 'enabled';
 					}
 
@@ -211,13 +211,13 @@ $(document).ready(function() {
 						if (langlist[i].checked) {
 							langlist[i].checked = false;
 							obj = rcube_find_object('spam_lang_'+ i);
-							obj.title = rcmail.gettext('disabled','sauserprefs');
+							obj.title = rcmail.get_label('disabled','sauserprefs');
 							obj.className = 'disabled';
 						}
 						else {
 							langlist[i].checked = true;
 							obj = rcube_find_object('spam_lang_'+ i);
-							obj.title = rcmail.gettext('enabled','sauserprefs');
+							obj.title = rcmail.get_label('enabled','sauserprefs');
 							obj.className = 'enabled';
 						}
 					}
@@ -232,7 +232,7 @@ $(document).ready(function() {
 					for (var i = 0; i < langlist.length; i++) {
 						langlist[i].checked = false;
 						obj = rcube_find_object('spam_lang_'+ i);
-						obj.title = rcmail.gettext('disabled','sauserprefs');
+						obj.title = rcmail.get_label('disabled','sauserprefs');
 						obj.className = 'disabled';
 					}
 
@@ -245,12 +245,12 @@ $(document).ready(function() {
 
 					if (langlist[i].checked) {
 						langlist[i].checked = false;
-						obj.title = rcmail.gettext('disabled','sauserprefs');
+						obj.title = rcmail.get_label('disabled','sauserprefs');
 						obj.className = 'disabled';
 					}
 					else {
 						langlist[i].checked = true;
-						obj.title = rcmail.gettext('enabled','sauserprefs');
+						obj.title = rcmail.get_label('enabled','sauserprefs');
 						obj.className = 'enabled';
 					}
 
@@ -262,7 +262,7 @@ $(document).ready(function() {
 					var rowidx = obj.parentNode.parentNode.rowIndex - 1;
 					var fieldidx = rowidx - 1;
 
-					if (!confirm(rcmail.gettext('spamaddressdelete','sauserprefs')))
+					if (!confirm(rcmail.get_label('spamaddressdelete','sauserprefs')))
 						return false;
 
 					if (document.getElementsByName('_address_rule_act[]')[fieldidx].value == "INSERT") {
@@ -287,12 +287,12 @@ $(document).ready(function() {
 					var input_spamaddress = rcube_find_object('_spamaddress');
 
 					if (input_spamaddress.value.replace(/^\s+|\s+$/g, '') == '') {
-						alert(rcmail.gettext('spamenteraddress','sauserprefs'));
+						alert(rcmail.get_label('spamenteraddress','sauserprefs'));
 						input_spamaddress.focus();
 						return false;
 					}
 					else if (!sauserprefs_check_email(input_spamaddress.value.replace(/^\s+/, '').replace(/[\s,;]+$/, ''))) {
-						alert(rcmail.gettext('spamaddresserror','sauserprefs'));
+						alert(rcmail.get_label('spamaddresserror','sauserprefs'));
 						input_spamaddress.focus();
 						return false;
 					}
@@ -303,7 +303,7 @@ $(document).ready(function() {
 
 						for (var i = 1; i < addresses.length; i++) {
 							if (addresses[i].value == input_spamaddress.value && actions[i].value != "DELETE") {
-								alert(rcmail.gettext('spamaddressexists','sauserprefs'));
+								alert(rcmail.get_label('spamaddressexists','sauserprefs'));
 								input_spamaddress.focus();
 								return false;
 							}
@@ -332,7 +332,7 @@ $(document).ready(function() {
 				rcmail.register_command('plugin.sauserprefs.whitelist_delete_all', function(props, obj) {
 					var adrTable = rcube_find_object('address-rules-table').tBodies[0];
 
-					if (!confirm(rcmail.gettext('spamaddressdeleteall','sauserprefs')))
+					if (!confirm(rcmail.get_label('spamaddressdeleteall','sauserprefs')))
 						return false;
 
 					for (var i = adrTable.rows.length - 1; i > 1; i--) {
@@ -358,7 +358,7 @@ $(document).ready(function() {
 				}, true);
 
 				rcmail.register_command('plugin.sauserprefs.purge_bayes', function(props, obj) {
-					if (confirm(rcmail.gettext('purgebayesconfirm','sauserprefs'))) {
+					if (confirm(rcmail.get_label('purgebayesconfirm','sauserprefs'))) {
 						var lock = rcmail.set_busy(true, 'sauserprefs.purgingbayes');
 						rcmail.http_request('plugin.sauserprefs.purge_bayes', '', lock);
 					}
@@ -369,7 +369,7 @@ $(document).ready(function() {
 				rcmail.register_command('plugin.sauserprefs.save', function() { rcmail.gui_objects.editform.submit(); }, true);
 
 				rcmail.register_command('plugin.sauserprefs.default', function() {
-					if (confirm(rcmail.gettext('usedefaultconfirm','sauserprefs'))) {
+					if (confirm(rcmail.get_label('usedefaultconfirm','sauserprefs'))) {
 						// Score
 						if (rcube_find_object('rcmfd_spamthres'))
 							rcube_find_object('rcmfd_spamthres').selectedIndex = 0;
@@ -386,13 +386,13 @@ $(document).ready(function() {
 						for (var i = 0; i < langlist.length; i++) {
 							langlist[i].checked = false;
 							obj = rcube_find_object('spam_lang_' + i);
-							obj.title = rcmail.gettext('disabled','sauserprefs');
+							obj.title = rcmail.get_label('disabled','sauserprefs');
 							obj.className = 'disabled';
 
 							if (dlangs.indexOf(" " + langlist[i].value + " ") > -1 || rcmail.env.ok_languages == "all") {
 								langlist[i].checked = true;
 								obj = rcube_find_object('spam_lang_' + i);
-								obj.title = rcmail.gettext('enabled','sauserprefs');
+								obj.title = rcmail.get_label('enabled','sauserprefs');
 								obj.className = 'enabled';
 							}
 						}
