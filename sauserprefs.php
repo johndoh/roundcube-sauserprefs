@@ -305,10 +305,10 @@ class sauserprefs extends rcube_plugin
 					$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : "1";
 
 				if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
-					$new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_utils::get_input_value('_bayesnonspam', rcube_utils::INPUT_POST);
+					$new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_utils::get_input_value('_bayesnonspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_nonspam'];
 
 				if (!isset($no_override['bayes_auto_learn_threshold_spam']))
-					$new_prefs['bayes_auto_learn_threshold_spam'] = rcube_utils::get_input_value('_bayesspam', rcube_utils::INPUT_POST);
+					$new_prefs['bayes_auto_learn_threshold_spam'] = rcube_utils::get_input_value('_bayesspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_spam'];
 
 				if (!isset($no_override['use_bayes_rules']))
 					$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : "1";
