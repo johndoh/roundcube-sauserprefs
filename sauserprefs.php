@@ -242,7 +242,7 @@ class sauserprefs extends rcube_plugin
 		{
 			case 'general':
 				if (!isset($no_override['required_score']))
-					$new_prefs['required_score'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST);
+					$new_prefs['required_score'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST) ?: $this->global_prefs['required_score'];
 
 				if (!isset($no_override['rewrite_header Subject']))
 					$new_prefs['rewrite_header Subject'] = rcube_utils::get_input_value('_spamsubject', rcube_utils::INPUT_POST);
