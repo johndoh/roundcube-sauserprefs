@@ -57,5 +57,3 @@ $messages['spamaddressdeleteall'] = 'Biztosan törölni szeretné az összes cí
 $messages['noaddressrules'] = 'Nem található cím szabály.';
 $messages['importingaddresses'] = 'Címek importálása...';
 $messages['usedefaultconfirm'] = 'Biztos, hogy vissza szeretné állítani az alapbeállítást? Ez törli az összes beállítást, ideértve a cím szabályokat is.';
-
-?>

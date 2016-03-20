@@ -82,5 +82,3 @@ $messages['levelhelp'] = 'L\'en-tête "Spam Level" peut être ajouté à un mess
 $messages['foldhelp'] = 'Est-ce que les en-têtes ajoutés par SpamAssassin doivent revenir à la ligne ? En d\'autres termes, est-ce qu\'ils doivent êtres répartis sur plusieurs lignes au lieu de n\'être que sur seule ligne très longue. Lorsqu\'il y a un retour à la ligne, la suivante sera indenté afin de marquer la continuité avec la précédente.';
 $messages['bayesruleshlp'] = 'Avant que le filtre bayésien puisse être utilisé, il doit effectivement être "entrainé" pour pouvoir correctement détecter les spams. Désactiver le filtre bayésien permet au système de continuer à apprendre automatiquement et manuellement des messages reçus, mais il ne sera pas utilisé pour la détection des spams en eux-mêmes.';
 $messages['purgebayesconfirm'] = 'Faut-il vraiment supprimer toutes les données personnelles du filtre bayésien ?';
-
-?>

@@ -80,5 +80,3 @@ $messages['levelhelp'] = 'Brevhuvudet benämnt \'Spam Level\', som visar hur bre
 $messages['foldhelp'] = 'Skall de brevhuvud som SpamAssassin lägger till brevet struktureras som en lång rad eller ett flertal separata brevhuvud.';
 $messages['bayesruleshlp'] = 'Innan bayesklassificering kan göras effektivt måste en inlärning av vad som är spräppost respektive vanliga brev ske. Om man inte väljer att använda bayesklassificering kommer skräppostsystemet att öka sin förmåga att detektera skräppost genom både manuellt och automatiskt inlärning, men klassificering kommer inte att ske.';
 $messages['purgebayesconfirm'] = 'Är du säker på att du vill radera alla dina bayesdata?';
-
-?>

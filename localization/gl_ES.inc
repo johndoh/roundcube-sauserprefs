@@ -81,5 +81,3 @@ $messages['levelhelp'] = 'Pódese engadir a cabeceria "Spam Level" á mensaxe pa
 $messages['foldhelp'] = 'Deberíanse cortar as cabeceiras engadidas por SpamAssassin? Ou, dito doutro xeito, deberíanse dividir en varias liñas no canto de deixala nuna soa liña moi longa?. Cando se divide unha liña sángrase para indicar que é continuación da anterior.';
 $messages['bayesruleshlp'] = 'Antes de poder usar o clasificador tipo bayesiano, é necesario "entranalo" para que detecte eficientemente correos lixo/non lixo. Se se desactivan as regras bayesianas, permítese que o sistema continue a aprender automáticamente e manualmente das mensaxes entrantes, pero non se vai usar para detectar correo lixo.';
 $messages['purgebayesconfirm'] = 'Está seguro de que quere borrar os seus datos bayesianos?';
-
-?>

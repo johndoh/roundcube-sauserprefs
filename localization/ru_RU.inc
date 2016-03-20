@@ -83,5 +83,3 @@ $messages['levelhelp'] = 'The \'Spam Level\' header can be added to a message to
 $messages['foldhelp'] = 'By default, headers added by SpamAssassin will be whitespace folded. In other words, they will be broken up into multiple lines instead of one very long one and each other line will have a tabulator prepended to mark it as a continuation of the preceding one.';
 $messages['bayesruleshlp'] = 'Позволяет использовать данные, собранные при помощи автоматического и ручного методов обучения Байесовского фильтра, для классификации последующих сообщений. Внимание: для классификации требуется большая предварительно собранная база (по 200 свежих сообщений каждого типа). В противном случае фильтр не работает даже если эта опция включена.';
 $messages['purgebayesconfirm'] = 'Вы уверены, что хотите удалить всю собранную статистику Байесовского фильтра?';
-
-?>

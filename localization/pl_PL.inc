@@ -82,5 +82,3 @@ $messages['levelhelp'] = 'Nagłówek \'Poziom Spamu\' może zostać dodany do wi
 $messages['foldhelp'] = 'Czy zawijać nagłówki dodane przez SpamAssassina? Inaczej mówiąc czy mają być łamane w wielu liniach czy też pozostawione jako jedna długa linia. Kiedy linia jest dzielona zostaje oznaczona jako kontynuacja poprzedniej linii.';
 $messages['bayesruleshlp'] = 'Słownikowy filtr Bayesa przed efektywnym użyciem musi przejść proces "trenowania" aby poprawnie wykrywać spam/nie spam. Wyłączenie reguł filtra Bayesa pozwoli systemowi na "uczenie" się zarówno automatycznie jak i ręcznie z nadchodzących wiadomości, ale wyniki działania filtrów nie będą używane do wykrywania spamu.';
 $messages['purgebayesconfirm'] = 'Czy napewno usunąć wszystkie dane Bayes?';
-
-?>
