@@ -991,8 +991,9 @@ class sauserprefs extends rcube_plugin
 				$address_table->add(array('colspan' => '3'), rcube_utils::rep_specialchars_output($this->gettext('noaddressrules')));
 
 				$this->api->output->set_env('address_rule_count', sizeof($this->user_prefs['addresses']));
-				foreach ($this->user_prefs['addresses'] as $address)
-					$this->_address_row($address_table, $address['field'], $address['value'], $attrib);
+				if (!empty($this->user_prefs['addresses']))
+					foreach ($this->user_prefs['addresses'] as $address)
+						$this->_address_row($address_table, $address['field'], $address['value'], $attrib);
 
 				$table->add(array('colspan' => 4, 'class' => 'scroller'), html::div(array('id' => 'address-rules-cont'), $address_table->show()));
 
