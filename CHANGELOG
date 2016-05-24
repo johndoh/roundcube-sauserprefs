@@ -2,6 +2,7 @@ Roundcube Webmail SAUserPrefs
 =============================
 
  * More fixes for bayes learn thresholds
+ * Correct PHP warning when no address rules defined
 
 Version 1.15 (2015-04-02, rc-1.1)
 =================================================
