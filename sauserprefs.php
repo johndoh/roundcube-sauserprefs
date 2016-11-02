@@ -5,7 +5,6 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
- * @version @package_version@
  * @author Philip Weir
  *
  * Copyright (C) 2009-2015 Philip Weir
