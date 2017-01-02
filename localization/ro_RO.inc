@@ -81,5 +81,3 @@ $messages['levelhelp'] = 'The \'Spam Level\' header can be added to a message to
 $messages['foldhelp'] = 'Should headers added by SpamAssassin will be wrapped? In other words, should they be broken up into multiple lines instead of one very long one. When a line is broken it will be indented to mark it as a continuation of the preceding one.';
 $messages['bayesruleshlp'] = 'Before the Bayesian-style classifier can be used effectively it must be "trained" to properly detect spam/non spam messages. Disabling the Bayesian rules allows the system to continue to learn both automatically and manually from incoming mail but it will not be used to detect spam.';
 $messages['purgebayesconfirm'] = 'Esti sigur ca doresti sa stergi toate datele Bayesiane?';
-
-?>

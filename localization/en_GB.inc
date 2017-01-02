@@ -33,7 +33,7 @@ $labels['blacklist_from'] = 'Reject Mail From';
 $labels['whitelist_to'] = 'Accept Mail Sent To';
 $labels['addrule'] = 'Add Rule';
 $labels['rule'] = 'Rule';
-$labels['importfromaddressbook'] = 'Import addresses from Address Book';
+$labels['importfromaddressbook'] = 'Import addresses from Contacts';
 $labels['deleteall'] = 'Delete All';
 $labels['autoscore'] = 'Auto';
 $labels['defaultscore'] = 'Default Score';
@@ -55,7 +55,7 @@ $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed spam settings';
 $messages['sauserpreffailed'] = 'Error: Cannot change spam settings';
 $messages['spamthresexp'] = 'Anything above the threshold is marked as spam. Increasing this threshold will increase the amount of spam missed, but will reduce the risk of false positives.';
-$messages['spamlangexp'] = 'Select all the languages you expect to receive e-mail in. Any messages received that are written in non selected languages will be treated as possible spam.';
+$messages['spamlangexp'] = 'Select all the languages you expect to receive email in. Any messages received that are written in non selected languages will be treated as possible spam.';
 $messages['headersexp'] = 'SpamAssassin adds headers to processed messages providing information about the results. Use the options below to configure these headers.';
 $messages['spamtestssexp'] = 'Some checks use internet based services to help identify spam. Select the ones you wish to use:';
 $messages['spamreport'] = 'When a message is identified as spam a report of all tests and scores assigned is created...';
@@ -83,5 +83,3 @@ $messages['levelhelp'] = 'The \'Spam Level\' header can be added to a message to
 $messages['foldhelp'] = 'Should headers added by SpamAssassin be wrapped? In other words, should they be broken up into multiple lines instead of one very long one. When a line is broken it will be indented to mark it as a continuation of the preceding one.';
 $messages['bayesruleshlp'] = 'Before the Bayesian-style classifier can be used effectively it must be "trained" to properly detect spam/non spam messages. Disabling the Bayesian rules allows the system to continue to learn both automatically and manually from incoming mail but it will not be used to detect spam.';
 $messages['purgebayesconfirm'] = 'Are you sure delete all your Bayesian data?';
-
-?>

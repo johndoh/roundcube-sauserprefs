@@ -82,5 +82,3 @@ $messages['levelhelp'] = 'L\'intestazione \'Spam Level\' può essere aggiunto a 
 $messages['foldhelp'] = 'Gli header aggiunti da SpamAssassin devono essere suddivisi? In altre parole, essi dovrebbero essere suddivisi in più righe invece di una molto lunga. Quando una linea è interrotta apparirà rientrata per segnalare la continuazione della precedente.';
 $messages['bayesruleshlp'] = 'Prima che i filtri Bayesiani possano funzionare in modo efficace devono essere "addestrati" per rilevare correttamente i messaggi di spam e non. La disattivazione delle regole bayesiane permette al sistema di continuare l\'apprendimento sia automaticamente che manualmente sulla posta in arrivo, ma non saranno utilizzati per rilevare lo spam.';
 $messages['purgebayesconfirm'] = 'Sei sicuro di voler eliminare tutti i dati bayesiani?';
-
-?>

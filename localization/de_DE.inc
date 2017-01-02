@@ -82,5 +82,3 @@ $messages['levelhelp'] = 'Der \'Spam Level\' Header kann  Mitteilungen anhand vo
 $messages['foldhelp'] = 'Standardmäßig werden Header, die von SpamAssasin hinzugefügt werden, "whitespace foled". In anderen Worten: Sie werden auf mehrere Zeilen verteilt anstelle von einer sehr langen Zeile. Jeder andere Zeile wird ein Tabulator vorgesetzt um es als eine weiterführende Zeile der Vorhergehenden zu markieren.';
 $messages['bayesruleshlp'] = 'Es empfiehlt sich, die "naive bayesische Stil Klassifizierung" zu verwenden. Damit können auch die Regeln deaktiviert werden auch wenn das automatisch und manuelle Lernen aktiviert ist.';
 $messages['purgebayesconfirm'] = 'Sind Sie sicher, dass Sie alle bayesischen Daten löschen möchten?';
-
-?>

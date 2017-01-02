@@ -5,7 +5,6 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
- * @version @package_version@
  * @author Philip Weir
  *
  * Copyright (C) 2009-2015 Philip Weir
@@ -242,7 +241,7 @@ class sauserprefs extends rcube_plugin
 		{
 			case 'general':
 				if (!isset($no_override['required_score']))
-					$new_prefs['required_score'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST);
+					$new_prefs['required_score'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST) ?: $this->global_prefs['required_score'];
 
 				if (!isset($no_override['rewrite_header Subject']))
 					$new_prefs['rewrite_header Subject'] = rcube_utils::get_input_value('_spamsubject', rcube_utils::INPUT_POST);
@@ -305,10 +304,10 @@ class sauserprefs extends rcube_plugin
 					$new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : "1";
 
 				if (!isset($no_override['bayes_auto_learn_threshold_nonspam']))
-					$new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_utils::get_input_value('_bayesnonspam', rcube_utils::INPUT_POST);
+					$new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_utils::get_input_value('_bayesnonspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_nonspam'];
 
 				if (!isset($no_override['bayes_auto_learn_threshold_spam']))
-					$new_prefs['bayes_auto_learn_threshold_spam'] = rcube_utils::get_input_value('_bayesspam', rcube_utils::INPUT_POST);
+					$new_prefs['bayes_auto_learn_threshold_spam'] = rcube_utils::get_input_value('_bayesspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_spam'];
 
 				if (!isset($no_override['use_bayes_rules']))
 					$new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : "1";
@@ -991,7 +990,7 @@ class sauserprefs extends rcube_plugin
 				$address_table->add(array('colspan' => '3'), rcube_utils::rep_specialchars_output($this->gettext('noaddressrules')));
 
 				$this->api->output->set_env('address_rule_count', sizeof($this->user_prefs['addresses']));
-				foreach ($this->user_prefs['addresses'] as $address)
+				foreach ((array)$this->user_prefs['addresses'] as $address)
 					$this->_address_row($address_table, $address['field'], $address['value'], $attrib);
 
 				$table->add(array('colspan' => 4, 'class' => 'scroller'), html::div(array('id' => 'address-rules-cont'), $address_table->show()));

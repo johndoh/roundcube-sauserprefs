@@ -81,5 +81,3 @@ $messages['levelhelp'] = 'O cabeçalho \'Spam Level\' pode ser adicionado na men
 $messages['foldhelp'] = 'Por padrão, os cabeçalhos adicionados são separados por duplo espaço. Evitando uma linha muito longa, quebrando-a em várias linhas menores.';
 $messages['bayesruleshlp'] = 'Se usar as regras \'naive-Bayes-style\' como classificadores. Permite que desligue as regras mas, possibilitando deixar auto-aprendizagem automatica ou manual.';
 $messages['purgebayesconfirm'] = 'Tem certeza que deseja excluir os dados da \'Bayes\' ?';
-
-?>

@@ -82,5 +82,3 @@ $messages['levelhelp'] = 'Hlavička \'Spam Level\' zobrazuje opakovaním znaku (
 $messages['foldhelp'] = 'Mohou být hlavičky přidané do e-mailu SpamAssassinem rozdělené na víc řádků, namísto toho, aby byly na jednom velmi dlouhém řádku? Pokud je řádek rozdělený, jeho pokračování je označeno odsazením.';
 $messages['bayesruleshlp'] = 'Předtím, než může být Bayesovský klasifikátor efektivně použit, se musí natrénovat správné rozeznávání spamu od ne-spamu. Deaktivací Bayesovských pravidel systému umožníte pokračovat ve studiu jak automaticky, tak ručně z příchozí pošty, ale pravidla nebudou použity k detekci spamu.';
 $messages['purgebayesconfirm'] = 'Jste si jisti, že chcete doopravdy vymazat celou Vaši Bayesovskou databázi?';
-
-?>

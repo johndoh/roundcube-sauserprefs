@@ -1,6 +1,11 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.16 (2017-01-02, rc-1.1)
+=================================================
+ * More fixes for bayes learn thresholds
+ * Correct PHP warning when no address rules defined
+
 Version 1.15 (2015-04-02, rc-1.1)
 =================================================
  * Add plugin hook sauserprefs_sections_list
