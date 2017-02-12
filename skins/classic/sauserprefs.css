@@ -226,3 +226,11 @@ table.addressprefstable tr > .scroller
 {
   padding: 0;
 }
+
+span.helpicon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url(images/icons.png);
+  background-position: 0 -57px;
+}

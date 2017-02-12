@@ -50,6 +50,7 @@ $labels['bayesspam'] = 'Junk threshold';
 $labels['bayesrules'] = 'Use Bayesian rules';
 $labels['help'] = 'Help';
 $labels['arialabelspamform'] = 'Junk settings form';
+$labels['moreinfo'] = 'See more information about this option';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed junk settings';
