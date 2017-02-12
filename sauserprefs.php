@@ -107,7 +107,7 @@ class sauserprefs extends rcube_plugin
 				$this->include_script('sauserprefs.js');
 			}
 		}
-		elseif (sizeof($this->addressbook_sync) > 0) {
+		elseif (count($this->addressbook_sync) > 0) {
 			$this->add_hook('contact_create', array($this, 'contact_add'));
 			$this->add_hook('contact_update', array($this, 'contact_save'));
 			$this->add_hook('contact_delete', array($this, 'contact_delete'));
@@ -205,7 +205,7 @@ class sauserprefs extends rcube_plugin
 		$this->api->output->set_env('sauserprefs_sort', $sorts);
 
 		// output global prefs as default in env
-		foreach($this->global_prefs as $key => $val)
+		foreach ($this->global_prefs as $key => $val)
 			$this->api->output->set_env(str_replace(" ", "_", $key), $val);
 
 		unset($attrib['form']);
@@ -471,7 +471,7 @@ class sauserprefs extends rcube_plugin
 
 		// sort address rules
 		if (is_array($prefs['addresses']))
-			usort($prefs['addresses'], create_function('$a, $b', 'return strnatcasecmp($a["value"], $b["value"]);'));
+			usort($prefs['addresses'], array($this, 'sort_addresses'));
 
 		return $prefs;
 	}
@@ -947,7 +947,7 @@ class sauserprefs extends rcube_plugin
 
 				$data = html::p(null, rcmail::Q($this->gettext('whitelistexp')));
 
-				if (sizeof($this->addressbook_sync) > 0)
+				if (count($this->addressbook_sync) > 0)
 					$data .= rcmail::Q($this->gettext('autowhitelist')) . "<br /><br />";
 
 				$blocks['main']['intro'] = $data;
@@ -971,7 +971,7 @@ class sauserprefs extends rcube_plugin
 				$table->add('action', $button_addaddress);
 				$table->add(null, "&nbsp;");
 
-				$import = sizeof($this->addressbook_import) > 0 ? $this->api->output->button(array('command' => 'plugin.sauserprefs.import_whitelist', 'type' => 'link', 'label' => 'import', 'title' => 'sauserprefs.importfromaddressbook')) : '';
+				$import = count($this->addressbook_import) > 0 ? $this->api->output->button(array('command' => 'plugin.sauserprefs.import_whitelist', 'type' => 'link', 'label' => 'import', 'title' => 'sauserprefs.importfromaddressbook')) : '';
 				$delete_all = $this->api->output->button(array('command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall'));
 
 				$table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import ."&nbsp;&nbsp;". $delete_all);
@@ -983,13 +983,13 @@ class sauserprefs extends rcube_plugin
 
 				$this->_address_row($address_table, null, null, $attrib);
 
-				if (sizeof($this->user_prefs['addresses']) > 0)
+				if (count($this->user_prefs['addresses']) > 0)
 					$norules = 'display: none;';
 
 				$address_table->set_row_attribs(array('style' => $norules));
 				$address_table->add(array('colspan' => '3'), rcube_utils::rep_specialchars_output($this->gettext('noaddressrules')));
 
-				$this->api->output->set_env('address_rule_count', sizeof($this->user_prefs['addresses']));
+				$this->api->output->set_env('address_rule_count', count($this->user_prefs['addresses']));
 				foreach ((array)$this->user_prefs['addresses'] as $address)
 					$this->_address_row($address_table, $address['field'], $address['value'], $attrib);
 
@@ -1004,10 +1004,10 @@ class sauserprefs extends rcube_plugin
 
 		$out = '';
 		foreach ($data['blocks'] as $block) {
-			if (isset($block['content']) || sizeof($block['options']) > 0 ) {
+			if (isset($block['content']) || count($block['options']) > 0 ) {
 				$content = $block['content'];
 
-				if (sizeof($block['options']) > 0) {
+				if (count($block['options']) > 0) {
 					$table = new html_table(array('class' => $block['class'], 'cols' => $block['cols']));
 
 					foreach ($block['options'] as $row) {
@@ -1075,6 +1075,11 @@ class sauserprefs extends rcube_plugin
 		}
 
 		return $pref;
+	}
+
+	static function sort_addresses($a, $b)
+	{
+		return strnatcasecmp($a["value"], $b["value"]);
 	}
 
 	private function _gen_email_arr($contact)
