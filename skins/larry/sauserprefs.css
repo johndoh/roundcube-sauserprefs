@@ -248,59 +248,59 @@ span.helpicon {
 #sections-table #rcmrowtests td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 5px -199px;
+  background-position: 3px -199px;
 }
 
 #sections-table #rcmrowtests.selected td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 5px -225px;
+  background-position: 3px -225px;
 }
 
 #sections-table #rcmrowbayes td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 5px -248px;
+  background-position: 3px -248px;
 }
 
 #sections-table #rcmrowbayes.selected td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 5px -270px;
+  background-position: 3px -270px;
 }
 
 #sections-table #rcmrowheaders td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 5px -99px;
+  background-position: 3px -99px;
 }
 
 #sections-table #rcmrowheaders.selected td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 5px -124px;
+  background-position: 3px -124px;
 }
 
 #sections-table #rcmrowreport td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 5px -150px;
+  background-position: 3px -150px;
 }
 
 #sections-table #rcmrowreport.selected td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 5px -174px;
+  background-position: 3px -174px;
 }
 
 #sections-table #rcmrowaddresses td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 4px -50px;
+  background-position: 2px -50px;
 }
 
 #sections-table #rcmrowaddresses.selected td.section
 {
   background-image: url(images/listicons.png);
-  background-position: 4px -74px;
+  background-position: 2px -74px;
 }
