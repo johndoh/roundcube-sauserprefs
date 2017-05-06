@@ -33,6 +33,7 @@ $labels['blacklist_from'] = 'Reject Mail From';
 $labels['whitelist_to'] = 'Accept Mail Sent To';
 $labels['addrule'] = 'Add Rule';
 $labels['rule'] = 'Rule';
+$labels['importaddresses'] = 'Import addresses';
 $labels['importfromaddressbook'] = 'Import addresses from Contacts';
 $labels['deleteall'] = 'Delete All';
 $labels['autoscore'] = 'Auto';
