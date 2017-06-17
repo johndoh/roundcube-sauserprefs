@@ -985,17 +985,18 @@ class sauserprefs extends rcube_plugin
 				$address_table->add_header('email', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'email', 'title' => 'sortby')));
 				$address_table->add_header('control', '&nbsp;');
 
-				$this->_address_row($address_table, null, null, $attrib);
-
-				if (count($this->user_prefs['addresses']) > 0)
-					$norules = 'display: none;';
-
-				$address_table->set_row_attribs(array('style' => $norules));
-				$address_table->add(array('colspan' => '3'), rcube_utils::rep_specialchars_output($this->gettext('noaddressrules')));
-
 				$this->api->output->set_env('address_rule_count', count($this->user_prefs['addresses']));
 				foreach ((array)$this->user_prefs['addresses'] as $address)
 					$this->_address_row($address_table, $address['field'], $address['value'], $attrib);
+
+				// add no address and new address rows at the end
+				if (count($this->user_prefs['addresses']) > 0)
+					$norules = 'display: none;';
+
+				$address_table->set_row_attribs(array('class' => 'noaddressrules', 'style' => $norules));
+				$address_table->add(array('colspan' => '3'), rcube_utils::rep_specialchars_output($this->gettext('noaddressrules')));
+
+				$this->_address_row($address_table, null, null, $attrib, array('class' => 'newaddressrule'));
 
 				$table->add(array('colspan' => 4, 'class' => 'scroller'), html::div(array('id' => 'address-rules-cont'), $address_table->show()));
 
@@ -1037,10 +1038,10 @@ class sauserprefs extends rcube_plugin
 		return $out;
 	}
 
-	private function _address_row($address_table, $field, $value, $attrib)
+	private function _address_row(&$address_table, $field, $value, $attrib, $row_attrib = array())
 	{
 		if (!isset($field))
-			$address_table->set_row_attribs(array('style' => 'display: none;'));
+			$address_table->set_row_attribs(array('style' => 'display: none;') + $row_attrib);
 
 		$hidden_action = new html_hiddenfield(array('name' => '_address_rule_act[]', 'value' => ''));
 		$hidden_field = new html_hiddenfield(array('name' => '_address_rule_field[]', 'value' => $field));
@@ -1063,8 +1064,6 @@ class sauserprefs extends rcube_plugin
 		$address_table->add(array('class' => 'email'), $value);
 		$del_button = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'link', 'class' => 'delete', 'label' => 'delete', 'content' => ' ', 'title' => 'delete'));
 		$address_table->add('control', $del_button . $hidden_action->show() . $hidden_field->show() . $hidden_text->show());
-
-		return $address_table;
 	}
 
 	static function map_pref_name($pref, $reverse = false)
