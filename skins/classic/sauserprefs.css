@@ -234,3 +234,12 @@ span.helpicon {
   background-image: url(images/icons.png);
   background-position: 0 -57px;
 }
+
+#rcmfd_spamlevelchar {
+  width: 20px;
+}
+
+#rcmfd_spamsubject,
+#rcmfd_spamaddress {
+  width: 200px;
+}
