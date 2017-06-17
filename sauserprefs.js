@@ -52,8 +52,6 @@ rcube_webmail.prototype.sauserprefs_toggle_bayes_auto = function(checkbox) {
 rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
 	parent.rcmail.set_busy(false, null, rcmail.env.sauserprefs_whitelist);
 
-	var adrTable = rcube_find_object('address-rules-table').tBodies[0];
-
 	var actions = document.getElementsByName('_address_rule_act[]');
 	var prefs = document.getElementsByName('_address_rule_field[]');
 	var addresses = document.getElementsByName('_address_rule_value[]');
@@ -64,20 +62,19 @@ rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
 		}
 	}
 
-	var newNode = adrTable.rows[0].cloneNode(true);
-	adrTable.rows[1].style.display = 'none';
-	adrTable.appendChild(newNode);
+	var adrTable = $('#address-rules-table tbody');
+	var new_row = $(adrTable).children('tr.newaddressrule').clone().removeClass('newaddressrule').show();
+	new_row.children('td').eq(0).addClass('whitelist_from').text(rcmail.get_label('whitelist_from','sauserprefs'));
+	new_row.children('td').eq(1).text(address);
+	new_row.find('input[name="_address_rule_act[]"]').val('INSERT');
+	new_row.find('input[name="_address_rule_field[]"]').val('whitelist_from');
+	new_row.find('input[name="_address_rule_value[]"]').val(address);
+	$(new_row).appendTo('#address-rules-table tbody');
 
-	newNode.style.display = "";
-	newNode.cells[0].className = "whitelist_from";
-	newNode.cells[0].innerHTML = rcmail.get_label('whitelist_from','sauserprefs');
-	newNode.cells[1].innerHTML = address;
-	actions[newNode.rowIndex - 2].value = "INSERT";
-	prefs[newNode.rowIndex - 2].value = "whitelist_from";
-	addresses[newNode.rowIndex - 2].value = address;
+	$(adrTable).children('tr.noaddressrules').hide();
 
 	rcmail.env.address_rule_count++;
-	rcmail.sauserprefs_table_sort('#spam-langs-table');
+	rcmail.sauserprefs_table_sort('#address-rules-table');
 }
 
 rcube_webmail.prototype.sauserprefs_help = function(sel) {
@@ -118,6 +115,9 @@ rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
 	for (var i = 0; i < rows.length; i++) {
 		table.children('tbody').append(rows[i]);
 	}
+
+	// move hidden rows to the bottom of the table
+	table.children('tbody').children('tr:hidden').appendTo(table.children('tbody'));
 }
 
 function sauserprefs_check_email(input) {
@@ -258,24 +258,24 @@ $(document).ready(function() {
 				}, true);
 
 				rcmail.register_command('plugin.sauserprefs.addressrule_del', function(props, obj) {
-					var adrTable = rcube_find_object('address-rules-table').tBodies[0];
-					var rowidx = obj.parentNode.parentNode.rowIndex - 1;
-					var fieldidx = rowidx - 1;
+					var adrTable = $('#address-rules-table tbody');
+					var actField = $(obj).closest('td').find('input[name="_address_rule_act[]"]');
 
 					if (!confirm(rcmail.get_label('spamaddressdelete','sauserprefs')))
 						return false;
 
-					if (document.getElementsByName('_address_rule_act[]')[fieldidx].value == "INSERT") {
-						adrTable.deleteRow(rowidx);
+					if (actField.val() == "INSERT") {
+						$(obj).closest('tr').remove();
 					}
 					else {
-						adrTable.rows[rowidx].style.display = 'none';
-						document.getElementsByName('_address_rule_act[]')[fieldidx].value = "DELETE";
+						actField.val('DELETE');
+						$(obj).closest('tr').hide().appendTo('#address-rules-table tbody');
 					}
 
 					rcmail.env.address_rule_count--;
-					if (rcmail.env.address_rule_count < 1)
-						adrTable.rows[1].style.display = '';
+
+					if (adrTable.children('tr:visible').length == 0)
+						$(adrTable).children('tr.noaddressrules').show();
 
 					return false;
 				}, true);
@@ -309,17 +309,16 @@ $(document).ready(function() {
 							}
 						}
 
-						var newNode = adrTable.rows[0].cloneNode(true);
-						adrTable.rows[1].style.display = 'none';
-						adrTable.appendChild(newNode);
+						var adrTable = $('#address-rules-table tbody');
+						var new_row = $(adrTable).children('tr.newaddressrule').clone().removeClass('newaddressrule').show();
+						new_row.children('td').eq(0).addClass(input_spamaddressrule.options[selrule].value).text(input_spamaddressrule.options[selrule].text);
+						new_row.children('td').eq(1).text(input_spamaddress.value);
+						new_row.find('input[name="_address_rule_act[]"]').val('INSERT');
+						new_row.find('input[name="_address_rule_field[]"]').val(input_spamaddressrule.options[selrule].value);
+						new_row.find('input[name="_address_rule_value[]"]').val(input_spamaddress.value);
+						$(new_row).appendTo('#address-rules-table tbody');
 
-						newNode.style.display = "";
-						newNode.cells[0].className = input_spamaddressrule.options[selrule].value;
-						newNode.cells[0].innerHTML = input_spamaddressrule.options[selrule].text;
-						newNode.cells[1].innerHTML = input_spamaddress.value;
-						actions[newNode.rowIndex - 2].value = "INSERT";
-						prefs[newNode.rowIndex - 2].value = input_spamaddressrule.options[selrule].value;
-						addresses[newNode.rowIndex - 2].value = input_spamaddress.value;
+						$(adrTable).children('tr.noaddressrules').hide();
 
 						input_spamaddressrule.selectedIndex = 0;
 						input_spamaddress.value = '';
@@ -330,24 +329,26 @@ $(document).ready(function() {
 				}, true);
 
 				rcmail.register_command('plugin.sauserprefs.whitelist_delete_all', function(props, obj) {
-					var adrTable = rcube_find_object('address-rules-table').tBodies[0];
-
 					if (!confirm(rcmail.get_label('spamaddressdeleteall','sauserprefs')))
 						return false;
 
-					for (var i = adrTable.rows.length - 1; i > 1; i--) {
-						if (document.getElementsByName('_address_rule_act[]')[i-1].value == "INSERT") {
-							adrTable.deleteRow(i);
-							rcmail.env.address_rule_count--;
-						}
-						else if (document.getElementsByName('_address_rule_act[]')[i-1].value != "DELETE") {
-							adrTable.rows[i].style.display = 'none';
-							document.getElementsByName('_address_rule_act[]')[i-1].value = "DELETE";
-							rcmail.env.address_rule_count--;
-						}
-					}
+					$.each($('#address-rules-table tbody tr:visible'), function() {
+						var actField = $(this).find('input[name="_address_rule_act[]"]');
 
-					adrTable.rows[1].style.display = '';
+						if (actField.val() == "INSERT") {
+							$(this).remove();
+						}
+						else {
+							actField.val('DELETE');
+							$(this).hide().appendTo('#address-rules-table tbody');
+						}
+
+						rcmail.env.address_rule_count--;
+					});
+
+					if ($('#address-rules-table tbody tr:visible').length == 0)
+						$('#address-rules-table tbody tr.noaddressrules').show();
+
 					return false;
 				}, true);
 
@@ -504,19 +505,22 @@ $(document).ready(function() {
 
 						// Delete whitelist
 						if (rcube_find_object('address-rules-table')) {
-							var adrTable = rcube_find_object('address-rules-table').tBodies[0];
-							for (var i = adrTable.rows.length - 1; i > 1; i--) {
-								if (document.getElementsByName('_address_rule_act[]')[i-1].value == "INSERT") {
-									adrTable.deleteRow(i);
-									rcmail.env.address_rule_count--;
+							$.each($('#address-rules-table tbody tr:visible'), function() {
+								var actField = $(this).find('input[name="_address_rule_act[]"]');
+
+								if (actField.val() == "INSERT") {
+									$(this).remove();
 								}
-								else if (document.getElementsByName('_address_rule_act[]')[i-1].value != "DELETE") {
-									adrTable.rows[i].style.display = 'none';
-									document.getElementsByName('_address_rule_act[]')[i-1].value = "DELETE";
-									rcmail.env.address_rule_count--;
+								else {
+									actField.val('DELETE');
+									$(this).hide().appendTo('#address-rules-table tbody');
 								}
-							}
-							adrTable.rows[1].style.display = '';
+
+								rcmail.env.address_rule_count--;
+							});
+
+							if ($('#address-rules-table tbody tr:visible').length == 0)
+								$('#address-rules-table tbody tr.noaddressrules').show();
 						}
 					}
 				}, true);
