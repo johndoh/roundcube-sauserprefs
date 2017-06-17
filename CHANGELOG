@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Fix bug saving locales/langs options
+
 Version 1.17 (2017-06-14, rc-1.3)
 =================================================
  * "Flattened" the larry theme: fresher look by removing shadows and gradients

@@ -249,7 +249,8 @@ class sauserprefs extends rcube_plugin
 				if (!isset($no_override['ok_locales'])) {
 					$new_prefs['ok_locales'] = '';
 					if (is_array(rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST))) {
-						$locales = array_intersect(rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST), $this->sa_locales);
+						$input_locals = rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST);
+						$locales = array_intersect($input_locals, $this->sa_locales);
 						$new_prefs['ok_locales'] = implode(" ", $locales);
 					}
 				}
