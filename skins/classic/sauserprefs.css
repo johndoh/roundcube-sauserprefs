@@ -46,10 +46,10 @@ table.spam-langs-table thead th a
   text-decoration: none;
 }
 
-table.address-rules-table thead th.sortedASC,
-table.address-rules-table thead th.sortedDESC,
-table.spam-langs-table thead th.sortedASC,
-table.spam-langs-table thead th.sortedDESC
+table.address-rules-table thead th.sorted-asc,
+table.address-rules-table thead th.sorted-desc,
+table.spam-langs-table thead th.sorted-asc,
+table.spam-langs-table thead th.sorted-desc
 {
   background-position: 0px -26px;
 }
@@ -69,14 +69,14 @@ table.spam-langs-table thead th.tick a
   padding-right: 24px;
 }
 
-table.address-rules-table thead tr th.sortedASC a,
-table.spam-langs-table thead tr th.sortedASC a
+table.address-rules-table thead tr th.sorted-asc a,
+table.spam-langs-table thead tr th.sorted-asc a
 {
   background: url(images/sort.gif) no-repeat right -14px;
 }
 
-table.address-rules-table thead tr th.sortedDESC a,
-table.spam-langs-table thead tr th.sortedDESC a
+table.address-rules-table thead tr th.sorted-desc a,
+table.spam-langs-table thead tr th.sorted-desc a
 {
   background: url(images/sort.gif) no-repeat right 0;
 }

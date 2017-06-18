@@ -201,11 +201,15 @@ function sauserprefs_check_email(input) {
 
 $(document).ready(function() {
 	if (window.rcmail) {
+		// set table sorting classes
+		rcmail.env.sauserprefs_table_sort_asc = 'sortedASC sorted-asc'; // sortedASC class depreciated in v1.18
+		rcmail.env.sauserprefs_table_sort_desc =  'sortedDESC sorted-desc'; // sortedDESC class depreciated in v1.18
+
 		$.each(['#spam-langs-table', '#address-rules-table'], function(idx, id) {
 			if ($(id).length == 1) {
 				// add classes for sorting
 				var sorting_defaults = rcmail.env.sauserprefs_sort[id];
-				$(id).find('thead th').eq(sorting_defaults[0]).addClass(sorting_defaults[1] == "true" ? 'sortedASC' : 'sortedDESC');
+				$(id).find('thead th').eq(sorting_defaults[0]).addClass(sorting_defaults[1] == "true" ? rcmail.env.sauserprefs_table_sort_asc : rcmail.env.sauserprefs_table_sort_desc);
 
 				var temp_table = new rcube_list_widget($(id)[0], {});
 				temp_table.init();
@@ -359,19 +363,12 @@ $(document).ready(function() {
 				rcmail.register_command('plugin.sauserprefs.table_sort', function(props, obj) {
 					var id = props;
 					var idx = $(obj).parent('th').index();
-					var asc = !$(obj).parent('th').hasClass('sortedASC');
+					var asc = !$(obj).parent('th').hasClass(rcmail.env.sauserprefs_table_sort_asc);
 
 					rcmail.sauserprefs_table_sort(id, idx, asc);
 
-					$(obj).parents('thead:first').find('th').removeClass('sortedASC').removeClass('sortedDESC');
-					if (asc) {
-						$(obj).parent('th').addClass('sortedASC');
-						$(obj).parent('th').removeClass('sortedDESC');
-					}
-					else {
-						$(obj).parent('th').removeClass('sortedASC');
-						$(obj).parent('th').addClass('sortedDESC');
-					}
+					$(obj).parents('thead:first').find('th').removeClass(rcmail.env.sauserprefs_table_sort_asc).removeClass(rcmail.env.sauserprefs_table_sort_desc);
+					$(obj).parent('th').addClass(asc ? rcmail.env.sauserprefs_table_sort_asc : rcmail.env.sauserprefs_table_sort_desc);
 
 					rcmail.env.sauserprefs_sort[id] = [idx, asc];
 					rcmail.save_pref({name: 'sauserprefs_sort', value: rcmail.env.sauserprefs_sort, env: true});

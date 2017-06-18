@@ -65,15 +65,15 @@ table.spam-langs-table thead th.tick a
   padding-right: 24px;
 }
 
-table.address-rules-table thead th.sortedASC a,
-table.spam-langs-table thead th.sortedASC a
+table.address-rules-table thead th.sorted-asc a,
+table.spam-langs-table thead th.sorted-asc a
 {
   text-decoration: underline;
   background: url(images/listicons.png) no-repeat right -298px;
 }
 
-table.address-rules-table thead th.sortedDESC a,
-table.spam-langs-table thead th.sortedDESC a
+table.address-rules-table thead th.sorted-desc a,
+table.spam-langs-table thead th.sorted-desc a
 {
   text-decoration: underline;
   background: url(images/listicons.png) no-repeat right -330px;
