@@ -53,6 +53,17 @@ rcube_webmail.prototype.sauserprefs_toggle_bayes_auto = function(checkbox) {
 	}
 }
 
+rcube_webmail.prototype.sauserprefs_update_lang = function(chkbox, tickobj, enable) {
+	if (enable) {
+		chkbox.attr('checked', 'checked');
+		tickobj.attr('title', rcmail.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
+	}
+	else {
+		chkbox.removeAttr('checked');
+		tickobj.attr('title', rcmail.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
+	}
+}
+
 rcube_webmail.prototype.sauserprefs_addressrule_insert_row = function(p) {
 	var error = false;
 	$.each($('input[name="_address_rule_value[]"]'), function(idx) {
@@ -190,34 +201,26 @@ function sauserprefs_check_email(input) {
 
 $(document).ready(function() {
 	if (window.rcmail) {
-		if (document.getElementById('spam-langs-table')) {
-			// add classes for sorting
-			$('#spam-langs-table thead th').eq(rcmail.env.sauserprefs_sort['#spam-langs-table'][0]).addClass(rcmail.env.sauserprefs_sort['#spam-langs-table'][1] == "true" ? 'sortedASC' : 'sortedDESC');
+		$.each(['#spam-langs-table', '#address-rules-table'], function(idx, id) {
+			if ($(id).length == 1) {
+				// add classes for sorting
+				var sorting_defaults = rcmail.env.sauserprefs_sort[id];
+				$(id).find('thead th').eq(sorting_defaults[0]).addClass(sorting_defaults[1] == "true" ? 'sortedASC' : 'sortedDESC');
 
-			var spam_langs_table = new rcube_list_widget(document.getElementById('spam-langs-table'), {});
-			spam_langs_table.init();
+				var temp_table = new rcube_list_widget($(id)[0], {});
+				temp_table.init();
 
-			// sort table according to user prefs
-			rcmail.sauserprefs_table_sort('#spam-langs-table');
-		}
+				// sort table according to user prefs
+				rcmail.sauserprefs_table_sort(id);
+			}
 
-		if (document.getElementById('address-rules-table')) {
-			// add classes for sorting
-			$('#address-rules-table thead th').eq(rcmail.env.sauserprefs_sort['#address-rules-table'][0]).addClass(rcmail.env.sauserprefs_sort['#address-rules-table'][1] == "true" ? 'sortedASC' : 'sortedDESC');
-
-			var address_rules_table = new rcube_list_widget(document.getElementById('address-rules-table'), {});
-			address_rules_table.init();
-
-			// sort table according to user prefs
-			rcmail.sauserprefs_table_sort('#address-rules-table');
-		}
+		});
 
 		rcmail.addEventListener('init', function(evt) {
 			if (rcmail.env.action == 'plugin.sauserprefs.edit') {
 				rcmail.register_command('plugin.sauserprefs.select_all_langs', function() {
 					$.each($('input[name="_spamlang[]"]'), function(idx) {
-						$(this).attr('checked', 'checked');
-						$('[id^=spam_lang_]').eq(idx).attr('title', rcmail.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
+						rcmail.sauserprefs_update_lang($(this), $('[id^=spam_lang_]').eq(idx), true);
 					});
 
 					return false;
@@ -225,14 +228,7 @@ $(document).ready(function() {
 
 				rcmail.register_command('plugin.sauserprefs.select_invert_langs', function() {
 					$.each($('input[name="_spamlang[]"]'), function(idx) {
-						if ($(this).is(':checked')) {
-							$(this).removeAttr('checked');
-							$('[id^=spam_lang_]').eq(idx).attr('title', rcmail.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
-						}
-						else {
-							$(this).attr('checked', 'checked');
-							$('[id^=spam_lang_]').eq(idx).attr('title', rcmail.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
-						}
+						rcmail.sauserprefs_update_lang($(this), $('[id^=spam_lang_]').eq(idx), !$(this).is(':checked'));
 					});
 
 					return false;
@@ -240,8 +236,7 @@ $(document).ready(function() {
 
 				rcmail.register_command('plugin.sauserprefs.select_no_langs', function() {
 					$.each($('input[name="_spamlang[]"]'), function(idx) {
-						$(this).removeAttr('checked');
-						$('[id^=spam_lang_]').eq(idx).attr('title', rcmail.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
+						rcmail.sauserprefs_update_lang($(this), $('[id^=spam_lang_]').eq(idx), false);
 					});
 
 					return false;
@@ -249,16 +244,7 @@ $(document).ready(function() {
 
 				rcmail.register_command('plugin.sauserprefs.message_lang', function(lang_code, obj) {
 					var langtick = $(obj).closest('tr').find('input');
-
-					if ($(langtick).is(':checked')) {
-						$(langtick).removeAttr('checked');
-						$(obj).attr('title', rcmail.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
-					}
-					else {
-						$(langtick).attr('checked', 'checked');
-						$(obj).attr('title', rcmail.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
-					}
-
+					rcmail.sauserprefs_update_lang($(langtick), $(obj), !$(langtick).is(':checked'));
 					return false;
 				}, true);
 
@@ -295,9 +281,7 @@ $(document).ready(function() {
 					if (!confirm(rcmail.get_label('spamaddressdeleteall','sauserprefs')))
 						return false;
 
-					$.each($('#address-rules-table tbody tr:visible'), function() {
-						rcmail.sauserprefs_addressrule_delete_row(this)
-					});
+					$.each($('#address-rules-table tbody tr:visible'), function() { rcmail.sauserprefs_addressrule_delete_row(this) });
 
 					return false;
 				}, true);
@@ -356,24 +340,14 @@ $(document).ready(function() {
 							'rcmfd_spamreport_1': rcmail.env.report_safe == '1',
 							'rcmfd_spamreport_2': rcmail.env.report_safe == '2',
 						};
-
-						$.each(checkboxes, function(id, checked) {
-							if (checked) {
-								$('#' + id).attr('checked', 'checked');
-							}
-							else {
-								$('#' + id).removeAttr('checked');
-							}
-						});
+						$.each(checkboxes, function(id, checked) { $('#' + id).prop('checked', checked); });
 
 						$('#rcmfd_bayesnonspam').val(''); // Bayes non spam score
 						$('#rcmfd_bayesspam').val(''); // Bayes spam score
 						$('#rcmfd_spamlevelchar').val(rcmail.env.add_header_all_Level.substr(7, 1)); // Spam level char
 
 						// Delete whitelist
-						$.each($('#address-rules-table tbody tr:visible'), function() {
-							rcmail.sauserprefs_addressrule_delete_row(this)
-						});
+						$.each($('#address-rules-table tbody tr:visible'), function() { rcmail.sauserprefs_addressrule_delete_row(this) });
 
 						// Toggle dependant fields
 						rcmail.sauserprefs_toggle_level_char($('#rcmfd_spamlevelstars'));
