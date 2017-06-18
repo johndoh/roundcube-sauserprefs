@@ -26,30 +26,23 @@ rcube_webmail.prototype.sauserprefs_toggle_level_char = function(checkbox) {
 
 rcube_webmail.prototype.sauserprefs_toggle_bayes = function(checkbox) {
 	if ($(checkbox).is(':checked')) {
-		$('#rcmfd_spambayesrules').removeAttr('disabled');
-		$('#rcmfd_spambayesautolearn').removeAttr('disabled');
+		$('#rcmfd_spambayesrules,#rcmfd_spambayesautolearn').removeAttr('disabled');
 
 		if ($('#rcmfd_spambayesautolearn').is(':checked')) {
-			$('#rcmfd_bayesnonspam').removeAttr('disabled');
-			$('#rcmfd_bayesspam').removeAttr('disabled');
+			$('#rcmfd_bayesnonspam,#rcmfd_bayesspam').removeAttr('disabled');
 		}
 	}
 	else {
-		$('#rcmfd_spambayesrules').attr('disabled', 'disabled');
-		$('#rcmfd_spambayesautolearn').attr('disabled', 'disabled');
-		$('#rcmfd_bayesnonspam').attr('disabled', 'disabled');
-		$('#rcmfd_bayesspam').attr('disabled', 'disabled');
+		$('#rcmfd_spambayesrules,#rcmfd_spambayesautolearn,#rcmfd_bayesnonspam,#rcmfd_bayesspam').attr('disabled', 'disabled');
 	}
 }
 
 rcube_webmail.prototype.sauserprefs_toggle_bayes_auto = function(checkbox) {
 	if ($(checkbox).is(':checked')) {
-		$('#rcmfd_bayesnonspam').removeAttr('disabled');
-		$('#rcmfd_bayesspam').removeAttr('disabled');
+		$('#rcmfd_bayesnonspam,#rcmfd_bayesspam').removeAttr('disabled');
 	}
 	else {
-		$('#rcmfd_bayesnonspam').attr('disabled', 'disabled');
-		$('#rcmfd_bayesspam').attr('disabled', 'disabled');
+		$('#rcmfd_bayesnonspam,#rcmfd_bayesspam').attr('disabled', 'disabled');
 	}
 }
 
@@ -346,8 +339,7 @@ $(document).ready(function() {
 						};
 						$.each(checkboxes, function(id, checked) { $('#' + id).prop('checked', checked); });
 
-						$('#rcmfd_bayesnonspam').val(''); // Bayes non spam score
-						$('#rcmfd_bayesspam').val(''); // Bayes spam score
+						$('#rcmfd_bayesnonspam,#rcmfd_bayesspam').val(''); // Bayes non spam/spam score
 						$('#rcmfd_spamlevelchar').val(rcmail.env.add_header_all_Level.substr(7, 1)); // Spam level char
 
 						// Delete whitelist
