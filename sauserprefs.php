@@ -553,7 +553,7 @@ class sauserprefs extends rcube_plugin
 						'content' => $this->gettext('select') .":&nbsp;&nbsp;". $select_all ."&nbsp;&nbsp;". $select_invert ."&nbsp;&nbsp;". $select_none
 					);
 
-					$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table spam-langs-table fixedheader', 'cellspacing' => '0', 'cols' => 2));
+					$lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table sortable-table spam-langs-table fixedheader', 'cellspacing' => '0', 'cols' => 2));
 					$lang_table->add_header('lang', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'language', 'title' => 'sortby')));
 					$lang_table->add_header('tick', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'sauserprefs.enabled', 'title' => 'sortby')));
 
@@ -981,7 +981,7 @@ class sauserprefs extends rcube_plugin
 
 				$table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import ."&nbsp;&nbsp;". $delete_all);
 
-				$address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table address-rules-table fixedheader', 'cellspacing' => '0', 'cols' => 3));
+				$address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table sortable-table address-rules-table fixedheader', 'cellspacing' => '0', 'cols' => 3));
 				$address_table->add_header('rule', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'sauserprefs.rule', 'title' => 'sortby')));
 				$address_table->add_header('email', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'email', 'title' => 'sortby')));
 				$address_table->add_header('control', '&nbsp;');
