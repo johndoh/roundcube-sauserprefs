@@ -10,23 +10,16 @@
   width: 100%;
 }
 
-body.address-rules-table,
-body.spam-langs-table
-{
-  margin: 0px;
-}
-
-table.address-rules-table,
-table.spam-langs-table
+table.records-table
 {
   width: 100%;
   display: table;
   table-layout: fixed;
   border: 0;
+  margin: 0px;
 }
 
-table.address-rules-table thead th,
-table.spam-langs-table thead th
+table.records-table thead th
 {
   background: none;
   background-color: #CCC;
@@ -34,15 +27,13 @@ table.spam-langs-table thead th
   color: #000;
 }
 
-table.address-rules-table thead th a,
-table.spam-langs-table thead th a
+table.records-table thead th a
 {
   color: #000;
   padding: 0;
 }
 
-table.address-rules-table thead th a:focus,
-table.spam-langs-table thead th a:focus
+table.records-table thead th a:focus
 {
   color: #000;
   font-weight: normal;
@@ -65,15 +56,13 @@ table.spam-langs-table thead th.tick a
   padding-right: 24px;
 }
 
-table.address-rules-table thead th.sorted-asc a,
-table.spam-langs-table thead th.sorted-asc a
+table.sortable-table thead th.sorted-asc a
 {
   text-decoration: underline;
   background: url(images/listicons.png) no-repeat right -298px;
 }
 
-table.address-rules-table thead th.sorted-desc a,
-table.spam-langs-table thead th.sorted-desc a
+table.sortable-table thead th.sorted-desc a
 {
   text-decoration: underline;
   background: url(images/listicons.png) no-repeat right -330px;
@@ -169,26 +158,14 @@ table.spam-langs-table tr > .tick a.disabled
   text-decoration: underline;
 }
 
-table.generalprefstable,
-table.langprefstable,
-table.headersprefstable,
-table.testsprefstable,
-table.bayesprefstable,
-table.reportprefstable,
-table.addressprefstable
+table.propform
 {
   width: 100%;
   border-spacing: 0;
   border-collapse: collapse;
 }
 
-table.generalprefstable td,
-table.langprefstable td,
-table.headersprefstable td,
-table.testsprefstable td,
-table.bayesprefstable td,
-table.reportprefstable td,
-table.addressprefstable td
+table.propform td
 {
   width: 80%;
   padding: 4px 10px;
@@ -201,13 +178,7 @@ table.addressprefstable td
   width: auto;
 }
 
-table.generalprefstable tr > .title,
-table.langprefstable tr > .title,
-table.headersprefstable tr > .title,
-table.testsprefstable tr > .title,
-table.bayesprefstable tr > .title,
-table.reportprefstable tr > .title,
-table.addressprefstable tr > .title
+table.propform tr > .title
 {
   width: 20%;
   color: #333;
@@ -231,13 +202,13 @@ table.addressprefstable tr > .action
   text-align: right;
 }
 
-table.langprefstable tr > .scroller,
-table.addressprefstable tr > .scroller
+table.propform tr > .scroller
 {
   padding: 0;
 }
 
-span.helpicon {
+span.helpicon
+{
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -305,11 +276,13 @@ span.helpicon {
   background-position: 2px -74px;
 }
 
-#rcmfd_spamlevelchar {
+#rcmfd_spamlevelchar
+{
   width: 20px;
 }
 
 #rcmfd_spamsubject,
-#rcmfd_spamaddress {
+#rcmfd_spamaddress
+{
   width: 200px;
 }
