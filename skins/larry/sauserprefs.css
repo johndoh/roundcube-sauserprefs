@@ -212,6 +212,7 @@ span.helpicon
   display: inline-block;
   width: 16px;
   height: 16px;
+  float: right;
   background-image: url(images/icons.png);
   background-position: 0 -55px;
 }

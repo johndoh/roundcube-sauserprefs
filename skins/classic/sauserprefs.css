@@ -214,6 +214,7 @@ span.helpicon
   display: inline-block;
   width: 16px;
   height: 16px;
+  margin-left: 10px;
   background-image: url(images/icons.png);
   background-position: 0 -57px;
 }
