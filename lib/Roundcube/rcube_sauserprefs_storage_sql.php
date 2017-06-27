@@ -103,7 +103,7 @@ class rcube_sauserprefs_storage_sql
 						$result = $this->db->affected_rows();
 
 						if (!$result) {
-							rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $prefs[$idx] . '" = "' .  $vals[$idx] . '" for ' . $user_id);
+							rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $address['field'] . '" = "' . $address['value'] . '" for ' . $user_id);
 							break;
 						}
 					}
@@ -119,7 +119,7 @@ class rcube_sauserprefs_storage_sql
 						$result = $this->db->affected_rows();
 
 						if (!$result) {
-							rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $prefs[$idx] . '" = "' .  $vals[$idx] . '" for ' . $user_id);
+							rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $address['field'] . '" = "' . $address['value'] . '" for ' . $user_id);
 							break;
 						}
 					}
@@ -213,6 +213,7 @@ class rcube_sauserprefs_storage_sql
 
 	function purge_bayes($user_id)
 	{
+		$result = false;
 		$this->_db_connect('w');
 		$queries = !is_array($this->bayes_delete_query) ? array($this->bayes_delete_query) : $this->bayes_delete_query;
 
@@ -225,9 +226,9 @@ class rcube_sauserprefs_storage_sql
 		}
 
 		if (!$this->db->is_error())
-			return true;
-		else
-			return false;
+			$result = true;
+
+		return $result;
 	}
 
 	private function _db_connect($mode)
