@@ -35,6 +35,7 @@ class sauserprefs extends rcube_plugin
 	private $cur_section;
 	private $global_prefs;
 	private $user_prefs;
+	private $score_prefs = array();
 	private $addressbook_import;
 	private $addressbook_sync;
 	private $sa_locales = array('en', 'ja', 'ko', 'ru', 'th', 'zh');
@@ -93,6 +94,7 @@ class sauserprefs extends rcube_plugin
 				'headers' => array('id' => 'headers', 'class' => 'headers','section' => $this->gettext('headers')),
 				'report' => array('id' => 'report', 'class' => 'report','section' => $this->gettext('spamreportsettings')),
 				'addresses' => array('id' => 'addresses', 'class' => 'addresses', 'section' => $this->gettext('spamaddressrules')),
+				'scores' => array('id' => 'scores', 'class' => 'scores', 'section' => $this->gettext('testscores')),
 			);
 			$this->cur_section = rcube_utils::get_input_value('_section', rcube_utils::INPUT_GPC);
 
@@ -169,6 +171,11 @@ class sauserprefs extends rcube_plugin
 		foreach ($data['list'] as $id => $block) {
 			if (!isset($no_override['{' . $id . '}']))
 				$sections[$id] = $block;
+		}
+
+		// remove the test scores section if its not needed
+		if (count($this->score_prefs) == 0) {
+			unset($sections['scores']);
 		}
 
 		// create XHTML table
@@ -339,6 +346,13 @@ class sauserprefs extends rcube_plugin
 					$new_prefs['score USER_IN_WHITELIST'] = rcube_utils::get_input_value('_score_user_whitelist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_WHITELIST'];
 
 				break;
+
+			case 'scores':
+				foreach ($this->score_prefs as $test) {
+					$new_prefs['score ' . $test] = rcube_utils::get_input_value('_score_' . $test, rcube_utils::INPUT_POST) ?: $this->global_prefs['score ' . $test];
+				}
+
+				break;
 		}
 
 		// allow additional actions before prefs are saved
@@ -467,6 +481,13 @@ class sauserprefs extends rcube_plugin
 		$rcmail = rcube::get_instance();
 		$this->global_prefs = $this->_load_prefs($rcmail->config->get('sauserprefs_global_userid'));
 		$this->global_prefs = array_merge($rcmail->config->get('sauserprefs_default_prefs'), $this->global_prefs);
+
+		// extract score prefs
+		foreach (array_keys($this->global_prefs) as $test) {
+			if (!in_array($test, array('score USER_IN_BLACKLIST', 'score USER_IN_WHITELIST')) && preg_match('/^score\s([A-Z0-9_]+)$/', $test, $matches)) {
+				$this->score_prefs[] = $matches[1];
+			}
+		}
 	}
 
 	private function _load_user_prefs()
@@ -982,6 +1003,26 @@ class sauserprefs extends rcube_plugin
 						'content' => $this->_score_select('_score_user_whitelist', $field_id, $this->user_prefs['score USER_IN_WHITELIST'])
 					);
 				}
+
+				break;
+
+			// Test scores
+			case 'scores':
+				$blocks = array(
+					'main' => array('name' => rcmail::Q($this->gettext('mainoptions'))),
+				);
+
+				$score_table = new html_table(array('class' => 'propform testscorestable', 'cols' => 2));
+				$score_table->add_header('test', rcmail::Q($this->gettext('test')));
+				$score_table->add_header('score', rcmail::Q($this->gettext('score')));
+
+				foreach ($this->score_prefs as $test) {
+					$field_id = 'rcmfd_score_' . $test;
+					$score_table->add('title', $test);
+					$score_table->add('', $this->_score_select('_score_' . $test, $field_id, $this->user_prefs['score ' . $test]));
+				}
+
+				$blocks['main']['content'] = $score_table->show();
 
 				break;
 		}

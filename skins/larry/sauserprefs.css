@@ -207,6 +207,10 @@ table.propform tr > .scroller
   padding: 0;
 }
 
+table.testscorestable tr > td.title {
+  width: 75%;
+}
+
 span.helpicon
 {
   display: inline-block;
@@ -275,6 +279,18 @@ span.helpicon
 {
   background-image: url(images/listicons.png);
   background-position: 2px -74px;
+}
+
+#sections-table #rcmrowscores td.section
+{
+  background-image: url(images/listicons.png);
+  background-position: 2px -343px;
+}
+
+#sections-table #rcmrowscores.selected td.section
+{
+  background-image: url(images/listicons.png);
+  background-position: 2px -366px;
 }
 
 #rcmfd_spamlevelchar

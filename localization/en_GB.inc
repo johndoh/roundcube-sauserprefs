@@ -55,6 +55,9 @@ $labels['moreinfo'] = 'See more information about this option';
 $labels['useawl'] = 'Auto-whitelist senders';
 $labels['score_blacklist'] = 'Blacklisted message score';
 $labels['score_whitelist'] = 'Whitelisted message score';
+$labels['testscores'] = 'Test Scores';
+$labels['test'] = 'Test';
+$labels['score'] = 'Score';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Successfully changed spam settings';

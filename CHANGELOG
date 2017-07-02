@@ -7,6 +7,7 @@ Roundcube Webmail SAUserPrefs
  * Add use_auto_whitelist option
  * Add score USER_IN_BLACKLIST option
  * Add score USER_IN_WHITELIST option
+ * Add method to override any test score, see readme for more info
 
 Version 1.17 (2017-06-14, rc-1.3)
 =================================================
