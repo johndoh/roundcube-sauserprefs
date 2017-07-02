@@ -136,9 +136,9 @@ An additional "Test Scores" section can be added to the UI to allow overriding
 of default test scores (e.g. `score A_HREF_TO_REMOVE 2.0`). To do this add the
 scores to the `sauserprefs_default_prefs` array. For example:
 $config['sauserprefs_default_prefs'] = array(
-									...
-									'score SYMBOLIC_TEST_NAME' => 2.0,
-								);
+  ...
+  'score SYMBOLIC_TEST_NAME' => 2.0,
+);
 
 [usingsql]: http://wiki.apache.org/spamassassin/UsingSQL
 [webuserprefs]: http://sourceforge.net/projects/webuserprefs/
