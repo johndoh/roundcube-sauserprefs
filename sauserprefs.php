@@ -329,6 +329,15 @@ class sauserprefs extends rcube_plugin
 				foreach ($acts as $idx => $act)
 					$new_prefs['addresses'][] = array('field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act);
 
+				if (!isset($no_override['use_auto_whitelist']))
+					$new_prefs['use_auto_whitelist'] = empty($_POST['_awl']) ? "0" : "1";
+
+				if (!isset($no_override['score USER_IN_BLACKLIST']))
+					$new_prefs['score USER_IN_BLACKLIST'] = rcube_utils::get_input_value('_score_user_blacklist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_BLACKLIST'];
+
+				if (!isset($no_override['score USER_IN_WHITELIST']))
+					$new_prefs['score USER_IN_WHITELIST'] = rcube_utils::get_input_value('_score_user_whitelist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_WHITELIST'];
+
 				break;
 		}
 
@@ -497,7 +506,7 @@ class sauserprefs extends rcube_plugin
 					$field_id = 'rcmfd_spamthres';
 					$blocks['main']['options']['spamthres'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('spamthres'))),
-						'content' => $this->_score_dropdown('_spamthres', $field_id, $this->user_prefs['required_score'])
+						'content' => $this->_score_select('_spamthres', $field_id, $this->user_prefs['required_score'])
 					);
 
 					$blocks['main']['options']['spamthres_help'] = array(
@@ -824,7 +833,7 @@ class sauserprefs extends rcube_plugin
 					$args = array('disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0);
 					$blocks['autolearn']['options']['bayesnonspam'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('bayesnonspam'))),
-						'content' => $this->_score_dropdown('_bayesnonspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_nonspam'], $args)
+						'content' => $this->_score_select('_bayesnonspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_nonspam'], $args)
 					);
 
 					$blocks['autolearn']['options']['bayesnonspam_help'] = array(
@@ -839,7 +848,7 @@ class sauserprefs extends rcube_plugin
 					$args = array('disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0);
 					$blocks['autolearn']['options']['bayesspam'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('bayesspam'))),
-						'content' => $this->_score_dropdown('_bayesspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_spam'], $args)
+						'content' => $this->_score_select('_bayesspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_spam'], $args)
 					);
 
 					$blocks['autolearn']['options']['bayesspam_help'] = array(
@@ -872,8 +881,8 @@ class sauserprefs extends rcube_plugin
 					);
 
 					$input_spamreport2 = new html_radiobutton(array('name' => '_spamreport', 'id' => $field_id.'_2', 'value' => '2'));
-						$blocks['main']['options']['bayesspam2'] = array(
-					'title' => html::label($field_id.'_2', rcmail::Q($this->gettext('spamreport2'))),
+					$blocks['main']['options']['bayesspam2'] = array(
+						'title' => html::label($field_id.'_2', rcmail::Q($this->gettext('spamreport2'))),
 						'content' => $input_spamreport2->show($this->user_prefs['report_safe'])
 					);
 				}
@@ -883,7 +892,8 @@ class sauserprefs extends rcube_plugin
 			// Address settings
 			case 'addresses':
 				$blocks = array(
-					'main' => array('name' => rcmail::Q($this->gettext('mainoptions')))
+					'main' => array('name' => rcmail::Q($this->gettext('mainoptions'))),
+					'extra' => array('name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => 'addressextratable propform', 'cols' => 2),
 				);
 
 				$data = html::p(null, rcmail::Q($this->gettext('whitelistexp')));
@@ -938,6 +948,40 @@ class sauserprefs extends rcube_plugin
 				$table->add(array('colspan' => 4, 'class' => 'scroller'), html::div(array('id' => 'address-rules-cont'), $address_table->show()));
 
 				$blocks['main']['content'] = $table->show();
+
+				if (!isset($no_override['use_auto_whitelist'])) {
+					$help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
+					$help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return '. rcmail_output::JS_OBJECT_NAME .'.sauserprefs_help("awl_help");', 'title' => $this->gettext('help')), $help_button);
+
+					$field_id = 'rcmfd_awl';
+					$input_awl = new html_checkbox(array('name' => '_awl', 'id' => $field_id, 'value' => '1'));
+					$blocks['extra']['options']['awl'] = array(
+						'title' => html::label($field_id, rcmail::Q($this->gettext('useawl'))),
+						'content' => $input_awl->show($this->user_prefs['use_auto_whitelist']) . $help_button
+					);
+
+					$blocks['extra']['options']['awl_help'] = array(
+						'row_attribs' => array('id' => 'awl_help', 'style' => 'display: none;', 'class' => 'sauphelp'),
+						'content_attribs' => array('colspan' => 2),
+						'content' => rcmail::Q($this->gettext('useawlexp'))
+					);
+				}
+
+				if (!isset($no_override['score USER_IN_BLACKLIST'])) {
+					$field_id = 'rcmfd_score_user_blacklist';
+					$blocks['extra']['options']['blacklist'] = array(
+						'title' => html::label($field_id, rcmail::Q($this->gettext('score_blacklist'))),
+						'content' => $this->_score_select('_score_user_blacklist', $field_id, $this->user_prefs['score USER_IN_BLACKLIST'])
+					);
+				}
+
+				if (!isset($no_override['score USER_IN_WHITELIST'])) {
+					$field_id = 'rcmfd_score_user_whitelist';
+					$blocks['extra']['options']['whitelist'] = array(
+						'title' => html::label($field_id, rcmail::Q($this->gettext('score_whitelist'))),
+						'content' => $this->_score_select('_score_user_whitelist', $field_id, $this->user_prefs['score USER_IN_WHITELIST'])
+					);
+				}
 
 				break;
 		}
@@ -1003,7 +1047,7 @@ class sauserprefs extends rcube_plugin
 		$address_table->add('control', $del_button . $hidden_action->show() . $hidden_field->show() . $hidden_text->show());
 	}
 
-	private function _score_dropdown($field_name, $field_id, $val, $args = array())
+	private function _score_select($field_name, $field_id, $val, $args = array())
 	{
 		$rcmail = rcube::get_instance();
 		$locale_info = localeconv();
@@ -1018,13 +1062,13 @@ class sauserprefs extends rcube_plugin
 
 		// calc values
 		$vals = array();
-		for ($i = $config['min']; $i <= $config['max']; $i = $i + $config['increment']) {
+		for ($i = $config['min']; $i <= $config['max']; $i += $config['increment']) {
 			$vals[number_format($i, 5, '.', '')] = array('val' => number_format($i, $decPlaces, '.', ''), 'text' => number_format($i, $decPlaces, $locale_info['decimal_point'], ''));
 		}
 		if (array_key_exists('extra', $config)) {
 			foreach ($config['extra'] as $extra) {
 				$decPlaces = strlen(substr(strrchr($extra['increment'], '.'), 1));
-				for ($i = $extra['min']; $i <= $extra['max']; $i = $i + $extra['increment']) {
+				for ($i = $extra['min']; $i <= $extra['max']; $i += $extra['increment']) {
 					$vals[number_format($i, 5, '.', '')] = array('val' => number_format($i, $decPlaces, '.', ''), 'text' => number_format($i, $decPlaces, $locale_info['decimal_point'], ''));
 				}
 			}

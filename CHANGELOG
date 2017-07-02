@@ -4,6 +4,9 @@ Roundcube Webmail SAUserPrefs
  * Fix bug saving locales/langs options
  * Depreciate sortedASC & sortedDESC class, use sorted-asc & sorted-desc instead
  * Replace sauserprefs_score_inc config with sauserprefs_score_options
+ * Add use_auto_whitelist option
+ * Add score USER_IN_BLACKLIST option
+ * Add score USER_IN_WHITELIST option
 
 Version 1.17 (2017-06-14, rc-1.3)
 =================================================

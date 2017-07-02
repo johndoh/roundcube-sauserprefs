@@ -61,23 +61,26 @@ $config['sauserprefs_dont_override'] = array();
 // default settings
 // these are overridden by $GLOBAL and user settings from the database
 $config['sauserprefs_default_prefs'] = array(
-									"required_score" => "5",
-									"rewrite_header Subject" => "*****SPAM*****",
-									"ok_languages" => "all",
-									"ok_locales" => "all",
-									"fold_headers" => "1",
-									"add_header all Level" => "_STARS(*)_",
-									"use_razor1" => "0",
-									"use_razor2" => "1",
-									"use_pyzor" => "1",
-									"use_dcc" => "1",
-									"use_bayes" => "1",
-									"skip_rbl_checks" => "0",
-									"report_safe" => "1",
-									"bayes_auto_learn" => "1",
-									"bayes_auto_learn_threshold_nonspam" => "0.1",
-									"bayes_auto_learn_threshold_spam" => "12.0",
-									"use_bayes_rules" => "1"
+									'required_score' => 5,
+									'rewrite_header Subject' => '',
+									'ok_languages' => 'all',
+									'ok_locales' => 'all',
+									'fold_headers' => 1,
+									'add_header all Level' => '_STARS(*)_',
+									'use_razor1' => 0,
+									'use_razor2' => 1,
+									'use_pyzor' => 1,
+									'use_dcc' => 1,
+									'use_bayes' => 1,
+									'skip_rbl_checks' => 0,
+									'report_safe' => 1,
+									'bayes_auto_learn' => 1,
+									'bayes_auto_learn_threshold_nonspam' => 0.1,
+									'bayes_auto_learn_threshold_spam' => 12.0,
+									'use_bayes_rules' => 1,
+									'use_auto_whitelist' => 1,
+									'score USER_IN_BLACKLIST' => 10,
+									'score USER_IN_WHITELIST' => -10
 								);
 
 // score options
@@ -86,8 +89,10 @@ $config['sauserprefs_default_prefs'] = array(
 // note: the 'extra' key is optional and should contain further arrays with min, max and increment keys
 $config['sauserprefs_score_options'] = array(
 									'*' => array('min' => 1, 'max' => 10, 'increment' => 1),
-									'_bayesnonspam' => array('min' => -1, 'max' => 1, 'increment' => 1),
+									'_bayesnonspam' => array('min' => -1, 'max' => 1, 'increment' => 0.1),
 									'_bayesspam' => array('min' => 1, 'max' => 20, 'increment' => 1),
+									'_score_user_blacklist' => array('min' => 0, 'max' => 100, 'increment' => 10, 'extra' => array(array('min' => 1, 'max' => 10, 'increment' => 1))),
+									'_score_user_whitelist' => array('min' => -100, 'max' => -1, 'increment' => 10, 'extra' => array(array('min' => -10, 'max' => -1, 'increment' => 1)))
 								);
 
 // delete user bayesian data stored in database
