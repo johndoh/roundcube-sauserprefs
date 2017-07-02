@@ -84,92 +84,89 @@ class rcube_sauserprefs_storage_sql
 
 	function save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs)
 	{
-		$this->_db_connect('w');
 		$result = true;
 
-		// save prefs
+		// process prefs
+		$actions = array();
 		foreach ($new_prefs as $preference => $value) {
 			if ($preference == 'addresses') {
 				foreach ($value as $address) {
-					if ($address['action'] == "DELETE") {
-						$result = false;
-
-						$this->db->query(
-							"DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ? AND `{$this->value_field}` = ?;",
-							$user_id,
-							$address['field'],
-							$address['value']);
-
-						$result = $this->db->affected_rows();
-
-						if (!$result) {
-							rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $address['field'] . '" = "' . $address['value'] . '" for ' . $user_id);
-							break;
-						}
-					}
-					elseif ($address['action'] == "INSERT") {
-						$result = false;
-
-						$this->db->query(
-							"INSERT INTO `{$this->table_name}` (`{$this->username_field}`, `{$this->preference_field}`, `{$this->value_field}`) VALUES (?, ?, ?);",
-							$user_id,
-							$address['field'],
-							$address['value']);
-
-						$result = $this->db->affected_rows();
-
-						if (!$result) {
-							rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $address['field'] . '" = "' . $address['value'] . '" for ' . $user_id);
-							break;
-						}
-					}
+					$actions[$address['action']][] = $address;
 				}
 			}
 			elseif (array_key_exists($preference, $cur_prefs) && ($value == "" || $value == $global_prefs[$preference])) {
-				$result = false;
-
-				$this->db->query(
-					"DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
-					$user_id,
-					$preference);
-
-				$result = $this->db->affected_rows();
-
-				if (!$result) {
-					rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $preference . '" for "' . $user_id);
-					break;
-				}
+				$actions['DELETE'][] = array('field' => $preference, 'value' => null);
 			}
 			elseif (array_key_exists($preference, $cur_prefs) && $value != $cur_prefs[$preference]) {
-				$result = false;
-
-				$this->db->query(
-					"UPDATE `{$this->table_name}` SET `{$this->value_field}` = ? WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
-					$value,
-					$user_id,
-					$preference);
-
-				$result = $this->db->affected_rows();
-
-				if (!$result) {
-					rcube::write_log('errors', 'sauserprefs error: cannot update "' . $preference . '" = "' .  $value . '" for ' . $user_id);
-					break;
-				}
+				$actions['UPDATE'][] = array('field' => $preference, 'value' => $value);
 			}
 			elseif (!array_key_exists($preference, $cur_prefs) && $value != $global_prefs[$preference]) {
-				$result = false;
+				$actions['INSERT'][] = array('field' => $preference, 'value' => $value);
+			}
+		}
 
-				$this->db->query(
-					"INSERT INTO `{$this->table_name}` (`{$this->username_field}`, `{$this->preference_field}`, `{$this->value_field}`) VALUES (?, ?, ?);",
-					$user_id,
-					$preference,
-					$value);
+		if (count($actions) > 0) {
+			$this->_db_connect('w');
+			$result = false;
+			foreach ($actions as $type => $prefs) {
+				foreach ($prefs as $pref) {
+					if ($type == 'INSERT') {
+						$this->db->query(
+							"INSERT INTO `{$this->table_name}` (`{$this->username_field}`, `{$this->preference_field}`, `{$this->value_field}`) VALUES (?, ?, ?);",
+							$user_id,
+							$pref['field'],
+							$pref['value']);
 
-				$result = $this->db->affected_rows();
+						$result = $this->db->affected_rows();
 
-				if (!$result) {
-					rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $preference . '" = "' .  $value . '" for ' . $user_id);
-					break;
+						if (!$result) {
+							rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $pref['field'] . '" = "' . $pref['value'] . '" for ' . $user_id);
+							break;
+						}
+					}
+					elseif ($type == 'UPDATE') {
+						$this->db->query(
+							"UPDATE `{$this->table_name}` SET `{$this->value_field}` = ? WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
+							$pref['value'],
+							$user_id,
+							$pref['field']);
+
+						$result = $this->db->affected_rows();
+
+						if (!$result) {
+							rcube::write_log('errors', 'sauserprefs error: cannot update "' . $pref['field'] . '" = "' . $pref['value'] . '" for ' . $user_id);
+							break;
+						}
+					}
+					elseif ($type == 'DELETE') {
+						if ($pref['value']) {
+							$this->db->query(
+								"DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ? AND `{$this->value_field}` = ?;",
+								$user_id,
+								$pref['field'],
+								$pref['value']);
+
+							$result = $this->db->affected_rows();
+
+							if (!$result) {
+								rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $pref['field'] . '" = "' . $pref['value'] . '" for ' . $user_id);
+								break;
+							}
+						}
+						else {
+							$this->db->query(
+								"DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
+								$user_id,
+								$pref['field']);
+
+							$result = $this->db->affected_rows();
+
+							if (!$result) {
+								rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $pref['field'] . '" for ' . $user_id);
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
