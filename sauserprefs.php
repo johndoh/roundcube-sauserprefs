@@ -481,7 +481,6 @@ class sauserprefs extends rcube_plugin
 	{
 		$rcmail = rcube::get_instance();
 		$no_override = array_flip($rcmail->config->get('sauserprefs_dont_override'));
-		$locale_info = localeconv();
 		$blocks = array();
 
 		switch ($part)
@@ -496,28 +495,9 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['required_score'])) {
 					$field_id = 'rcmfd_spamthres';
-
-					$input_spamthres = new html_select(array('name' => '_spamthres', 'id' => $field_id));
-					$input_spamthres->add($this->gettext('defaultscore'), '');
-
-					$decPlaces = 0;
-					if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
-						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
-
-					$score_found = false;
-					for ($i = 1; $i <= 10; $i = $i + $rcmail->config->get('sauserprefs_score_inc')) {
-						$input_spamthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
-
-						if (!$score_found && $this->user_prefs['required_score'] && (float)$this->user_prefs['required_score'] == (float)$i)
-							$score_found = true;
-					}
-
-					if (!$score_found && $this->user_prefs['required_score'])
-						$input_spamthres->add(str_replace('%s', $this->user_prefs['required_score'], $this->gettext('otherscore')), (float)$this->user_prefs['required_score']);
-
 					$blocks['main']['options']['spamthres'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('spamthres'))),
-						'content' => $input_spamthres->show(number_format($this->user_prefs['required_score'], $decPlaces, '.', ''))
+						'content' => $this->_score_dropdown('_spamthres', $field_id, $this->user_prefs['required_score'])
 					);
 
 					$blocks['main']['options']['spamthres_help'] = array(
@@ -841,27 +821,10 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['bayes_auto_learn_threshold_nonspam'])) {
 					$field_id = 'rcmfd_bayesnonspam';
-					$input_bayesnthres = new html_select(array('name' => '_bayesnonspam', 'id' => $field_id, 'disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0));
-					$input_bayesnthres->add($this->gettext('defaultscore'), '');
-
-					$decPlaces = 1;
-					//if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
-					//	$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
-
-					$score_found = false;
-					for ($i = -1; $i <= 1; $i = $i + 0.1) {
-						$input_bayesnthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
-
-						if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_nonspam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_nonspam'] == (float)$i)
-							$score_found = true;
-					}
-
-					if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_nonspam'])
-						$input_bayesnthres->add(str_replace('%s', $this->user_prefs['bayes_auto_learn_threshold_nonspam'], $this->gettext('otherscore')), (float)$this->user_prefs['bayes_auto_learn_threshold_nonspam']);
-
+					$args = array('disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0);
 					$blocks['autolearn']['options']['bayesnonspam'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('bayesnonspam'))),
-						'content' => $input_bayesnthres->show(number_format($this->user_prefs['bayes_auto_learn_threshold_nonspam'], $decPlaces, '.', ''))
+						'content' => $this->_score_dropdown('_bayesnonspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_nonspam'], $args)
 					);
 
 					$blocks['autolearn']['options']['bayesnonspam_help'] = array(
@@ -873,27 +836,10 @@ class sauserprefs extends rcube_plugin
 
 				if (!isset($no_override['bayes_auto_learn_threshold_spam'])) {
 					$field_id = 'rcmfd_bayesspam';
-					$input_bayesthres = new html_select(array('name' => '_bayesspam', 'id' => $field_id, 'disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0));
-					$input_bayesthres->add($this->gettext('defaultscore'), '');
-
-					$decPlaces = 0;
-					if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
-						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
-
-					$score_found = false;
-					for ($i = 1; $i <= 20; $i = $i + $rcmail->config->get('sauserprefs_score_inc')) {
-						$input_bayesthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
-
-						if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_spam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_spam'] == (float)$i)
-							$score_found = true;
-					}
-
-					if (!$score_found && $this->user_prefs['required_score'])
-						$input_bayesthres->add(str_replace('%s', $this->user_prefs['bayes_auto_learn_threshold_spam'], $this->gettext('otherscore')), (float)$this->user_prefs['bayes_auto_learn_threshold_spam']);
-
+					$args = array('disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0);
 					$blocks['autolearn']['options']['bayesspam'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('bayesspam'))),
-						'content' => $input_bayesthres->show(number_format($this->user_prefs['bayes_auto_learn_threshold_spam'], $decPlaces, '.', ''))
+						'content' => $this->_score_dropdown('_bayesspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_spam'], $args)
 					);
 
 					$blocks['autolearn']['options']['bayesspam_help'] = array(
@@ -1055,6 +1001,48 @@ class sauserprefs extends rcube_plugin
 		$address_table->add(array('class' => 'email'), $value);
 		$del_button = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'link', 'class' => 'delete', 'label' => 'delete', 'content' => ' ', 'title' => 'delete'));
 		$address_table->add('control', $del_button . $hidden_action->show() . $hidden_field->show() . $hidden_text->show());
+	}
+
+	private function _score_dropdown($field_name, $field_id, $val, $args = array())
+	{
+		$rcmail = rcube::get_instance();
+		$locale_info = localeconv();
+
+		if ($config = $rcmail->config->get('sauserprefs_score_options')) {
+			$config = array_key_exists($field_name, $config) ? $config[$field_name] : $config['*'];
+		}
+		else {
+			$config = array('min' => 1, 'max' => 10, 'increment' => $rcmail->config->get('sauserprefs_score_inc', 1));
+		}
+		$decPlaces = strlen(substr(strrchr($config['increment'], '.'), 1));
+
+		// calc values
+		$vals = array();
+		for ($i = $config['min']; $i <= $config['max']; $i = $i + $config['increment']) {
+			$vals[number_format($i, 5, '.', '')] = array('val' => number_format($i, $decPlaces, '.', ''), 'text' => number_format($i, $decPlaces, $locale_info['decimal_point'], ''));
+		}
+		if (array_key_exists('extra', $config)) {
+			foreach ($config['extra'] as $extra) {
+				$decPlaces = strlen(substr(strrchr($extra['increment'], '.'), 1));
+				for ($i = $extra['min']; $i <= $extra['max']; $i = $i + $extra['increment']) {
+					$vals[number_format($i, 5, '.', '')] = array('val' => number_format($i, $decPlaces, '.', ''), 'text' => number_format($i, $decPlaces, $locale_info['decimal_point'], ''));
+				}
+			}
+		}
+		// numerical order
+		ksort($vals);
+
+		$input_score = new html_select(array('name' => $field_name, 'id' => $field_id) + $args);
+		$input_score->add($this->gettext('defaultscore'), '');
+		foreach ($vals as $opt) {
+			$input_score->add($opt['text'], $opt['val']);
+		}
+
+		if (!array_key_exists(number_format($val, 5, '.', ''), $vals)) {
+			$input_score->add(str_replace('%s', $val, $this->gettext('otherscore')), $val);
+		}
+
+		return $input_score->show($val);
 	}
 
 	static function map_pref_name($pref, $reverse = false)

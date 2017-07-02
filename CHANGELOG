@@ -3,6 +3,7 @@ Roundcube Webmail SAUserPrefs
 
  * Fix bug saving locales/langs options
  * Depreciate sortedASC & sortedDESC class, use sorted-asc & sorted-desc instead
+ * Replace sauserprefs_score_inc config with sauserprefs_score_options
 
 Version 1.17 (2017-06-14, rc-1.3)
 =================================================
