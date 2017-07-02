@@ -1012,7 +1012,7 @@ class sauserprefs extends rcube_plugin
 					'main' => array('name' => rcmail::Q($this->gettext('mainoptions'))),
 				);
 
-				$score_table = new html_table(array('class' => 'propform testscorestable', 'cols' => 2));
+				$score_table = new html_table(array('id' => 'test-scores-table', 'class' => 'propform testscorestable', 'cols' => 2));
 				$score_table->add_header('test', rcmail::Q($this->gettext('test')));
 				$score_table->add_header('score', rcmail::Q($this->gettext('score')));
 
