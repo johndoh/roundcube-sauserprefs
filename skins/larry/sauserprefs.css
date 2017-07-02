@@ -207,7 +207,7 @@ table.propform tr > .scroller
   padding: 0;
 }
 
-table.testscorestable tr > td.title {
+table.test-scores-table tr > td.title {
   width: 75%;
 }
 
