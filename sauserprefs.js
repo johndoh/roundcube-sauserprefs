@@ -271,6 +271,9 @@ $(document).ready(function() {
 							$('#rcmfd_spamaddress').focus();
 							return false;
 						}
+						else {
+							$('#rcmfd_spamaddress').val('');
+						}
 					}
 				}, true);
 
