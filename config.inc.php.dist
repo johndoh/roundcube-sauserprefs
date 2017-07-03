@@ -78,7 +78,7 @@ $config['sauserprefs_default_prefs'] = array(
 									'bayes_auto_learn_threshold_nonspam' => 0.1,
 									'bayes_auto_learn_threshold_spam' => 12.0,
 									'use_bayes_rules' => 1,
-									'use_auto_whitelist' => 1,
+									'use_auto_whitelist' => 0,
 									'score USER_IN_BLACKLIST' => 10,
 									'score USER_IN_WHITELIST' => -10
 								);
