@@ -36,8 +36,8 @@ class sauserprefs extends rcube_plugin
     private $global_prefs;
     private $user_prefs;
     private $score_prefs = array();
-    private $addressbook_import;
-    private $addressbook_sync;
+    private $addressbook_import = array();
+    private $addressbook_sync = array();
     private $sa_locales = array('en', 'ja', 'ko', 'ru', 'th', 'zh');
     private $sa_user;
     private $bayes_query;
@@ -953,12 +953,12 @@ class sauserprefs extends rcube_plugin
                 $address_table->add_header('email', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'email', 'title' => 'sortby')));
                 $address_table->add_header('control', '&nbsp;');
 
-                $this->api->output->set_env('address_rule_count', count($this->user_prefs['addresses']));
+                $this->api->output->set_env('address_rule_count', !empty($this->user_prefs['addresses']) ? count($this->user_prefs['addresses']) : 0);
                 foreach ((array)$this->user_prefs['addresses'] as $address)
                     $this->_address_row($address_table, $address['field'], $address['value'], $attrib);
 
                 // add no address and new address rows at the end
-                if (count($this->user_prefs['addresses']) > 0)
+                if (!empty($this->user_prefs['addresses']))
                     $norules = 'display: none;';
 
                 $address_table->set_row_attribs(array('class' => 'noaddressrules', 'style' => $norules));
@@ -1030,31 +1030,33 @@ class sauserprefs extends rcube_plugin
         $data = $rcmail->plugins->exec_hook('sauserprefs_list', array('section' => $part, 'blocks' => $blocks));
 
         $out = '';
-        foreach ($data['blocks'] as $block) {
-            if (isset($block['content']) || count($block['options']) > 0 ) {
+        foreach ($data['blocks'] as $k => $block) {
+            $content = '';
+
+            if (!empty($block['content']))
                 $content = $block['content'];
 
-                if (count($block['options']) > 0) {
-                    $table = new html_table(array('class' => 'propform ' . $block['class'], 'cols' => $block['cols']));
+            if (!empty($block['options'])) {
+                $table = new html_table(array('class' => 'propform ' . $block['class'], 'cols' => $block['cols']));
 
-                    foreach ($block['options'] as $row) {
-                        if (isset($row['row_attribs']))
-                            $table->set_row_attribs($row['row_attribs']);
+                foreach ($block['options'] as $row) {
+                    if (isset($row['row_attribs']))
+                        $table->set_row_attribs($row['row_attribs']);
 
-                        if (isset($row['title']))
-                            $table->add('title', $row['title']);
+                    if (isset($row['title']))
+                        $table->add('title', $row['title']);
 
-                        $table->add($row['content_attribs'], $row['content']);
+                    $table->add($row['content_attribs'], $row['content']);
 
-                        if (isset($row['help']))
-                            $table->add('help', $row['help']);
-                    }
-
-                    $content .= $table->show();
+                    if (isset($row['help']))
+                        $table->add('help', $row['help']);
                 }
 
-                $out .= html::tag('fieldset', null, html::tag('legend', null, $block['name']) . $block['intro'] . $content);
+                $content .= $table->show();
             }
+
+            if (!empty($content))
+                $out .= html::tag('fieldset', null, html::tag('legend', null, $block['name']) . $block['intro'] . $content);
         }
 
         return $out;
