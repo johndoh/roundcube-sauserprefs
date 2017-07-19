@@ -20,5 +20,24 @@
 
 <roundcube:include file="/includes/footer.html" />
 
+<script type="text/javascript">
+var legend = $('#preferences-details fieldset.advanced legend'),
+  toggle = $('<a href="#toggle"></a>')
+    .text(rcmail.gettext('toggleadvancedoptions'))
+    .attr('title', rcmail.gettext('toggleadvancedoptions'))
+    .addClass('advanced-toggle');
+
+legend.click(function(e) {
+  toggle.html($(this).hasClass('collapsed') ? '&#9650;' : '&#9660;');
+
+  $(this).toggleClass('collapsed')
+    .closest('fieldset').children('.propform').toggle()
+}).append(toggle).addClass('collapsed')
+
+// this magically fixes incorrect position of toggle link created above in Firefox 3.6
+if (bw.mz)
+  legend.parents('form').css('display', 'inline');
+</script>
+
 </body>
 </html>

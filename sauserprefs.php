@@ -914,7 +914,7 @@ class sauserprefs extends rcube_plugin
             case 'addresses':
                 $blocks = array(
                     'main' => array('name' => rcmail::Q($this->gettext('mainoptions'))),
-                    'extra' => array('name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => 'addressextratable propform', 'cols' => 2),
+                    'advanced' => array('name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => 'addressadvancedtable propform', 'cols' => 2),
                 );
 
                 $data = html::p(null, rcmail::Q($this->gettext('whitelistexp')));
@@ -976,12 +976,12 @@ class sauserprefs extends rcube_plugin
 
                     $field_id = 'rcmfd_awl';
                     $input_awl = new html_checkbox(array('name' => '_awl', 'id' => $field_id, 'value' => '1'));
-                    $blocks['extra']['options']['awl'] = array(
+                    $blocks['advanced']['options']['awl'] = array(
                         'title' => html::label($field_id, rcmail::Q($this->gettext('useawl'))),
                         'content' => $input_awl->show($this->user_prefs['use_auto_whitelist']) . $help_button
                     );
 
-                    $blocks['extra']['options']['awl_help'] = array(
+                    $blocks['advanced']['options']['awl_help'] = array(
                         'row_attribs' => array('id' => 'awl_help', 'style' => 'display: none;', 'class' => 'sauphelp'),
                         'content_attribs' => array('colspan' => 2),
                         'content' => rcmail::Q($this->gettext('useawlexp'))
@@ -990,7 +990,7 @@ class sauserprefs extends rcube_plugin
 
                 if (!isset($no_override['score USER_IN_BLACKLIST'])) {
                     $field_id = 'rcmfd_score_user_blacklist';
-                    $blocks['extra']['options']['blacklist'] = array(
+                    $blocks['advanced']['options']['blacklist'] = array(
                         'title' => html::label($field_id, rcmail::Q($this->gettext('score_blacklist'))),
                         'content' => $this->_score_select('_score_user_blacklist', $field_id, $this->user_prefs['score USER_IN_BLACKLIST'])
                     );
@@ -998,7 +998,7 @@ class sauserprefs extends rcube_plugin
 
                 if (!isset($no_override['score USER_IN_WHITELIST'])) {
                     $field_id = 'rcmfd_score_user_whitelist';
-                    $blocks['extra']['options']['whitelist'] = array(
+                    $blocks['advanced']['options']['whitelist'] = array(
                         'title' => html::label($field_id, rcmail::Q($this->gettext('score_whitelist'))),
                         'content' => $this->_score_select('_score_user_whitelist', $field_id, $this->user_prefs['score USER_IN_WHITELIST'])
                     );
@@ -1030,7 +1030,7 @@ class sauserprefs extends rcube_plugin
         $data = $rcmail->plugins->exec_hook('sauserprefs_list', array('section' => $part, 'blocks' => $blocks));
 
         $out = '';
-        foreach ($data['blocks'] as $k => $block) {
+        foreach ($data['blocks'] as $class => $block) {
             $content = '';
 
             if (!empty($block['content']))
@@ -1056,7 +1056,7 @@ class sauserprefs extends rcube_plugin
             }
 
             if (!empty($content))
-                $out .= html::tag('fieldset', null, html::tag('legend', null, $block['name']) . $block['intro'] . $content);
+                $out .= html::tag('fieldset', $class, html::tag('legend', null, $block['name']) . $block['intro'] . $content);
         }
 
         return $out;
