@@ -592,12 +592,16 @@ class sauserprefs extends rcube_plugin
                     $i = 0;
                     $locales_langs = array_merge($ok_locales, $ok_languages);
                     foreach ($rcmail->config->get('sauserprefs_languages') as $lang_code => $name) {
-                        if (in_array($lang_code, $locales_langs))
-                            $button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => 'enabled', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.enabled', 'content' => ' '));
-                        else
-                            $button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => 'disabled', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.disabled', 'content' => ' '));
+                        $button = '';
+                        $checkbox_display = array();
 
-                        $input_spamlang = new html_checkbox(array('style' => 'display: none;', 'name' => '_spamlang[]', 'value' => $lang_code));
+                        if ($attrib['lang_list_buttons'] == '1') {
+                            $button_type = in_array($lang_code, $locales_langs) ? 'enabled' : 'disabled';
+                            $button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => $button_type, 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.' + $button_type, 'content' => ' '));
+                            $checkbox_display = array('style' => 'display: none;');
+                        }
+
+                        $input_spamlang = new html_checkbox(array('name' => '_spamlang[]', 'value' => $lang_code) + $checkbox_display);
 
                         $lang_table->add('lang', $name);
                         $lang_table->add('tick', $button . $input_spamlang->show(in_array($lang_code, $locales_langs) ? $lang_code : ''));
