@@ -1,7 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.17.1 (2017-09-29, rc-1.3)
+=================================================
  * Fix bug saving locales/langs options
+ * Correct error message text from storage class (#39)
 
 Version 1.17 (2017-06-14, rc-1.3)
 =================================================
