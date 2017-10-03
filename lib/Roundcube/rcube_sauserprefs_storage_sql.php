@@ -91,7 +91,9 @@ class rcube_sauserprefs_storage_sql
 		foreach ($new_prefs as $preference => $value) {
 			if ($preference == 'addresses') {
 				foreach ($value as $address) {
-					$actions[$address['action']][] = $address;
+					if ($address['action']) {
+						$actions[$address['action']][] = $address;
+					}
 				}
 			}
 			elseif (array_key_exists($preference, $cur_prefs) && ($value == "" || $value == $global_prefs[$preference])) {
