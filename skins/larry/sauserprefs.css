@@ -123,15 +123,15 @@ table.spam-langs-table tr > .tick a.disabled
   background-position: 0 -36px;
 }
 
-.whitelist_from,
-.whitelist_to
+.whitelist_from td.rule,
+.whitelist_to td.rule
 {
   color: #008800;
   text-align: left;
   vertical-align: middle;
 }
 
-.blacklist_from
+.blacklist_from td.rule
 {
   color: #BB0000;
   text-align: left;

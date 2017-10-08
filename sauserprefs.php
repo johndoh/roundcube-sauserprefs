@@ -1066,9 +1066,6 @@ class sauserprefs extends rcube_plugin
 
     private function _address_row(&$address_table, $field, $value, $attrib, $row_attrib = array())
     {
-        if (!isset($field))
-            $address_table->set_row_attribs(array('style' => 'display: none;') + $row_attrib);
-
         $hidden_action = new html_hiddenfield(array('name' => '_address_rule_act[]', 'value' => ''));
         $hidden_field = new html_hiddenfield(array('name' => '_address_rule_field[]', 'value' => $field));
         $hidden_text = new html_hiddenfield(array('name' => '_address_rule_value[]', 'value' => $value));
@@ -1086,7 +1083,9 @@ class sauserprefs extends rcube_plugin
                 break;
         }
 
-        $address_table->add(array('class' => $field), $fieldtxt);
+        $row_attrib = !isset($field) ? array_merge($row_attrib, array('style' => 'display: none;')) : array_merge($row_attrib, array('class' => $field));
+        $address_table->set_row_attribs($row_attrib);
+        $address_table->add(array('class' => 'rule'), $fieldtxt);
         $address_table->add(array('class' => 'email'), $value);
         $del_button = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'link', 'class' => 'delete', 'label' => 'delete', 'content' => ' ', 'title' => 'delete'));
         $address_table->add('control', $del_button . $hidden_action->show() . $hidden_field->show() . $hidden_text->show());

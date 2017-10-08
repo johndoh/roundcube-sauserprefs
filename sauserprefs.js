@@ -69,13 +69,14 @@ rcube_webmail.prototype.sauserprefs_addressrule_insert_row = function(p) {
         return false;
 
     var adrTable = $('#address-rules-table tbody');
-    var new_row = $(adrTable).children('tr.newaddressrule').clone().removeClass('newaddressrule').show();
-    new_row.children('td').eq(0).addClass(p.type).text(p.desc);
+    var new_row = $(adrTable).children('tr.newaddressrule').clone();
+    new_row.removeClass('newaddressrule').addClass(p.type);
+    new_row.children('td').eq(0).text(p.desc);
     new_row.children('td').eq(1).text(p.address);
     new_row.find('input[name="_address_rule_act[]"]').val('INSERT');
     new_row.find('input[name="_address_rule_field[]"]').val(p.type);
     new_row.find('input[name="_address_rule_value[]"]').val(p.address);
-    $(new_row).appendTo('#address-rules-table tbody');
+    $(new_row).show().appendTo('#address-rules-table tbody');
 
     $(adrTable).children('tr.noaddressrules').hide();
 
