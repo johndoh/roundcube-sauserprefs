@@ -8,6 +8,7 @@ Roundcube Webmail SAUserPrefs
  * Add score USER_IN_WHITELIST option
  * Add method to override any test score, see readme for more info
  * Make use of icons rather than checkboxes in language option list skin configurable
+ * Remove unnecessary stylesheet (69f50b1)
 
 Version 1.17.1 (2017-09-29, rc-1.3)
 =================================================
