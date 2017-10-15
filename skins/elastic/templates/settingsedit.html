@@ -1,0 +1,46 @@
+<roundcube:include file="includes/layout.html" />
+
+<h1 class="voice"><roundcube:object name="sectionname" /></h1>
+
+<div class="formcontent">
+    <roundcube:object name="userprefs" form="form" class="propform" />
+</div>
+
+<div class="formbuttons">
+    <roundcube:button command="plugin.sauserprefs.save" class="button mainaction save" label="save" />
+    <roundcube:button command="plugin.sauserprefs.default" class="button saup_defaults" label="sauserprefs.usedefault" data-hidden-small="1" />
+</div>
+
+<script type="text/javascript">
+// bootstrap display
+$('#spam-langs-table,#address-rules-table,#test-scores-table').addClass('table table-striped');
+$('table.propform tr.sauphelp.saupsubject td:first').addClass('d-none d-sm-flex');
+
+// relocate help icon at end of text
+$.each($('span.helpicon'), function() {
+    var a = $(this).parent();
+    var row = $(this).parents('tr');
+    a.appendTo(row.children('td:first'));
+});
+
+// create input group for adding addresses
+if ($('table.addressprefstable').length == 1) {
+    var btn_grp = $('<div>').addClass('address-group input-group')
+                    .append($('<span>').addClass('input-group-btn').append($('#rcmfd_spamaddressrule').addClass('form-control')))
+                    .append($('#rcmfd_spamaddress').addClass('form-control'))
+                    .append($('<span>').addClass('input-group-btn').append($('#rcmbtn_add_address')))
+                    .insertBefore($('table.addressprefstable'));
+
+    $('table.addressprefstable > tbody > tr:first').remove();
+}
+
+// add headers to score tests table
+if ($('#test-scores-table').length == 1) {
+    $('#test-scores-table > thead > tr').addClass('row');
+    $('#test-scores-table > thead > tr > th:first').addClass('col-sm-4');
+    $('#test-scores-table > thead > tr > th:last').addClass('col-sm-8');
+}
+
+</script>
+
+<roundcube:include file="includes/footer.html" />

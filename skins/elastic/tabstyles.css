@@ -1,0 +1,6 @@
+/**
+ * SAUserPrefs plugin styles (tab styles)
+ */
+.listing.iconized li.sauserprefs > a::before {
+  content: "\f1b8";
+}

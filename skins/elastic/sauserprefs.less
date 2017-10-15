@@ -1,0 +1,204 @@
+/**
+ * SAUserPrefs plugin styles
+ */
+
+@import (reference) "/skins/elastic/styles/mixins";
+@import (reference) "/skins/elastic/styles/colors";
+@import (reference) "/skins/elastic/styles/fontawesome";
+
+@grid-gutter-height: 15px;
+@color-text-whitelist: #28a745;
+@color-text-blacklist: #dc3545;
+
+#layout > .content > div.header button.saup_defaults {
+  display: none;
+}
+
+.listing.iconized tr {
+  &.general > td.section::before {
+    content: @fa-var-cogs;
+  }
+
+  &.tests > td.section::before {
+    content: @fa-var-cloud;
+  }
+
+  &.bayes > td.section::before {
+    content: @fa-var-database;
+  }
+
+  &.headers > td.section::before {
+    content: @fa-var-list;
+  }
+
+  &.report > td.section::before {
+    content: @fa-var-file-text;
+  }
+
+  &.addresses > td.section::before {
+    content: @fa-var-vcard;
+  }
+
+  &.scores > td.section::before {
+    content: @fa-var-wrench;
+  }
+}
+
+table.propform tr.sauphelp {
+  margin-top: (ceil((@grid-gutter-height / 2) * -1));
+}
+
+table.langprefstable tr > .scroller,
+table.addressprefstable tr > .scroller {
+  width: 100%;
+
+  .icon-checkbox + label::before {
+    float: right;
+  }
+}
+
+#address-rules-cont,
+#spam-langs-cont {
+  height: 400px;
+  overflow: auto;
+  width: 100%;
+}
+
+table.sortable-table > thead > tr > th {
+  > a {
+    text-decoration: none;
+    color: @color-list;
+    white-space: nowrap;
+  }
+
+  > a::after {
+    &:extend(.font-icon-class);
+    display: inline-block;
+    float: none;
+  }
+
+  &.sorted-asc > a::after {
+    content: @fa-var-long-arrow-down;
+  }
+
+  &.sorted-desc > a::after {
+    content: @fa-var-long-arrow-up;
+  }
+}
+
+table.spam-langs-table,
+table.address-rules-table {
+  margin-bottom: 0;
+  overflow: hidden;
+
+  > thead > tr {
+   > th.lang,
+   > th.email {
+      width: 100%;
+    }
+  }
+
+  > tbody > tr {
+    > td.rule {
+      white-space: nowrap;
+    }
+
+    > td.lang,
+    > td.email {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 1px;
+    }
+  }
+}
+
+table.records-table tr > .tick,
+table.records-table tr > .control {
+  > a::before {
+    &:extend(.font-icon-class);
+    display: inline-block;
+    float: none;
+    text-decoration: none;
+  }
+
+  > a.delete::before {
+    content: @fa-var-trash-o;
+    color: @color-list;
+  }
+}
+
+#rcmfd_spamaddressrule {
+  width: 100%
+}
+
+.whitelist_from > td.rule,
+.whitelist_to > td.rule {
+  color: @color-text-whitelist;
+}
+
+.blacklist_from > td.rule {
+  color: @color-text-blacklist;
+}
+
+#test-scores-table tr.form-group {
+  margin-bottom: 0;
+}
+
+#listcontrols {
+  text-align: right;
+  width: 100%;
+  font-size: 0.9em;
+  margin-bottom: (ceil((@grid-gutter-height / 2) * -1));
+}
+
+span.helpicon::after {
+  &:extend(.font-icon-class);
+  float: none;
+  display: inline-block;
+  content: @fa-var-info-circle;
+}
+
+#rcmfd_spamlevelchar {
+  width: 40px;
+}
+
+div.address-group {
+  margin-bottom: ceil((@grid-gutter-height / 2));
+}
+
+#rcmfd_spamaddress {
+  min-width: 100px;
+}
+
+html.layout-small,
+html.layout-phone {
+  #address-rules-cont,
+  #spam-langs-cont {
+    height: auto;
+  }
+}
+
+html.layout-phone {
+  .address-group.input-group {
+    display: block;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  table.address-rules-table > thead > tr > th.rule,
+  table.address-rules-table > tbody > tr > td.rule {
+    display: none;
+  }
+
+  .whitelist_from > td.email,
+  .whitelist_to > td.email {
+    color: @color-text-whitelist;
+  }
+
+  .blacklist_from > td.email {
+    color: @color-text-blacklist;
+  }
+}
