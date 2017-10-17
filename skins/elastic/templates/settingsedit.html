@@ -26,8 +26,8 @@ $.each($('span.helpicon'), function() {
 // create input group for adding addresses
 if ($('table.addressprefstable').length == 1) {
     var btn_grp = $('<div>').addClass('address-group input-group')
-                    .append($('<span>').addClass('input-group-btn').append($('#rcmfd_spamaddressrule').addClass('form-control')))
-                    .append($('#rcmfd_spamaddress').addClass('form-control'))
+                    .append($('<span>').addClass('input-group-btn').append($('#rcmfd_spamaddressrule')))
+                    .append($('#rcmfd_spamaddress'))
                     .append($('<span>').addClass('input-group-btn').append($('#rcmbtn_add_address')))
                     .insertBefore($('table.addressprefstable'));
 
