@@ -21,8 +21,11 @@ span.helpicon::after {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
-#layout > .content > div.header button.saup_defaults {
+#layout > .content > div.footer a.saup_defaults {
   display: none;
+}
+button.btn.saup_defaults::before {
+  content: "\f0e2";
 }
 .listing.iconized tr.general > td.section::before {
   content: "\f085";

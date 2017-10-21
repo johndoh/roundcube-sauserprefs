@@ -10,8 +10,12 @@
 @color-text-whitelist: #28a745;
 @color-text-blacklist: #dc3545;
 
-#layout > .content > div.header button.saup_defaults {
+#layout > .content > div.footer a.saup_defaults {
   display: none;
+}
+
+button.btn.saup_defaults::before {
+  content: @fa-var-undo;
 }
 
 .listing.iconized tr {
