@@ -21,12 +21,6 @@ span.helpicon::after {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
-#layout > .content > div.footer a.saup_defaults {
-  display: none;
-}
-button.btn.saup_defaults::before {
-  content: "\f0e2";
-}
 .listing.iconized tr.general > td.section::before {
   content: "\f085";
 }
@@ -147,6 +141,12 @@ div.address-group {
 }
 #rcmfd_spamaddress {
   min-width: 100px;
+}
+button.btn.saup_defaults::before {
+  content: "\f0e2";
+}
+#layout > .content > div.footer .saup_defaults {
+  display: none;
 }
 html.layout-small #address-rules-cont,
 html.layout-phone #address-rules-cont,

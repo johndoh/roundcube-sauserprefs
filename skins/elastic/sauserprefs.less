@@ -10,14 +10,6 @@
 @color-text-whitelist: #28a745;
 @color-text-blacklist: #dc3545;
 
-#layout > .content > div.footer a.saup_defaults {
-  display: none;
-}
-
-button.btn.saup_defaults::before {
-  content: @fa-var-undo;
-}
-
 .listing.iconized tr {
   &.general > td.section::before {
     content: @fa-var-cogs;
@@ -173,6 +165,14 @@ div.address-group {
 
 #rcmfd_spamaddress {
   min-width: 100px;
+}
+
+button.btn.saup_defaults::before {
+  content: @fa-var-undo;
+}
+
+#layout > .content > div.footer .saup_defaults {
+  display: none;
 }
 
 html.layout-small,
