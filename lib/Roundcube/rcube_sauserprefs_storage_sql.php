@@ -36,7 +36,7 @@ class rcube_sauserprefs_storage_sql
     private $value_field;
     private $bayes_delete_query;
 
-    function __construct($config)
+    public function __construct($config)
     {
         $this->db_dsnw = $config->get('sauserprefs_db_dsnw');
         $this->db_dsnr = $config->get('sauserprefs_db_dsnr');
@@ -48,7 +48,7 @@ class rcube_sauserprefs_storage_sql
         $this->bayes_delete_query = $config->get('sauserprefs_bayes_delete_query');
     }
 
-    function load_prefs($user)
+    public function load_prefs($user)
     {
         $this->_db_connect('r');
         $prefs = array();
@@ -62,10 +62,12 @@ class rcube_sauserprefs_storage_sql
             $pref_name = sauserprefs::map_pref_name($pref_name);
             $pref_value = $sql_arr[$this->value_field];
 
-            if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to')
+            if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to') {
                 $prefs['addresses'][] = array('field' => $pref_name, 'value' => $pref_value);
-            else
+            }
+            else {
                 $prefs[$pref_name] = $pref_value;
+            }
 
             // update deprecated prefs in db
             if ($sql_arr[$this->preference_field] != $pref_name) {
@@ -82,7 +84,7 @@ class rcube_sauserprefs_storage_sql
         return $prefs;
     }
 
-    function save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs)
+    public function save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs)
     {
         $result = true;
 
@@ -176,7 +178,7 @@ class rcube_sauserprefs_storage_sql
         return $result;
     }
 
-    function whitelist_add($user_id, $emails)
+    public function whitelist_add($user_id, $emails)
     {
         $this->_db_connect('w');
 
@@ -188,16 +190,17 @@ class rcube_sauserprefs_storage_sql
                             sauserprefs::map_pref_name('whitelist_from'),
                             $email);
 
-            if (!$this->db->fetch_array($sql_result))
+            if (!$this->db->fetch_array($sql_result)) {
                 $this->db->query(
                     "INSERT INTO `{$this->table_name}` (`{$this->username_field}`, `{$this->preference_field}`, `{$this->value_field}`) VALUES (?, ?, ?);",
                     $user_id,
                     sauserprefs::map_pref_name('whitelist_from'),
                     $email);
+            }
         }
     }
 
-    function whitelist_delete($user_id, $emails)
+    public function whitelist_delete($user_id, $emails)
     {
         $this->_db_connect('w');
 
@@ -210,7 +213,7 @@ class rcube_sauserprefs_storage_sql
         }
     }
 
-    function purge_bayes($user_id)
+    public function purge_bayes($user_id)
     {
         $result = false;
         $this->_db_connect('w');
@@ -220,22 +223,25 @@ class rcube_sauserprefs_storage_sql
             $sql = str_replace('%u', $this->db->quote($user_id, 'text'), $sql);
             $this->db->query($sql);
 
-            if ($this->db->is_error())
+            if ($this->db->is_error()) {
                 break;
+            }
         }
 
-        if (!$this->db->is_error())
+        if (!$this->db->is_error()) {
             $result = true;
+        }
 
         return $result;
     }
 
     private function _db_connect($mode)
     {
-        if (!$this->db)
+        if (!$this->db) {
             $this->db = rcube_db::factory($this->db_dsnw, $this->db_dsnr, $this->db_persistent);
+        }
 
-        $this->db->set_debug((bool)rcube::get_instance()->config->get('sql_debug'));
+        $this->db->set_debug((bool) rcube::get_instance()->config->get('sql_debug'));
         $this->db->db_connect($mode);
 
         // check DB connections and exit on failure
@@ -243,9 +249,8 @@ class rcube_sauserprefs_storage_sql
             rcube::raise_error(array(
                 'code' => 603,
                 'type' => 'db',
-                'message' => $err_str), false, true);
+                'message' => $err_str
+            ), false, true);
         }
     }
 }
-
-?>
