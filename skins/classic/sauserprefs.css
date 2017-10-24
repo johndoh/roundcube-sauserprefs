@@ -185,6 +185,14 @@ table.propform tr > .help
   text-align: right;
 }
 
+div.address-input {
+  margin-bottom: 10px;
+}
+
+div.address-input > input  {
+  margin-left: 10px;
+}
+
 table.addressprefstable tr > .ruletype
 {
   width: 180px;

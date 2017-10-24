@@ -926,8 +926,6 @@ class sauserprefs extends rcube_plugin
 
                 $blocks['main']['intro'] = $data;
 
-                $table = new html_table(array('class' => 'addressprefstable propform', 'cols' => 4));
-
                 $field_id = 'rcmfd_spamaddressrule';
                 $input_spamaddressrule = new html_select(array('name' => '_spamaddressrule', 'id' => $field_id));
                 $input_spamaddressrule->add($this->gettext('whitelist_from'),'whitelist_from');
@@ -935,18 +933,17 @@ class sauserprefs extends rcube_plugin
                 $input_spamaddressrule->add($this->gettext('whitelist_to'), 'whitelist_to');
 
                 $field_id = 'rcmfd_spamaddress';
-                $input_spamaddress = new html_inputfield(array('name' => '_spamaddress', 'id' => $field_id));
+                $input_spamaddress = new html_inputfield(array('name' => '_spamaddress', 'id' => $field_id, 'title' => rcmail::Q($this->gettext('email')), 'placeholder' => rcmail::Q($this->gettext('email'))));
 
                 $field_id = 'rcmbtn_add_address';
                 $button_addaddress = $this->api->output->button(array('id' => $field_id, 'command' => 'plugin.sauserprefs.addressrule_add', 'type' => 'input', 'class' => 'button', 'label' => 'sauserprefs.addrule'));
 
-                $table->add('ruletype', $input_spamaddressrule->show());
-                $table->add('address', $input_spamaddress->show());
-                $table->add('action', $button_addaddress);
-                $table->add(null, "&nbsp;");
+                $blocks['main']['intro'] .= html::div('address-input grouped', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
 
                 $import = count($this->addressbook_import) > 0 ? $this->api->output->button(array('command' => 'plugin.sauserprefs.import_whitelist', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
                 $delete_all = $this->api->output->button(array('command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall'));
+
+                $table = new html_table(array('class' => 'addressprefstable propform', 'cols' => 4));
 
                 $table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import ."&nbsp;&nbsp;". $delete_all);
 

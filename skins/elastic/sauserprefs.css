@@ -136,7 +136,7 @@ span.helpicon::after {
 #rcmfd_spamlevelchar {
   width: 40px;
 }
-div.address-group {
+div.address-input {
   margin-bottom: 8px;
 }
 #rcmfd_spamaddress {
@@ -154,10 +154,10 @@ html.layout-small #spam-langs-cont,
 html.layout-phone #spam-langs-cont {
   height: auto;
 }
-html.layout-phone .address-group.input-group {
+html.layout-phone .address-input.input-group {
   display: block;
 }
-html.layout-phone .address-group.input-group input {
+html.layout-phone .address-input.input-group input {
   width: 100%;
 }
 html.layout-phone table.address-rules-table > thead > tr > th.rule,

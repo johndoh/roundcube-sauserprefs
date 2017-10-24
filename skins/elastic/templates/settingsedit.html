@@ -24,14 +24,10 @@ $.each($('span.helpicon'), function() {
 });
 
 // create input group for adding addresses
-if ($('table.addressprefstable').length == 1) {
-    var btn_grp = $('<div>').addClass('address-group input-group')
-                    .append($('<span>').addClass('input-group-btn').append($('#rcmfd_spamaddressrule')))
-                    .append($('#rcmfd_spamaddress'))
-                    .append($('<span>').addClass('input-group-btn').append($('#rcmbtn_add_address')))
-                    .insertBefore($('table.addressprefstable'));
-
-    $('table.addressprefstable > tbody > tr:first').remove();
+if ($('div.address-input').length == 1) {
+    $('div.address-input').addClass('input-group');
+    $('#rcmfd_spamaddressrule').wrap($('<span>').addClass('input-group-btn'));
+    $('#rcmbtn_add_address').wrap($('<span>').addClass('input-group-btn'));
 }
 
 // add headers to score tests table
