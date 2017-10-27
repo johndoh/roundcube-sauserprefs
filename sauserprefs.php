@@ -209,6 +209,9 @@ class sauserprefs extends rcube_plugin
         if (!array_key_exists('#address-rules-table', $sorts)) $sorts['#address-rules-table'] = array(1, 'true');
         $this->api->output->set_env('sauserprefs_sort', $sorts);
 
+        // define input error class
+        $this->api->output->set_env('sauserprefs_input_error_class', $attrib['input_error_class'] ?: 'error');
+
         // output global prefs as default in env
         foreach ($this->global_prefs as $key => $val)
             $this->api->output->set_env(str_replace(" ", "_", $key), $val);

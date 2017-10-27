@@ -227,6 +227,10 @@ span.helpicon
   background-position: 0 -57px;
 }
 
+input.error {
+  background-color: #FFFF88;
+}
+
 #rcmfd_spamlevelchar
 {
   width: 20px;

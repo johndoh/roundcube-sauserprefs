@@ -229,6 +229,10 @@ span.helpicon
   background-position: 0 -55px;
 }
 
+input.error {
+  background-color: #FFFF88;
+}
+
 #sections-table #rcmrowtests td.section
 {
   background-image: url(images/listicons.png);

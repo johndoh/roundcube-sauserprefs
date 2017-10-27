@@ -257,22 +257,26 @@ $(document).ready(function() {
 
                 rcmail.register_command('plugin.sauserprefs.addressrule_add', function() {
                     if ($('#rcmfd_spamaddress').val().replace(/^\s+|\s+$/g, '') == '') {
-                        alert(rcmail.get_label('spamenteraddress','sauserprefs'));
+                        rcmail.display_message(rcmail.get_label('spamenteraddress','sauserprefs'), 'warning');
+                        $('#rcmfd_spamaddress').addClass(rcmail.env.sauserprefs_input_error_class);
                         $('#rcmfd_spamaddress').focus();
                         return false;
                     }
                     else if (!sauserprefs_check_email($('#rcmfd_spamaddress').val().replace(/^\s+/, '').replace(/[\s,;]+$/, ''))) {
-                        alert(rcmail.get_label('spamaddresserror','sauserprefs'));
+                        rcmail.display_message(rcmail.get_label('spamaddresserror','sauserprefs'), 'warning');
+                        $('#rcmfd_spamaddress').addClass(rcmail.env.sauserprefs_input_error_class);
                         $('#rcmfd_spamaddress').focus();
                         return false;
                     }
                     else {
                         if (!rcmail.sauserprefs_addressrule_insert_row({'type': $('#rcmfd_spamaddressrule').val(), 'desc': $('#rcmfd_spamaddressrule option:selected').text(), 'address': $('#rcmfd_spamaddress').val()})) {
-                            alert(rcmail.get_label('spamaddressexists','sauserprefs'));
+                            rcmail.display_message(rcmail.get_label('spamaddressexists','sauserprefs'), 'warning');
+                            $('#rcmfd_spamaddress').addClass(rcmail.env.sauserprefs_input_error_class);
                             $('#rcmfd_spamaddress').focus();
                             return false;
                         }
                         else {
+                            $('#rcmfd_spamaddress').removeClass(rcmail.env.sauserprefs_input_error_class);
                             $('#rcmfd_spamaddress').val('');
                         }
                     }
