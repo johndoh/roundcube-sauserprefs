@@ -45,6 +45,9 @@ span.helpicon::after {
 table.propform tr.sauphelp {
   margin-top: -7px;
 }
+table.propform tr.sauphelp td {
+  color: #888888;
+}
 table.langprefstable tr > .scroller,
 table.addressprefstable tr > .scroller {
   width: 100%;
