@@ -96,9 +96,9 @@ table.spam-langs-table > tbody > tr > td.lang,
 table.address-rules-table > tbody > tr > td.lang,
 table.spam-langs-table > tbody > tr > td.email,
 table.address-rules-table > tbody > tr > td.email {
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   max-width: 1px;
 }
 table.records-table tr > .tick > a::before,
