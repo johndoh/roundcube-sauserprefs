@@ -247,8 +247,8 @@ $(document).ready(function() {
                 }, true);
 
                 rcmail.register_command('plugin.sauserprefs.addressrule_del', function(props, obj) {
-                    rcmail.confirm_dialog(rcmail.get_label('spamaddressdelete','sauserprefs'), 'delete', function() {
-                            rcmail.sauserprefs_addressrule_delete_row(obj);
+                    rcmail.confirm_dialog(rcmail.get_label('spamaddressdelete','sauserprefs'), 'delete', function(e, ref) {
+                            ref.sauserprefs_addressrule_delete_row(obj);
                         });
                     return false;
                 }, true);
@@ -281,8 +281,8 @@ $(document).ready(function() {
                 }, true);
 
                 rcmail.register_command('plugin.sauserprefs.whitelist_delete_all', function(props, obj) {
-                    rcmail.confirm_dialog(rcmail.get_label('spamaddressdeleteall','sauserprefs'), 'delete', function() {
-                            $.each($('#address-rules-table tbody tr:visible'), function() { rcmail.sauserprefs_addressrule_delete_row(this); });
+                    rcmail.confirm_dialog(rcmail.get_label('spamaddressdeleteall','sauserprefs'), 'delete', function(e, ref) {
+                            $.each($('#address-rules-table tbody tr:visible'), function() { ref.sauserprefs_addressrule_delete_row(this); });
                         });
                     return false;
                 }, true);
@@ -304,54 +304,54 @@ $(document).ready(function() {
                 rcmail.register_command('plugin.sauserprefs.save', function() { rcmail.gui_objects.editform.submit(); }, true);
 
                 rcmail.register_command('plugin.sauserprefs.default', function() {
-                    var reset_func = function() {
+                    var reset_func = function(e, ref) {
                         $('#rcmfd_spamthres').val(''); // Score
-                        $('#rcmfd_spamsubject').val(rcmail.env.rewrite_header_Subject); // Subject tag
+                        $('#rcmfd_spamsubject').val(ref.env.rewrite_header_Subject); // Subject tag
 
                         // Languages
-                        var dlangs = " " + rcmail.env.ok_languages + " ";
+                        var dlangs = " " + ref.env.ok_languages + " ";
                         $.each($('input[name="_spamlang[]"]'), function(idx) {
                             $(this).removeAttr('checked');
-                            $('[id^=spam_lang_]').eq(idx).attr('title', rcmail.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
+                            $('[id^=spam_lang_]').eq(idx).attr('title', ref.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
 
-                            if (dlangs.indexOf(" " + $(this).val() + " ") > -1 || rcmail.env.ok_languages == "all") {
+                            if (dlangs.indexOf(" " + $(this).val() + " ") > -1 || ref.env.ok_languages == "all") {
                                 $(this).attr('checked', 'checked');
-                                $('[id^=spam_lang_]').eq(idx).attr('title', rcmail.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
+                                $('[id^=spam_lang_]').eq(idx).attr('title', ref.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
                             }
                         });
 
                         // Defaults for checkboxes
                         var checkboxes = {
                             // Tests
-                            'rcmfd_spamuserazor1': rcmail.env.use_razor1 == '1',
-                            'rcmfd_spamuserazor2': rcmail.env.use_razor2 == '1',
-                            'rcmfd_spamusepyzor': rcmail.env.use_pyzor == '1',
-                            'rcmfd_spamusedcc': rcmail.env.use_dcc == '1',
-                            'rcmfd_spamskiprblchecks': rcmail.env.skip_rbl_checks == '0',
+                            'rcmfd_spamuserazor1': ref.env.use_razor1 == '1',
+                            'rcmfd_spamuserazor2': ref.env.use_razor2 == '1',
+                            'rcmfd_spamusepyzor': ref.env.use_pyzor == '1',
+                            'rcmfd_spamusedcc': ref.env.use_dcc == '1',
+                            'rcmfd_spamskiprblchecks': ref.env.skip_rbl_checks == '0',
                             // Bayes
-                            'rcmfd_spamusebayes': rcmail.env.use_bayes == '1',
-                            'rcmfd_spambayesautolearn': rcmail.env.bayes_auto_learn == '1',
-                            'rcmfd_spambayesrules': rcmail.env.use_bayes_rules == '1',
+                            'rcmfd_spamusebayes': ref.env.use_bayes == '1',
+                            'rcmfd_spambayesautolearn': ref.env.bayes_auto_learn == '1',
+                            'rcmfd_spambayesrules': ref.env.use_bayes_rules == '1',
                             // Headers
-                            'rcmfd_spamfoldheaders': rcmail.env.fold_headers == '1',
-                            'rcmfd_spamlevelstars': rcmail.env.add_header_all_Level != '',
+                            'rcmfd_spamfoldheaders': ref.env.fold_headers == '1',
+                            'rcmfd_spamlevelstars': ref.env.add_header_all_Level != '',
                             // Report
-                            'rcmfd_spamreport_0': rcmail.env.report_safe == '0',
-                            'rcmfd_spamreport_1': rcmail.env.report_safe == '1',
-                            'rcmfd_spamreport_2': rcmail.env.report_safe == '2',
+                            'rcmfd_spamreport_0': ref.env.report_safe == '0',
+                            'rcmfd_spamreport_1': ref.env.report_safe == '1',
+                            'rcmfd_spamreport_2': ref.env.report_safe == '2',
                         };
                         $.each(checkboxes, function(id, checked) { $('#' + id).prop('checked', checked); });
 
                         $('#rcmfd_bayesnonspam,#rcmfd_bayesspam').val(''); // Bayes non spam/spam score
-                        $('#rcmfd_spamlevelchar').val(rcmail.env.add_header_all_Level.substr(7, 1)); // Spam level char
+                        $('#rcmfd_spamlevelchar').val(ref.env.add_header_all_Level.substr(7, 1)); // Spam level char
 
                         // Delete whitelist
-                        $.each($('#address-rules-table tbody tr:visible'), function() { rcmail.sauserprefs_addressrule_delete_row(this) });
+                        $.each($('#address-rules-table tbody tr:visible'), function() { ref.sauserprefs_addressrule_delete_row(this) });
 
                         // Toggle dependant fields
-                        rcmail.sauserprefs_toggle_level_char($('#rcmfd_spamlevelstars'));
-                        rcmail.sauserprefs_toggle_bayes($('#rcmfd_spamusebayes'));
-                        rcmail.sauserprefs_toggle_bayes_auto($('#rcmfd_spambayesautolearn'));
+                        ref.sauserprefs_toggle_level_char($('#rcmfd_spamlevelstars'));
+                        ref.sauserprefs_toggle_bayes($('#rcmfd_spamusebayes'));
+                        ref.sauserprefs_toggle_bayes_auto($('#rcmfd_spambayesautolearn'));
                     }
 
                     rcmail.confirm_dialog(rcmail.get_label('usedefaultconfirm','sauserprefs'), 'sauserprefs.saupusedefault', reset_func, { button_class: 'delete saupusedefault' });
