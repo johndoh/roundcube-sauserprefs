@@ -37,7 +37,7 @@ $labels['deleteall'] = 'Mindent törli';
 $labels['autoscore'] = 'Auto';
 $labels['defaultscore'] = 'Alapérték';
 $labels['otherscore'] = 'Egyéb (%s)';
-$labels['usedefault'] = 'Alapértékek visszaállítása';
+$labels['saupusedefault'] = 'Alapértékek visszaállítása';
 
 $messages = array();
 $messages['sauserprefchanged'] = 'Sikeresen megváltoztatta a spam beállításokat';

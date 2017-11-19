@@ -185,6 +185,14 @@ table.propform tr > .help
   text-align: right;
 }
 
+div.address-input {
+  margin-bottom: 10px;
+}
+
+div.address-input > input  {
+  margin-left: 10px;
+}
+
 table.addressprefstable tr > .ruletype
 {
   width: 180px;
@@ -217,6 +225,10 @@ span.helpicon
   margin-left: 10px;
   background-image: url(images/icons.png);
   background-position: 0 -57px;
+}
+
+input.error {
+  background-color: #FFFF88;
 }
 
 #rcmfd_spamlevelchar

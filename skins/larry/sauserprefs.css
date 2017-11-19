@@ -186,6 +186,14 @@ table.propform tr > .title
   white-space: nowrap;
 }
 
+div.address-input {
+  margin-bottom: 10px;
+}
+
+div.address-input > input  {
+  margin-left: 10px;
+}
+
 table.addressprefstable tr > .ruletype
 {
   width: 180px;
@@ -219,6 +227,10 @@ span.helpicon
   float: right;
   background-image: url(images/icons.png);
   background-position: 0 -55px;
+}
+
+input.error {
+  background-color: #FFFF88;
 }
 
 #sections-table #rcmrowtests td.section
