@@ -103,7 +103,7 @@ $config['sauserprefs_score_options'] = array(
 // eg. $config['sauserprefs_bayes_delete_query'] = array(
 //                                              'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
 //                                              'DELETE FROM bayes_token WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
-//                                              'DELETE FROM bayes_vars WHERE username = %u;',
+//                                              'DELETE FROM bayes_vars WHERE username = %u;'
 //                                              );
 $config['sauserprefs_bayes_delete_query'] = null;
 
