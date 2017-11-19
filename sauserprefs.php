@@ -201,7 +201,7 @@ class sauserprefs extends rcube_plugin
             'sauserprefs.spamaddresserror', 'sauserprefs.spamaddressdelete',
             'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
             'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm', 'sauserprefs.purgebayesconfirm',
-            'sauserprefs.whitelist_from');
+            'sauserprefs.whitelist_from', 'sauserprefs.saupusedefault');
 
         // output table sorting prefs
         $sorts = rcube::get_instance()->config->get('sauserprefs_sort', array());

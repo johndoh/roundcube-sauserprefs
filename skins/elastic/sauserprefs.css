@@ -145,10 +145,10 @@ div.address-input {
 #rcmfd_spamaddress {
   min-width: 100px;
 }
-button.btn.saup_defaults::before {
+button.btn.saupusedefault::before {
   content: "\f0e2";
 }
-#layout > .content > div.footer .saup_defaults {
+#layout > .content > div.footer .saupusedefault {
   display: none;
 }
 html.layout-small #address-rules-cont,

@@ -4,3 +4,6 @@
 .listing.iconized li.sauserprefs > a::before {
   content: "\f1b8";
 }
+button.btn.saupusedefault::before {
+  content: "\f0e2";
+}

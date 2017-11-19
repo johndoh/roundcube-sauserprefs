@@ -5,6 +5,7 @@
 @import (reference) "/skins/elastic/styles/mixins";
 @import (reference) "/skins/elastic/styles/colors";
 @import (reference) "/skins/elastic/styles/fontawesome";
+@import (reference) "tabstyles";
 
 @grid-gutter-height: 15px;
 @color-text-whitelist: #28a745;
@@ -170,11 +171,11 @@ div.address-input {
   min-width: 100px;
 }
 
-button.btn.saup_defaults::before {
-  content: @fa-var-undo;
+button.btn.saupusedefault::before {
+  content: @saup-defaults-icon;
 }
 
-#layout > .content > div.footer .saup_defaults {
+#layout > .content > div.footer .saupusedefault {
   display: none;
 }
 

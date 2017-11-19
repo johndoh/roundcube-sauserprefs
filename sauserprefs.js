@@ -247,11 +247,9 @@ $(document).ready(function() {
                 }, true);
 
                 rcmail.register_command('plugin.sauserprefs.addressrule_del', function(props, obj) {
-                    if (!confirm(rcmail.get_label('spamaddressdelete','sauserprefs')))
-                        return false;
-
-                    rcmail.sauserprefs_addressrule_delete_row(obj);
-
+                    rcmail.confirm_dialog(rcmail.get_label('spamaddressdelete','sauserprefs'), 'delete', function() {
+                            rcmail.sauserprefs_addressrule_delete_row(obj);
+                        });
                     return false;
                 }, true);
 
@@ -283,11 +281,9 @@ $(document).ready(function() {
                 }, true);
 
                 rcmail.register_command('plugin.sauserprefs.whitelist_delete_all', function(props, obj) {
-                    if (!confirm(rcmail.get_label('spamaddressdeleteall','sauserprefs')))
-                        return false;
-
-                    $.each($('#address-rules-table tbody tr:visible'), function() { rcmail.sauserprefs_addressrule_delete_row(this) });
-
+                    rcmail.confirm_dialog(rcmail.get_label('spamaddressdeleteall','sauserprefs'), 'delete', function() {
+                            $.each($('#address-rules-table tbody tr:visible'), function() { rcmail.sauserprefs_addressrule_delete_row(this); });
+                        });
                     return false;
                 }, true);
 
@@ -298,18 +294,17 @@ $(document).ready(function() {
                 }, true);
 
                 rcmail.register_command('plugin.sauserprefs.purge_bayes', function(props, obj) {
-                    if (confirm(rcmail.get_label('purgebayesconfirm','sauserprefs'))) {
-                        var lock = rcmail.set_busy(true, 'sauserprefs.purgingbayes');
-                        rcmail.http_request('plugin.sauserprefs.purge_bayes', '', lock);
-                    }
-
+                    rcmail.confirm_dialog(rcmail.get_label('purgebayesconfirm','sauserprefs'), 'delete', function(e, ref) {
+                            var lock = ref.set_busy(true, 'sauserprefs.purgingbayes');
+                            ref.http_request('plugin.sauserprefs.purge_bayes', '', lock);
+                        });
                     return false;
                 }, true);
 
                 rcmail.register_command('plugin.sauserprefs.save', function() { rcmail.gui_objects.editform.submit(); }, true);
 
                 rcmail.register_command('plugin.sauserprefs.default', function() {
-                    if (confirm(rcmail.get_label('usedefaultconfirm','sauserprefs'))) {
+                    var reset_func = function() {
                         $('#rcmfd_spamthres').val(''); // Score
                         $('#rcmfd_spamsubject').val(rcmail.env.rewrite_header_Subject); // Subject tag
 
@@ -358,6 +353,8 @@ $(document).ready(function() {
                         rcmail.sauserprefs_toggle_bayes($('#rcmfd_spamusebayes'));
                         rcmail.sauserprefs_toggle_bayes_auto($('#rcmfd_spambayesautolearn'));
                     }
+
+                    rcmail.confirm_dialog(rcmail.get_label('usedefaultconfirm','sauserprefs'), 'sauserprefs.saupusedefault', reset_func, { button_class: 'delete saupusedefault' });
                 }, true);
 
                 rcmail.register_command('plugin.sauserprefs.table_sort', function(props, obj) {
