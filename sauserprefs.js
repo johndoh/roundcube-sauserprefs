@@ -214,7 +214,7 @@ $(document).ready(function() {
 
         });
 
-        rcmail.addEventListener('init', function(evt) {
+        rcmail.addEventListener('init', function() {
             if (rcmail.env.action == 'plugin.sauserprefs.edit') {
                 rcmail.register_command('plugin.sauserprefs.select_all_langs', function() {
                     $.each($('input[name="_spamlang[]"]'), function(idx) {
@@ -280,20 +280,20 @@ $(document).ready(function() {
                     }
                 }, true);
 
-                rcmail.register_command('plugin.sauserprefs.whitelist_delete_all', function(props, obj) {
+                rcmail.register_command('plugin.sauserprefs.whitelist_delete_all', function() {
                     rcmail.confirm_dialog(rcmail.get_label('spamaddressdeleteall','sauserprefs'), 'delete', function(e, ref) {
                             $.each($('#address-rules-table tbody tr:visible'), function() { ref.sauserprefs_addressrule_delete_row(this); });
                         });
                     return false;
                 }, true);
 
-                rcmail.register_command('plugin.sauserprefs.import_whitelist', function(props, obj) {
+                rcmail.register_command('plugin.sauserprefs.import_whitelist', function() {
                     rcmail.env.sauserprefs_whitelist = rcmail.set_busy(true, 'sauserprefs.importingaddresses');
                     rcmail.http_request('plugin.sauserprefs.whitelist_import', '', rcmail.env.sauserprefs_whitelist);
                     return false;
                 }, true);
 
-                rcmail.register_command('plugin.sauserprefs.purge_bayes', function(props, obj) {
+                rcmail.register_command('plugin.sauserprefs.purge_bayes', function() {
                     rcmail.confirm_dialog(rcmail.get_label('purgebayesconfirm','sauserprefs'), 'delete', function(e, ref) {
                             var lock = ref.set_busy(true, 'sauserprefs.purgingbayes');
                             ref.http_request('plugin.sauserprefs.purge_bayes', '', lock);
