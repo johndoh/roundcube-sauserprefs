@@ -2,7 +2,7 @@
   "name": "johndoh/sauserprefs",
   "description": "Control SpamAssassin settings from within Roundcube",
   "keywords": ["spamassassin","preferences"],
-  "homepage": "http://github.com/JohnDoh/Roundcube-Plugin-SpamAssassin-User-Prefs-SQL/",
+  "homepage": "https://github.com/johndoh/roundcube-sauserprefs/",
   "license": "GPL-3.0",
   "type": "roundcube-plugin",
   "version": "1.18-git",
@@ -16,7 +16,7 @@
   "repositories": [
     {
       "type": "composer",
-      "url": "http://plugins.roundcube.net"
+      "url": "https://plugins.roundcube.net"
     }
   ],
   "require": {

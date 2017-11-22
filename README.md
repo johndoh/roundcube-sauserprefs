@@ -142,8 +142,9 @@ $config['sauserprefs_default_prefs'] = array(
 );
 ```
 
-[usingsql]: http://wiki.apache.org/spamassassin/UsingSQL
-[webuserprefs]: http://sourceforge.net/projects/webuserprefs/
-[rcplugrepo]: http://plugins.roundcube.net/packages/johndoh/sauserprefs
-[releases]: http://github.com/JohnDoh/Roundcube-Plugin-SpamAssassin-User-Prefs-SQL/releases
-[gpl]: http://www.gnu.org/licenses/gpl.html
+[usingsql]: https://wiki.apache.org/spamassassin/UsingSQL
+[webuserprefs]: https://sourceforge.net/projects/webuserprefs/
+[rcplugrepo]: https://plugins.roundcube.net/packages/johndoh/sauserprefs
+[releases]: https://github.com/johndoh/roundcube-sauserprefs/releases
+[rcjqui]: https://github.com/roundcube/roundcubemail/tree/master/plugins/jqueryui
+[gpl]: https://www.gnu.org/licenses/gpl.html
