@@ -19,6 +19,10 @@ SAUserPrefs are available from the [Roundcube plugin repository][rcplugrepo]
 (for 1.0 and above) or the [releases section][releases] of the GitHub
 repository.
 
+Requirements
+------------
+* [Roundcube jQueryUI plugin][rcjqui]
+
 License
 -------
 This plugin is released under the [GNU General Public License Version 3+][gpl].

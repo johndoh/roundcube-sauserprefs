@@ -5,9 +5,11 @@
  *
  * Plugin to allow the user to manage their SpamAssassin settings using an SQL database
  *
+ * @requires jQueryUI plugin
+ *
  * @author Philip Weir
  *
- * Copyright (C) 2009-2015 Philip Weir
+ * Copyright (C) 2009-2017 Philip Weir
  *
  * This program is a Roundcube (https://roundcube.net) plugin.
  * For more information see README.md.
@@ -62,7 +64,7 @@ class sauserprefs extends rcube_plugin
             $this->addressbook_import = array($rcmail->config->get('sauserprefs_whitelist_abook_id'), 0);
         }
 
-        $abook_sync = $rcmail->config->get('sauserprefs_abook_sync');
+        $abook_sync = $rcmail->config->get('sauserprefs_abook_sync', false);
         if ($abook_sync === true) {
             $this->addressbook_sync = array(0);
         }
@@ -70,7 +72,7 @@ class sauserprefs extends rcube_plugin
             $this->addressbook_sync = !is_array($abook_sync) ? array($abook_sync) : $abook_sync;
         }
 
-        $abook_import = $rcmail->config->get('sauserprefs_abook_import');
+        $abook_import = $rcmail->config->get('sauserprefs_abook_import', false);
         if ($abook_import === true) {
             $this->addressbook_import = array(0);
         }
@@ -132,6 +134,8 @@ class sauserprefs extends rcube_plugin
         $this->include_stylesheet($this->local_skin_path() . '/sauserprefs.css');
 
         if (rcube::get_instance()->action == 'plugin.sauserprefs.edit') {
+            // use jQuery for popup window
+            $this->require_plugin('jqueryui');
             $this->api->output->include_script('list.js');
             $this->user_prefs = array_merge($this->global_prefs, $this->user_prefs);
             $this->api->output->add_handler('userprefs', array($this, 'gen_form'));
@@ -206,7 +210,8 @@ class sauserprefs extends rcube_plugin
             'sauserprefs.spamaddresserror', 'sauserprefs.spamaddressdelete',
             'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
             'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm', 'sauserprefs.purgebayesconfirm',
-            'sauserprefs.whitelist_from', 'sauserprefs.saupusedefault');
+            'sauserprefs.whitelist_from', 'sauserprefs.saupusedefault', 'sauserprefs.importaddresses',
+            'sauserprefs.selectimportsource', 'import');
 
         // output table sorting prefs
         $sorts = rcube::get_instance()->config->get('sauserprefs_sort', array());
@@ -405,23 +410,30 @@ class sauserprefs extends rcube_plugin
 
     public function whitelist_import()
     {
+        $selected_sources = rcube_utils::get_input_value('_sources', rcube_utils::INPUT_POST);
+        if (!is_array($selected_sources)) {
+            return;
+        }
+
         foreach ($this->addressbook_import as $aid) {
-            $contacts = rcube::get_instance()->get_address_book($aid);
-            $contacts->set_page(1);
-            $contacts->set_pagesize(99999);
-            $result = $contacts->list_records(null, 0, true);
+            if (in_array($aid, $selected_sources)) {
+                $contacts = rcube::get_instance()->get_address_book($aid);
+                $contacts->set_page(1);
+                $contacts->set_pagesize(99999);
+                $result = $contacts->list_records(null, 0, true);
 
-            if (empty($result) || $result->count == 0) {
-                return;
-            }
-            $records = $result->records;
-            foreach ($records as $row_data) {
-                foreach ($this->_gen_email_arr($row_data) as $email) {
-                    $this->api->output->command('sauserprefs_addressrule_import', $email, '', '');
+                if (empty($result) || $result->count == 0) {
+                    return;
                 }
-            }
+                $records = $result->records;
+                foreach ($records as $row_data) {
+                    foreach ($this->_gen_email_arr($row_data) as $email) {
+                        $this->api->output->command('sauserprefs_addressrule_import', $email, '', '');
+                    }
+                }
 
-            $contacts->close();
+                $contacts->close();
+            }
         }
     }
 
@@ -974,7 +986,7 @@ class sauserprefs extends rcube_plugin
                 $data = html::p(null, rcmail::Q($this->gettext('whitelistexp')));
 
                 if (count($this->addressbook_sync) > 0) {
-                    $data .= rcmail::Q($this->gettext('autowhitelist')) . "<br /><br />";
+                    $data .= rcmail::Q(str_replace('%s', $this->_list_contact_sources($this->addressbook_sync), $this->gettext('autowhitelist'))) . "<br /><br />";
                 }
 
                 $blocks['main']['intro'] = $data;
@@ -993,8 +1005,8 @@ class sauserprefs extends rcube_plugin
 
                 $blocks['main']['intro'] .= html::div('address-input grouped', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
 
-                $import = count($this->addressbook_import) > 0 ? $this->api->output->button(array('command' => 'plugin.sauserprefs.import_whitelist', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
-                $delete_all = $this->api->output->button(array('command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall'));
+                $import = count($this->addressbook_import) > 0 ? $this->api->output->button(array('href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
+                $delete_all = $this->api->output->button(array('command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
 
                 $table = new html_table(array('class' => 'addressprefstable propform', 'cols' => 4));
                 $table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import . "&nbsp;&nbsp;" . $delete_all);
@@ -1055,6 +1067,26 @@ class sauserprefs extends rcube_plugin
                         'title' => html::label($field_id, rcmail::Q($this->gettext('score_whitelist'))),
                         'content' => $this->_score_select('_score_user_whitelist', $field_id, $this->user_prefs['score USER_IN_WHITELIST'])
                     );
+                }
+
+                // import overlay
+                if (count($this->addressbook_import) > 0) {
+                    $sources = rcube::get_instance()->get_address_sources();
+                    $sources_table = new html_table(array('class' => 'propform', 'cols' => 2));
+                    foreach ($this->addressbook_import as $id) {
+                        if (array_key_exists($id, $sources)) {
+                            $field_id = 'rcmfd_saupimport' . $id;
+                            $input_source = new html_checkbox(array('name' => '_source[]', 'id' => $field_id, 'value' => $id));
+                            $sources_table->add('title', html::label($field_id, rcmail::Q($sources[$id]['name'])));
+                            $sources_table->add(null, $input_source->show());
+                        }
+                    }
+
+                    // add overlay input box to html page
+                    $this->api->output->add_footer(html::tag('div', array(
+                        'id' => 'saup_addressimport',
+                        'style' => 'display: none;'
+                    ), html::p(null, rcube::Q($this->gettext('importexp'))) . html::div('formcontent', $sources_table->show())));
                 }
 
                 break;
@@ -1229,5 +1261,19 @@ class sauserprefs extends rcube_plugin
         }
 
         return $emails;
+    }
+
+    private function _list_contact_sources($ids)
+    {
+        $sources = rcube::get_instance()->get_address_sources();
+        $names = array();
+
+        foreach ($ids as $id) {
+            if (array_key_exists($id, $sources)) {
+                $names[] = $sources[$id]['name'];
+            }
+        }
+
+        return implode(', ', $names);
     }
 }

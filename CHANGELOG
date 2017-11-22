@@ -10,6 +10,7 @@ Roundcube Webmail SAUserPrefs
  * Make use of icons rather than checkboxes in language option list skin configurable
  * Remove unnecessary stylesheet (69f50b1)
  * Add Elastic skin support
+ * Require Roundcube jQueryUI plugin (for import addresses dialog)
 
 Version 1.17.1 (2017-09-29, rc-1.3)
 =================================================

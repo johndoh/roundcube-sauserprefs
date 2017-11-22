@@ -49,11 +49,11 @@ rcube_webmail.prototype.sauserprefs_toggle_bayes_auto = function(checkbox) {
 rcube_webmail.prototype.sauserprefs_update_lang = function(chkbox, tickobj, enable) {
     if (enable) {
         chkbox.attr('checked', 'checked');
-        tickobj.attr('title', rcmail.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
+        tickobj.attr('title', this.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
     }
     else {
         chkbox.removeAttr('checked');
-        tickobj.attr('title', rcmail.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
+        tickobj.attr('title', this.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
     }
 }
 
@@ -80,8 +80,8 @@ rcube_webmail.prototype.sauserprefs_addressrule_insert_row = function(p) {
 
     $(adrTable).children('tr.noaddressrules').hide();
 
-    rcmail.env.address_rule_count++;
-    rcmail.sauserprefs_table_sort('#address-rules-table');
+    this.env.address_rule_count++;
+    this.sauserprefs_table_sort('#address-rules-table');
 
     return true;
 }
@@ -97,15 +97,15 @@ rcube_webmail.prototype.sauserprefs_addressrule_delete_row = function(obj) {
         $(obj).closest('tr').hide().appendTo('#address-rules-table tbody');
     }
 
-    rcmail.env.address_rule_count--;
+    this.env.address_rule_count--;
 
     if ($('#address-rules-table tbody').children('tr:visible').length == 0)
         $('#address-rules-table tbody').children('tr.noaddressrules').show();
 }
 
 rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
-    parent.rcmail.set_busy(false, null, rcmail.env.sauserprefs_whitelist);
-    rcmail.sauserprefs_addressrule_insert_row({'type': 'whitelist_from', 'desc': rcmail.get_label('whitelist_from','sauserprefs'), 'address': address});
+    parent.rcmail.set_busy(false, null, this.env.sauserprefs_whitelist);
+    this.sauserprefs_addressrule_insert_row({'type': 'whitelist_from', 'desc': this.get_label('whitelist_from','sauserprefs'), 'address': address});
 }
 
 rcube_webmail.prototype.sauserprefs_help = function(sel) {
@@ -115,8 +115,8 @@ rcube_webmail.prototype.sauserprefs_help = function(sel) {
 
 rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
     if (idx == null) {
-        idx = rcmail.env.sauserprefs_sort[id][0];
-        asc = rcmail.env.sauserprefs_sort[id][1] == "true";
+        idx = this.env.sauserprefs_sort[id][0];
+        asc = this.env.sauserprefs_sort[id][1] == "true";
     }
 
     var table = $(id);
@@ -148,6 +148,21 @@ rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
 
     // move hidden rows to the bottom of the table
     table.children('tbody').children('tr:hidden').appendTo(table.children('tbody'));
+}
+
+rcube_webmail.prototype.sauserprefs_address_import_dialog = function() {
+    var dialog = $('#saup_addressimport').clone();
+    this.simple_dialog(dialog.show(), this.gettext('sauserprefs.importaddresses'), function() {
+        if (dialog.find('input:checked').length > 0) {
+            var sources = dialog.find('input:checked').map(function(){ return $(this).val(); }).get();
+            rcmail.command('plugin.sauserprefs.import_whitelist', sources);
+            return true;
+        }
+        else {
+            rcmail.display_message(rcmail.get_label('selectimportsource','sauserprefs'), 'warning');
+            return false;
+        }
+    }, { button: 'import' });
 }
 
 function sauserprefs_check_email(input) {
@@ -255,9 +270,9 @@ $(document).ready(function() {
                     return false;
                 }, true);
 
-                rcmail.register_command('plugin.sauserprefs.import_whitelist', function() {
+                rcmail.register_command('plugin.sauserprefs.import_whitelist', function(props) {
                     rcmail.env.sauserprefs_whitelist = rcmail.set_busy(true, 'sauserprefs.importingaddresses');
-                    rcmail.http_request('plugin.sauserprefs.whitelist_import', '', rcmail.env.sauserprefs_whitelist);
+                    rcmail.http_request('plugin.sauserprefs.whitelist_import', { _sources: props }, rcmail.env.sauserprefs_whitelist, 'POST');
                     return false;
                 }, true);
 
