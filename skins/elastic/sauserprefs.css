@@ -46,7 +46,7 @@ table.propform tr.sauphelp {
   margin-top: -7px;
 }
 table.propform tr.sauphelp td {
-  color: #888888;
+  color: #637a83;
 }
 table.langprefstable tr > .scroller,
 table.addressprefstable tr > .scroller {
@@ -64,7 +64,7 @@ table.addressprefstable tr > .scroller .icon-checkbox + label::before {
 }
 table.sortable-table > thead > tr > th > a {
   text-decoration: none;
-  color: #141823;
+  color: #161b1d;
   white-space: nowrap;
 }
 table.sortable-table > thead > tr > th > a::after {
@@ -110,7 +110,7 @@ table.records-table tr > .control > a::before {
 table.records-table tr > .tick > a.delete::before,
 table.records-table tr > .control > a.delete::before {
   content: "\f014";
-  color: #141823;
+  color: #161b1d;
 }
 #rcmfd_spamaddressrule {
   width: 100%;
@@ -124,6 +124,13 @@ table.records-table tr > .control > a.delete::before {
 }
 #test-scores-table tr.form-group {
   margin-bottom: 0;
+}
+#test-scores-table th {
+  border-top: 0;
+}
+#test-scores-table th,
+#test-scores-table td {
+  padding: .75rem;
 }
 #listcontrols {
   text-align: right;

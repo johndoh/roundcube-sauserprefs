@@ -1102,8 +1102,8 @@ class sauserprefs extends rcube_plugin
 
                 foreach ($this->score_prefs as $test) {
                     $field_id = 'rcmfd_score_' . $test;
-                    $score_table->add('title', $test);
-                    $score_table->add('', $this->_score_select('_score_' . $test, $field_id, $this->user_prefs['score ' . $test]));
+                    $score_table->add('title', html::label($field_id, rcmail::Q($test)));
+                    $score_table->add(null, $this->_score_select('_score_' . $test, $field_id, $this->user_prefs['score ' . $test]));
                 }
 
                 $blocks['main']['content'] = $score_table->show();
