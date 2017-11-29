@@ -292,6 +292,7 @@ class sauserprefs extends rcube_plugin
 
                 if (!isset($no_override['add_header all Level'])) {
                     $spamchar = empty($_POST['_spamlevelchar']) ? "*" : rcube_utils::get_input_value('_spamlevelchar', rcube_utils::INPUT_POST);
+                    $spamchar = substr($spamchar, 0, 1); // input validation, make sure its only ever 1 char
 
                     if (rcube_utils::get_input_value('_spamlevelstars', rcube_utils::INPUT_POST) == "1") {
                         $new_prefs['add_header all Level'] = "_STARS(" . $spamchar . ")_";
