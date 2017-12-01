@@ -145,6 +145,8 @@ span.helpicon::after {
 }
 #rcmfd_spamlevelchar {
   width: 40px;
+  margin-left: -7px;
+  text-align: center;
 }
 div.address-input {
   margin-bottom: 15px;
@@ -157,6 +159,9 @@ button.btn.saupusedefault::before {
 }
 #layout > .content > div.footer .saupusedefault {
   display: none;
+}
+html.touch #rcmfd_spamlevelchar {
+  margin-left: -5px;
 }
 html.layout-small #address-rules-cont,
 html.layout-phone #address-rules-cont,

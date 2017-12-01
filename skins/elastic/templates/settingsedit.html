@@ -20,6 +20,9 @@ $('table.propform tr.sauphelp.saupsubject td:first').addClass('d-none d-sm-flex'
 $('[type=radio]', $('.propform', document)).addClass('form-check-input');
 $('[type=radio]', $('.propform', document)).parents('tr').addClass('form-check');
 
+// special display for small spam char input box
+$('#rcmfd_spamlevelchar').parents('tr').addClass('form-check');
+
 // relocate help icon at end of text
 $.each($('span.helpicon'), function() {
     var a = $(this).parent();
