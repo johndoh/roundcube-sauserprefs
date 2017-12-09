@@ -142,6 +142,7 @@ span.helpicon::after {
   float: none;
   display: inline-block;
   content: "\f05a";
+  margin-left: 5px;
 }
 #rcmfd_spamlevelchar {
   width: 40px;

@@ -27,7 +27,7 @@ $('#rcmfd_spamlevelchar').parents('tr').addClass('form-check');
 $.each($('span.helpicon'), function() {
     var a = $(this).parent();
     var row = $(this).parents('tr');
-    a.appendTo(row.children('td:first'));
+    a.appendTo(row.children('td:first').children('label'));
 });
 
 // create input group for adding addresses
