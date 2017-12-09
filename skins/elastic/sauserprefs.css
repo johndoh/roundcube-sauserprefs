@@ -13,7 +13,7 @@ span.helpicon::after {
   height: 1em;
   font-family: 'Icons';
   font-style: normal;
-  font-weight: normal;
+  font-weight: 900;
   text-decoration: inherit;
   text-align: center;
   speak: none;
@@ -72,10 +72,10 @@ table.sortable-table > thead > tr > th > a::after {
   float: none;
 }
 table.sortable-table > thead > tr > th.sorted-asc > a::after {
-  content: "\f175";
+  content: "\f309";
 }
 table.sortable-table > thead > tr > th.sorted-desc > a::after {
-  content: "\f176";
+  content: "\f30c";
 }
 table.spam-langs-table,
 table.address-rules-table {
@@ -109,7 +109,7 @@ table.records-table tr > .control > a::before {
 }
 table.records-table tr > .tick > a.delete::before,
 table.records-table tr > .control > a.delete::before {
-  content: "\f014";
+  content: "\f2ed";
   color: #161b1d;
 }
 #rcmfd_spamaddressrule {
@@ -156,6 +156,7 @@ div.address-input {
 }
 button.btn.saupusedefault::before {
   content: "\f0e2";
+  font-weight: 900;
 }
 #layout > .content > div.footer .saupusedefault {
   display: none;

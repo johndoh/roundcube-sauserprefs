@@ -2,10 +2,8 @@
  * SAUserPrefs plugin styles
  */
 
+@import (reference) "/skins/elastic/styles/variables";
 @import (reference) "/skins/elastic/styles/mixins";
-@import (reference) "/skins/elastic/styles/colors";
-@import (reference) "/skins/elastic/styles/fontawesome";
-@import (reference) "tabstyles";
 
 @grid-gutter-height: 15px;
 @color-whitelist: #28a745;
@@ -29,11 +27,11 @@
   }
 
   &.report > td.section::before {
-    content: @fa-var-file-text;
+    content: @fa-var-file-alt;
   }
 
   &.addresses > td.section::before {
-    content: @fa-var-vcard;
+    content: @fa-var-address-card;
   }
 
   &.scores > td.section::before {
@@ -79,11 +77,11 @@ table.sortable-table > thead > tr > th {
   }
 
   &.sorted-asc > a::after {
-    content: @fa-var-long-arrow-down;
+    content: @fa-var-long-arrow-alt-down;
   }
 
   &.sorted-desc > a::after {
-    content: @fa-var-long-arrow-up;
+    content: @fa-var-long-arrow-alt-up;
   }
 }
 
@@ -123,7 +121,7 @@ table.records-table tr > .control {
   }
 
   > a.delete::before {
-    content: @fa-var-trash-o;
+    content: @fa-var-trash-alt;
     color: @color-list;
   }
 }
@@ -184,7 +182,7 @@ div.address-input {
 }
 
 button.btn.saupusedefault::before {
-  content: @saup-defaults-icon;
+  .font-icon-solid(@fa-var-undo);
 }
 
 #layout > .content > div.footer .saupusedefault {
