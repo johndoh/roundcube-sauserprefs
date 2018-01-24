@@ -33,8 +33,8 @@ $.each($('span.helpicon'), function() {
 // create input group for adding addresses
 if ($('div.address-input').length == 1) {
     $('div.address-input').addClass('input-group');
-    $('#rcmfd_spamaddressrule').wrap($('<span>').addClass('input-group-btn'));
-    $('#rcmbtn_add_address').wrap($('<span>').addClass('input-group-btn'));
+    $('#rcmfd_spamaddressrule').wrap($('<span>').addClass('input-group-prepend'));
+    $('#rcmbtn_add_address').wrap($('<span>').addClass('input-group-append'));
 }
 
 // add headers to score tests table

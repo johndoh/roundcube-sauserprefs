@@ -126,10 +126,6 @@ table.records-table tr > .control {
   }
 }
 
-#rcmfd_spamaddressrule {
-  width: 100%
-}
-
 .whitelist_from > td.rule,
 .whitelist_to > td.rule {
   color: @color-whitelist;
@@ -178,6 +174,14 @@ div.address-input {
   margin-bottom: @grid-gutter-height;
 }
 
+// Bootstrap 4.0.0 does not expect form-control elements in input-group-prepend but it makes layout easier so fix the border
+.input-group-prepend:first-child {
+  > select:last-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
 #rcmfd_spamaddress {
   min-width: 100px;
 }
@@ -205,11 +209,34 @@ html.layout-phone {
 }
 
 html.layout-phone {
+  // stack the input-group on small screens and fix the borders
   .address-input.input-group {
     display: block;
 
     input {
       width: 100%;
+    }
+
+    .input-group-prepend:first-child {
+      margin-right: 0;
+      margin-bottom: -1px;
+
+      > :first-child {
+        border-radius: 0;
+        border-top-left-radius: 0.25em;
+        border-top-right-radius: 0.25em;
+      }
+    }
+
+    .input-group-append:last-child {
+      margin-left: 0;
+      margin-top: -1px;
+
+      > :last-child {
+        border-radius: 0;
+        border-bottom-left-radius: 0.25em;
+        border-bottom-right-radius: 0.25em;
+      }
     }
   }
 
