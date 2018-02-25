@@ -362,22 +362,9 @@ $(document).ready(function() {
 
         if (rcmail.env.action == 'plugin.sauserprefs') {
             rcmail.section_select = function(list) {
-                var id = list.get_single_selection()
-
-                if (id) {
-                    var add_url = '';
-                    var target = window;
-                    this.set_busy(true);
-
-                    if (this.env.contentframe && window.frames && window.frames[this.env.contentframe]) {
-                        add_url = '&_framed=1';
-                        target = window.frames[this.env.contentframe];
-                    }
-
-                    target.location.href = this.env.comm_path + '&_action=plugin.sauserprefs.edit&_section=' + id + add_url;
-                }
-
-                return true;
+                var win, id = list.get_single_selection();
+                if (id && (win = this.get_frame_window(this.env.contentframe)))
+                  this.location_href({_action: 'plugin.sauserprefs.edit', _section: id, _framed: 1}, win, true);
             }
         }
     }
