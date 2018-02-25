@@ -363,8 +363,10 @@ $(document).ready(function() {
         if (rcmail.env.action == 'plugin.sauserprefs') {
             rcmail.section_select = function(list) {
                 var win, id = list.get_single_selection();
-                if (id && (win = this.get_frame_window(this.env.contentframe)))
-                  this.location_href({_action: 'plugin.sauserprefs.edit', _section: id, _framed: 1}, win, true);
+
+                if (id && (win = this.get_frame_window(this.env.contentframe))) {
+                    this.location_href({_action: 'plugin.sauserprefs.edit', _section: id, _framed: 1}, win, true);
+                }
             }
         }
     }
