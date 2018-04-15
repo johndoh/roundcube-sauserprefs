@@ -650,6 +650,10 @@ class sauserprefs extends rcube_plugin
                             $checkbox_display = array('style' => 'display: none;');
                         }
 
+                        if (!empty($attrib['lang_checkbox_class'])) {
+                            $checkbox_display += array('class' => $attrib['lang_checkbox_class']);
+                        }
+
                         $input_spamlang = new html_checkbox(array('name' => '_spamlang[]', 'value' => $lang_code) + $checkbox_display);
 
                         $lang_table->add('lang', $name);
