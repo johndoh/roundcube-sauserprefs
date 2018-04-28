@@ -599,9 +599,9 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($no_override['ok_languages']) || !isset($no_override['ok_locales'])) {
-                    $select_all = $this->api->output->button(array('command' => 'plugin.sauserprefs.select_all_langs', 'type' => 'link', 'label' => 'all'));
-                    $select_none = $this->api->output->button(array('command' => 'plugin.sauserprefs.select_no_langs', 'type' => 'link', 'label' => 'none'));
-                    $select_invert = $this->api->output->button(array('command' => 'plugin.sauserprefs.select_invert_langs', 'type' => 'link', 'label' => 'invert'));
+                    $select_all = $this->api->output->button(array('class' => 'select select-all', 'command' => 'plugin.sauserprefs.select_all_langs', 'type' => 'link', 'label' => 'all'));
+                    $select_none = $this->api->output->button(array('class' => 'select select-none', 'command' => 'plugin.sauserprefs.select_no_langs', 'type' => 'link', 'label' => 'none'));
+                    $select_invert = $this->api->output->button(array('class' => 'select select-invert', 'command' => 'plugin.sauserprefs.select_invert_langs', 'type' => 'link', 'label' => 'invert'));
 
                     $blocks['langs']['options']['header'] = array(
                         'content_attribs' => array('id' => 'listcontrols'),
@@ -1010,8 +1010,8 @@ class sauserprefs extends rcube_plugin
 
                 $blocks['main']['intro'] .= html::div('address-input grouped', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
 
-                $import = count($this->addressbook_import) > 0 ? $this->api->output->button(array('href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
-                $delete_all = $this->api->output->button(array('command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
+                $import = count($this->addressbook_import) > 0 ? $this->api->output->button(array('class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
+                $delete_all = $this->api->output->button(array('class' => 'delete-all', 'command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
 
                 $table = new html_table(array('class' => 'addressprefstable propform', 'cols' => 4));
                 $table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import . "&nbsp;&nbsp;" . $delete_all);

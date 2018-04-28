@@ -187,10 +187,33 @@ table.records-table tr > .control {
 }
 
 #listcontrols {
+  display: block;
   text-align: right;
   width: 100%;
   font-size: 0.9em;
   margin-bottom: (ceil((@grid-gutter-height / 2) * -1));
+
+  > a:not(.select) {
+    margin-right: 0.5rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &::before {
+      &:extend(.font-icon-class);
+      display: inline;
+      float: none;
+    }
+
+    &.import::before {
+      content: @fa-var-upload;
+    }
+
+    &.delete-all::before {
+      content: @fa-var-trash-alt;
+    }
+  }
 }
 
 span.helpicon::after {
