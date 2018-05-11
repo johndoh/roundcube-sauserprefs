@@ -1193,7 +1193,7 @@ class sauserprefs extends rcube_plugin
         else {
             $config = array('min' => 1, 'max' => 10, 'increment' => $rcmail->config->get('sauserprefs_score_inc', 1));
         }
-        $decPlaces = strlen(substr(strrchr($config['increment'], '.'), 1));
+        $decPlaces = strcspn(strrev((string)$config['increment']), $locale_info['decimal_point']);
 
         // calc values
         $vals = array();
@@ -1202,7 +1202,7 @@ class sauserprefs extends rcube_plugin
         }
         if (array_key_exists('extra', $config)) {
             foreach ($config['extra'] as $extra) {
-                $decPlaces = strlen(substr(strrchr($extra['increment'], '.'), 1));
+                $decPlaces = strcspn(strrev((string)$extra['increment']), $locale_info['decimal_point']);
                 for ($i = $extra['min']; $i <= $extra['max']; $i += $extra['increment']) {
                     $vals[number_format($i, 5, '.', '')] = array('val' => number_format($i, $decPlaces, '.', ''), 'text' => number_format($i, $decPlaces, $locale_info['decimal_point'], ''));
                 }
