@@ -12,6 +12,8 @@ Roundcube Webmail SAUserPrefs
  * Add Elastic skin support
  * Require Roundcube jQueryUI plugin (for import addresses dialog)
  * Replace with saprefsframe template object contentframe (req rc 647a7e9)
+ * Add sauserprefs_allowed_hosts config option
+ * Add sauserprefs_host_config config option
 
 Version 1.17.1 (2017-09-29, rc-1.3)
 =================================================

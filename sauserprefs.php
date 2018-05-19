@@ -9,7 +9,7 @@
  *
  * @author Philip Weir
  *
- * Copyright (C) 2009-2017 Philip Weir
+ * Copyright (C) 2009-2018 Philip Weir
  *
  * This program is a Roundcube (https://roundcube.net) plugin.
  * For more information see README.md.
@@ -49,6 +49,14 @@ class sauserprefs extends rcube_plugin
     {
         $rcmail = rcube::get_instance();
         $this->load_config();
+        $this->_load_host_config();
+
+        // Host exceptions
+        $hosts = $rcmail->config->get('sauserprefs_allowed_hosts');
+        if (!empty($hosts) && !in_array($_SESSION['storage_host'], (array) $hosts)) {
+            return;
+        }
+
         $this->sa_user = $rcmail->config->get('sauserprefs_userid', "%u");
 
         $identity_arr = $rcmail->user->get_identity();
@@ -1270,5 +1278,16 @@ class sauserprefs extends rcube_plugin
         }
 
         return implode(', ', $names);
+    }
+
+    private function _load_host_config()
+    {
+        $configs = rcube::get_instance()->config->get('sauserprefs_host_config');
+        if (empty($configs) || !array_key_exists($_SESSION['storage_host'], (array) $configs)) {
+            return;
+        }
+
+        $file = $configs[$_SESSION['storage_host']];
+        $this->load_config($file);
     }
 }

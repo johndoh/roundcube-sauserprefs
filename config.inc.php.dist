@@ -58,6 +58,17 @@ $config['sauserprefs_abook_import'] = false;
 // eg. $config['sauserprefs_dont_override'] = array('{tests}');
 $config['sauserprefs_dont_override'] = array();
 
+// activate SAUserPrefs for selected mail hosts only. If this is not set all mail hosts are allowed.
+// example: $config['sauserprefs_allowed_hosts'] = array('mail1.domain.tld', 'mail2.domain.tld');
+$config['sauserprefs_allowed_hosts'] = null;
+
+// load specific config for different mail hosts
+// example: $config['sauserprefs_host_config'] = array(
+//    'mail1.domain.tld' => 'mail1_config.inc.php',
+//    'mail2.domain.tld' => 'mail2_config.inc.php',
+// );
+$config['sauserprefs_host_config'] = null;
+
 // default settings
 // these are overridden by $GLOBAL and user settings from the database
 $config['sauserprefs_default_prefs'] = array(
