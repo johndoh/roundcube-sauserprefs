@@ -144,7 +144,6 @@ class sauserprefs extends rcube_plugin
         }
         else {
             $this->api->output->add_handler('sasectionslist', array($this, 'section_list'));
-            $this->api->output->add_handler('saprefsframe', array($this, 'preference_frame'));
             $this->api->output->send('sauserprefs.sauserprefs');
         }
     }
@@ -192,15 +191,6 @@ class sauserprefs extends rcube_plugin
         $this->api->output->include_script('list.js');
 
         return $out;
-    }
-
-    public function preference_frame($attrib)
-    {
-        if (!$attrib['id']) {
-            $attrib['id'] = 'rcmprefsframe';
-        }
-
-        return $this->api->output->frame($attrib, true);
     }
 
     public function gen_form($attrib)
