@@ -43,36 +43,37 @@ class sauserprefs extends rcube_plugin
     private $sa_locales = array('en', 'ja', 'ko', 'ru', 'th', 'zh');
     private $sa_user;
     private $bayes_query;
+    private $rcube;
     public static $deprecated_prefs = array('required_hits' => 'required_score'); // old => new
 
     public function init()
     {
-        $rcmail = rcube::get_instance();
+        $this->rcube = rcube::get_instance();
         $this->load_config();
         $this->_load_host_config();
 
         // Host exceptions
-        $hosts = $rcmail->config->get('sauserprefs_allowed_hosts');
+        $hosts = $this->rcube->config->get('sauserprefs_allowed_hosts');
         if (!empty($hosts) && !in_array($_SESSION['storage_host'], (array) $hosts)) {
             return;
         }
 
-        $this->sa_user = $rcmail->config->get('sauserprefs_userid', "%u");
+        $this->sa_user = $this->rcube->config->get('sauserprefs_userid', "%u");
 
-        $identity_arr = $rcmail->user->get_identity();
+        $identity_arr = $this->rcube->user->get_identity();
         $identity = $identity_arr['email'];
         $this->sa_user = str_replace('%u', $_SESSION['username'], $this->sa_user);
-        $this->sa_user = str_replace('%l', $rcmail->user->get_username('local'), $this->sa_user);
-        $this->sa_user = str_replace('%d', $rcmail->user->get_username('domain'), $this->sa_user);
+        $this->sa_user = str_replace('%l', $this->rcube->user->get_username('local'), $this->sa_user);
+        $this->sa_user = str_replace('%d', $this->rcube->user->get_username('domain'), $this->sa_user);
         $this->sa_user = str_replace('%i', $identity, $this->sa_user);
 
         // backwards compatibility sauserprefs_whitelist_abook_id and sauserprefs_whitelist_sync removed 20150117
-        if ($rcmail->config->get('sauserprefs_whitelist_sync', false)) {
-            $this->addressbook_sync = array($rcmail->config->get('sauserprefs_whitelist_abook_id'), 0);
-            $this->addressbook_import = array($rcmail->config->get('sauserprefs_whitelist_abook_id'), 0);
+        if ($this->rcube->config->get('sauserprefs_whitelist_sync', false)) {
+            $this->addressbook_sync = array($this->rcube->config->get('sauserprefs_whitelist_abook_id'), 0);
+            $this->addressbook_import = array($this->rcube->config->get('sauserprefs_whitelist_abook_id'), 0);
         }
 
-        $abook_sync = $rcmail->config->get('sauserprefs_abook_sync', false);
+        $abook_sync = $this->rcube->config->get('sauserprefs_abook_sync', false);
         if ($abook_sync === true) {
             $this->addressbook_sync = array(0);
         }
@@ -80,7 +81,7 @@ class sauserprefs extends rcube_plugin
             $this->addressbook_sync = !is_array($abook_sync) ? array($abook_sync) : $abook_sync;
         }
 
-        $abook_import = $rcmail->config->get('sauserprefs_abook_import', false);
+        $abook_import = $this->rcube->config->get('sauserprefs_abook_import', false);
         if ($abook_import === true) {
             $this->addressbook_import = array(0);
         }
@@ -88,13 +89,13 @@ class sauserprefs extends rcube_plugin
             $this->addressbook_import = !is_array($abook_import) ? array($abook_import) : $abook_import;
         }
 
-        $this->bayes_query = $rcmail->config->get('sauserprefs_bayes_delete_query');
+        $this->bayes_query = $this->rcube->config->get('sauserprefs_bayes_delete_query');
         // backwards compatibility sauserprefs_bayes_delete removed 20150117
-        if ($rcmail->config->get('sauserprefs_bayes_delete') === false) {
+        if ($this->rcube->config->get('sauserprefs_bayes_delete') === false) {
             $this->bayes_query = null;
         }
 
-        if ($rcmail->task == 'settings') {
+        if ($this->rcube->task == 'settings') {
             $this->add_texts('localization/');
             $this->include_stylesheet($this->local_skin_path() . '/tabstyles.css');
 
@@ -137,29 +138,29 @@ class sauserprefs extends rcube_plugin
         $this->_load_global_prefs();
         $this->_load_user_prefs();
 
-        $this->api->output->set_pagetitle($this->gettext('sauserprefssettings'));
+        $this->rcube->output->set_pagetitle($this->gettext('sauserprefssettings'));
         $this->include_script('sauserprefs.js');
         $this->include_stylesheet($this->local_skin_path() . '/sauserprefs.css');
 
-        if (rcube::get_instance()->action == 'plugin.sauserprefs.edit') {
+        if ($this->rcube->action == 'plugin.sauserprefs.edit') {
+            $this->user_prefs = array_merge($this->global_prefs, $this->user_prefs);
+
             // use jQuery for popup window
             $this->require_plugin('jqueryui');
-            $this->api->output->include_script('list.js');
-            $this->user_prefs = array_merge($this->global_prefs, $this->user_prefs);
-            $this->api->output->add_handler('userprefs', array($this, 'gen_form'));
-            $this->api->output->add_handler('sectionname', array($this, 'prefs_section_name'));
-            $this->api->output->send('sauserprefs.settingsedit');
+            $this->rcube->output->include_script('list.js');
+            $this->rcube->output->add_handler('userprefs', array($this, 'gen_form'));
+            $this->rcube->output->add_handler('sectionname', array($this, 'prefs_section_name'));
+            $this->rcube->output->send('sauserprefs.settingsedit');
         }
         else {
-            $this->api->output->add_handler('sasectionslist', array($this, 'section_list'));
-            $this->api->output->send('sauserprefs.sauserprefs');
+            $this->rcube->output->add_handler('sasectionslist', array($this, 'section_list'));
+            $this->rcube->output->send('sauserprefs.sauserprefs');
         }
     }
 
     public function section_list($attrib)
     {
-        $rcmail = rcube::get_instance();
-        $no_override = array_flip(rcube::get_instance()->config->get('sauserprefs_dont_override'));
+        $no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override'));
 
         // add id to message list table if not specified
         if (!strlen($attrib['id'])) {
@@ -178,7 +179,7 @@ class sauserprefs extends rcube_plugin
             $this->sections = $new_sections;
         }
 
-        $data = rcube::get_instance()->plugins->exec_hook('sauserprefs_sections_list', array('list' => $this->sections, 'cols' => array('section')));
+        $data = $this->rcube->plugins->exec_hook('sauserprefs_sections_list', array('list' => $this->sections, 'cols' => array('section')));
 
         foreach ($data['list'] as $id => $block) {
             if (!isset($no_override['{' . $id . '}'])) {
@@ -191,19 +192,19 @@ class sauserprefs extends rcube_plugin
             unset($sections['scores']);
         }
 
-        // create XHTML table
-        $out = $rcmail->table_output($attrib, $sections, $data['cols'], 'id');
+        // create HTML table
+        $out = $this->rcube->table_output($attrib, $sections, $data['cols'], 'id');
 
         // set client env
-        $this->api->output->add_gui_object('sectionslist', $attrib['id']);
-        $this->api->output->include_script('list.js');
+        $this->rcube->output->add_gui_object('sectionslist', $attrib['id']);
+        $this->rcube->output->include_script('list.js');
 
         return $out;
     }
 
     public function gen_form($attrib)
     {
-        $this->api->output->add_label(
+        $this->rcube->output->add_label(
             'sauserprefs.spamaddressexists', 'sauserprefs.spamenteraddress',
             'sauserprefs.spamaddresserror', 'sauserprefs.spamaddressdelete',
             'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
@@ -212,21 +213,21 @@ class sauserprefs extends rcube_plugin
             'sauserprefs.selectimportsource', 'import');
 
         // output table sorting prefs
-        $sorts = rcube::get_instance()->config->get('sauserprefs_sort', array());
+        $sorts = $this->rcube->config->get('sauserprefs_sort', array());
         if (!array_key_exists('#spam-langs-table', $sorts)) {
             $sorts['#spam-langs-table'] = array(0, 'true');
         }
         if (!array_key_exists('#address-rules-table', $sorts)) {
             $sorts['#address-rules-table'] = array(1, 'true');
         }
-        $this->api->output->set_env('sauserprefs_sort', $sorts);
+        $this->rcube->output->set_env('sauserprefs_sort', $sorts);
 
         // define input error class
-        $this->api->output->set_env('sauserprefs_input_error_class', $attrib['input_error_class'] ?: 'error');
+        $this->rcube->output->set_env('sauserprefs_input_error_class', $attrib['input_error_class'] ?: 'error');
 
         // output global prefs as default in env
         foreach ($this->global_prefs as $key => $val) {
-            $this->api->output->set_env(str_replace(" ", "_", $key), $val);
+            $this->rcube->output->set_env(str_replace(" ", "_", $key), $val);
         }
 
         unset($attrib['form']);
@@ -243,19 +244,18 @@ class sauserprefs extends rcube_plugin
 
     public function prefs_section_name()
     {
-        $data = rcube::get_instance()->plugins->exec_hook('sauserprefs_section_name', array('section' => $this->cur_section, 'title' => $this->sections[$this->cur_section]['section']));
+        $data = $this->rcube->plugins->exec_hook('sauserprefs_section_name', array('section' => $this->cur_section, 'title' => $this->sections[$this->cur_section]['section']));
 
         return $data['title'];
     }
 
     public function save()
     {
-        $rcmail = rcube::get_instance();
         $this->_init_storage();
         $this->_load_global_prefs();
         $this->_load_user_prefs();
 
-        $no_override = array_flip($rcmail->config->get('sauserprefs_dont_override'));
+        $no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override'));
         $new_prefs = array();
         $result = true;
 
@@ -384,25 +384,25 @@ class sauserprefs extends rcube_plugin
         }
 
         // allow additional actions before prefs are saved
-        $data = $rcmail->plugins->exec_hook('sauserprefs_save', array(
+        $data = $this->rcube->plugins->exec_hook('sauserprefs_save', array(
             'section' => $this->cur_section, 'cur_prefs' => $this->user_prefs, 'new_prefs' => $new_prefs, 'global_prefs' => $this->global_prefs
         ));
 
         if (!$data['abort']) {
             // save prefs
             if ($this->storage->save_prefs($this->sa_user, $data['new_prefs'], $this->user_prefs, $this->global_prefs)) {
-                $this->api->output->command('display_message', $this->gettext('sauserprefchanged'), 'confirmation');
+                $this->rcube->output->command('display_message', $this->gettext('sauserprefchanged'), 'confirmation');
             }
             else {
-                $this->api->output->command('display_message', $this->gettext('sauserpreffailed'), 'error');
+                $this->rcube->output->command('display_message', $this->gettext('sauserpreffailed'), 'error');
             }
         }
         else {
-            $this->api->output->command('display_message', $data['message'] ? $data['message'] : $this->gettext('sauserpreffailed'), 'error');
+            $this->rcube->output->command('display_message', $data['message'] ? $data['message'] : $this->gettext('sauserpreffailed'), 'error');
         }
 
         // go to next step
-        $rcmail->overwrite_action('plugin.sauserprefs.edit');
+        $this->rcube->overwrite_action('plugin.sauserprefs.edit');
         $this->_load_user_prefs();
         $this->init_html();
     }
@@ -416,7 +416,7 @@ class sauserprefs extends rcube_plugin
 
         foreach ($this->addressbook_import as $aid) {
             if (in_array($aid, $selected_sources)) {
-                $contacts = rcube::get_instance()->get_address_book($aid);
+                $contacts = $this->rcube->get_address_book($aid);
                 $contacts->set_page(1);
                 $contacts->set_pagesize(99999);
                 $result = $contacts->list_records(null, 0, true);
@@ -427,7 +427,7 @@ class sauserprefs extends rcube_plugin
                 $records = $result->records;
                 foreach ($records as $row_data) {
                     foreach ($this->_gen_email_arr($row_data) as $email) {
-                        $this->api->output->command('sauserprefs_addressrule_import', $email, '', '');
+                        $this->rcube->output->command('sauserprefs_addressrule_import', $email, '', '');
                     }
                 }
 
@@ -438,27 +438,25 @@ class sauserprefs extends rcube_plugin
 
     public function purge_bayes()
     {
-        $rcmail = rcube::get_instance();
         $this->_init_storage();
 
         if (empty($this->bayes_query)) {
-            $this->api->output->command('display_message', $this->gettext('servererror'), 'error');
+            $this->rcube->output->command('display_message', $this->gettext('servererror'), 'error');
 
             return;
         }
 
         if ($this->storage->purge_bayes($this->sa_user)) {
-            $this->api->output->command('display_message', $this->gettext('done'), 'confirmation');
+            $this->rcube->output->command('display_message', $this->gettext('done'), 'confirmation');
         }
         else {
-            $this->api->output->command('display_message', $this->gettext('servererror'), 'error');
+            $this->rcube->output->command('display_message', $this->gettext('servererror'), 'error');
         }
     }
 
     public function contact_add($args)
     {
         if (in_array($args['source'], $this->addressbook_sync)) {
-            $rcmail = rcube::get_instance();
             $this->_init_storage();
 
             $emails = $this->_gen_email_arr($args['record']);
@@ -475,14 +473,13 @@ class sauserprefs extends rcube_plugin
     public function contact_delete($args)
     {
         if (in_array($args['source'], $this->addressbook_sync)) {
-            $rcmail = rcube::get_instance();
             $this->_init_storage();
 
             if (!is_array($args['id'])) {
                 $args['id'] = array($args['id']);
             }
 
-            $contacts = $rcmail->get_address_book($args['source']);
+            $contacts = $this->rcube->get_address_book($args['source']);
             foreach ($args['id'] as $id) {
                 $emails = $this->_gen_email_arr($contacts->get_record($id, true));
                 $this->storage->whitelist_delete($this->sa_user, $emails);
@@ -495,19 +492,17 @@ class sauserprefs extends rcube_plugin
     private function _init_storage()
     {
         if (!$this->storage) {
-            $rcmail = rcube::get_instance();
-
             // Add include path for internal classes
             $include_path = $this->home . '/lib' . PATH_SEPARATOR;
             $include_path .= ini_get('include_path');
             set_include_path($include_path);
 
-            $class = $rcmail->config->get('sauserprefs_storage', 'sql');
+            $class = $this->rcube->config->get('sauserprefs_storage', 'sql');
             $class = "rcube_sauserprefs_storage_" . $class;
 
             // try to instantiate class
             if (class_exists($class)) {
-                $this->storage = new $class($rcmail->config);
+                $this->storage = new $class($this->rcube->config);
             }
             else {
                 // no storage found, raise error
@@ -521,9 +516,8 @@ class sauserprefs extends rcube_plugin
 
     private function _load_global_prefs()
     {
-        $rcmail = rcube::get_instance();
-        $this->global_prefs = $this->_load_prefs($rcmail->config->get('sauserprefs_global_userid'));
-        $this->global_prefs = array_merge($rcmail->config->get('sauserprefs_default_prefs'), $this->global_prefs);
+        $this->global_prefs = $this->_load_prefs($this->rcube->config->get('sauserprefs_global_userid'));
+        $this->global_prefs = array_merge($this->rcube->config->get('sauserprefs_default_prefs'), $this->global_prefs);
 
         // extract score prefs
         foreach (array_keys($this->global_prefs) as $test) {
@@ -540,7 +534,6 @@ class sauserprefs extends rcube_plugin
 
     private function _load_prefs($user)
     {
-        $rcmail = rcube::get_instance();
         $prefs = $this->storage->load_prefs($user);
 
         // sort address rules
@@ -553,8 +546,7 @@ class sauserprefs extends rcube_plugin
 
     private function _prefs_block($part, $attrib)
     {
-        $rcmail = rcube::get_instance();
-        $no_override = array_flip($rcmail->config->get('sauserprefs_dont_override'));
+        $no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override'));
         $blocks = array();
 
         switch ($part) {
@@ -597,9 +589,9 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($no_override['ok_languages']) || !isset($no_override['ok_locales'])) {
-                    $select_all = $this->api->output->button(array('class' => 'select select-all', 'command' => 'plugin.sauserprefs.select_all_langs', 'type' => 'link', 'label' => 'all'));
-                    $select_none = $this->api->output->button(array('class' => 'select select-none', 'command' => 'plugin.sauserprefs.select_no_langs', 'type' => 'link', 'label' => 'none'));
-                    $select_invert = $this->api->output->button(array('class' => 'select select-invert', 'command' => 'plugin.sauserprefs.select_invert_langs', 'type' => 'link', 'label' => 'invert'));
+                    $select_all = $this->rcube->output->button(array('class' => 'select select-all', 'command' => 'plugin.sauserprefs.select_all_langs', 'type' => 'link', 'label' => 'all'));
+                    $select_none = $this->rcube->output->button(array('class' => 'select select-none', 'command' => 'plugin.sauserprefs.select_no_langs', 'type' => 'link', 'label' => 'none'));
+                    $select_invert = $this->rcube->output->button(array('class' => 'select select-invert', 'command' => 'plugin.sauserprefs.select_invert_langs', 'type' => 'link', 'label' => 'invert'));
 
                     $blocks['langs']['options']['header'] = array(
                         'content_attribs' => array('id' => 'listcontrols'),
@@ -607,8 +599,8 @@ class sauserprefs extends rcube_plugin
                     );
 
                     $lang_table = new html_table(array('id' => 'spam-langs-table', 'class' => 'records-table sortable-table spam-langs-table fixedheader', 'cellspacing' => '0', 'cols' => 2));
-                    $lang_table->add_header('lang', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'language', 'title' => 'sortby')));
-                    $lang_table->add_header('tick', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'sauserprefs.enabled', 'title' => 'sortby')));
+                    $lang_table->add_header('lang', $this->rcube->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'language', 'title' => 'sortby')));
+                    $lang_table->add_header('tick', $this->rcube->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'sauserprefs.enabled', 'title' => 'sortby')));
 
                     if (!isset($no_override['ok_locales'])) {
                         if ($this->user_prefs['ok_locales'] == "all") {
@@ -624,27 +616,27 @@ class sauserprefs extends rcube_plugin
 
                     if (!isset($no_override['ok_languages'])) {
                         if ($this->user_prefs['ok_languages'] == "all") {
-                            $ok_languages = array_keys($rcmail->config->get('sauserprefs_languages'));
+                            $ok_languages = array_keys($this->rcube->config->get('sauserprefs_languages'));
                         }
                         else {
                             $ok_languages = explode(" ", $this->user_prefs['ok_languages']);
                         }
                     }
                     else {
-                        $tmp_array = $rcmail->config->get('sauserprefs_languages');
-                        $rcmail->config->set('sauserprefs_languages', array_intersect_key($tmp_array, array_flip($this->sa_locales)));
+                        $tmp_array = $this->rcube->config->get('sauserprefs_languages');
+                        $this->rcube->config->set('sauserprefs_languages', array_intersect_key($tmp_array, array_flip($this->sa_locales)));
                         $ok_languages = array();
                     }
 
                     $i = 0;
                     $locales_langs = array_merge($ok_locales, $ok_languages);
-                    foreach ($rcmail->config->get('sauserprefs_languages') as $lang_code => $name) {
+                    foreach ($this->rcube->config->get('sauserprefs_languages') as $lang_code => $name) {
                         $button = '';
                         $checkbox_display = array();
 
                         if ($attrib['lang_list_buttons'] == '1') {
                             $button_type = in_array($lang_code, $locales_langs) ? 'enabled' : 'disabled';
-                            $button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => $button_type, 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.' . $button_type, 'content' => ' '));
+                            $button = $this->rcube->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => $button_type, 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.' . $button_type, 'content' => ' '));
                             $checkbox_display = array('style' => 'display: none;');
                         }
 
@@ -866,7 +858,7 @@ class sauserprefs extends rcube_plugin
                     ));
 
                     if (!empty($this->bayes_query)) {
-                        $delete_link = "&nbsp;&nbsp;&nbsp;" . html::span(array('id' => 'listcontrols'), $this->api->output->button(array('command' => 'plugin.sauserprefs.purge_bayes', 'type' => 'link', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp')));
+                        $delete_link = "&nbsp;&nbsp;&nbsp;" . html::span(array('id' => 'listcontrols'), $this->rcube->output->button(array('command' => 'plugin.sauserprefs.purge_bayes', 'type' => 'link', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp')));
                     }
 
                     $blocks['main']['options']['spamusebayes'] = array(
@@ -1004,22 +996,22 @@ class sauserprefs extends rcube_plugin
                 $input_spamaddress = new html_inputfield(array('name' => '_spamaddress', 'id' => $field_id, 'title' => rcmail::Q($this->gettext('email')), 'placeholder' => rcmail::Q($this->gettext('email'))));
 
                 $field_id = 'rcmbtn_add_address';
-                $button_addaddress = $this->api->output->button(array('id' => $field_id, 'command' => 'plugin.sauserprefs.addressrule_add', 'type' => 'input', 'class' => 'button', 'label' => 'sauserprefs.addrule'));
+                $button_addaddress = $this->rcube->output->button(array('id' => $field_id, 'command' => 'plugin.sauserprefs.addressrule_add', 'type' => 'input', 'class' => 'button', 'label' => 'sauserprefs.addrule'));
 
                 $blocks['main']['intro'] .= html::div('address-input grouped', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
 
-                $import = count($this->addressbook_import) > 0 ? $this->api->output->button(array('class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
-                $delete_all = $this->api->output->button(array('class' => 'delete-all', 'command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
+                $import = count($this->addressbook_import) > 0 ? $this->rcube->output->button(array('class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
+                $delete_all = $this->rcube->output->button(array('class' => 'delete-all', 'command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
 
                 $table = new html_table(array('class' => 'addressprefstable propform', 'cols' => 4));
                 $table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import . "&nbsp;&nbsp;" . $delete_all);
 
                 $address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table sortable-table address-rules-table fixedheader', 'cellspacing' => '0', 'cols' => 3));
-                $address_table->add_header('rule', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'sauserprefs.rule', 'title' => 'sortby')));
-                $address_table->add_header('email', $this->api->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'email', 'title' => 'sortby')));
+                $address_table->add_header('rule', $this->rcube->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'sauserprefs.rule', 'title' => 'sortby')));
+                $address_table->add_header('email', $this->rcube->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'email', 'title' => 'sortby')));
                 $address_table->add_header('control', '&nbsp;');
 
-                $this->api->output->set_env('address_rule_count', !empty($this->user_prefs['addresses']) ? count($this->user_prefs['addresses']) : 0);
+                $this->rcube->output->set_env('address_rule_count', !empty($this->user_prefs['addresses']) ? count($this->user_prefs['addresses']) : 0);
                 foreach ((array) $this->user_prefs['addresses'] as $address) {
                     $this->_address_row($address_table, $address['field'], $address['value'], $attrib);
                 }
@@ -1074,7 +1066,7 @@ class sauserprefs extends rcube_plugin
 
                 // import overlay
                 if (count($this->addressbook_import) > 0) {
-                    $sources = rcube::get_instance()->get_address_sources();
+                    $sources = $this->rcube->get_address_sources();
                     $sources_table = new html_table(array('class' => 'propform', 'cols' => 2));
                     foreach ($this->addressbook_import as $id) {
                         if (array_key_exists($id, $sources)) {
@@ -1086,7 +1078,7 @@ class sauserprefs extends rcube_plugin
                     }
 
                     // add overlay input box to html page
-                    $this->api->output->add_footer(html::tag('div', array(
+                    $this->rcube->output->add_footer(html::tag('div', array(
                         'id' => 'saup_addressimport',
                         'style' => 'display: none;'
                     ), html::p(null, rcube::Q($this->gettext('importexp'))) . html::div('formcontent', $sources_table->show())));
@@ -1114,7 +1106,7 @@ class sauserprefs extends rcube_plugin
                 break;
         }
 
-        $data = $rcmail->plugins->exec_hook('sauserprefs_list', array('section' => $part, 'blocks' => $blocks));
+        $data = $this->rcube->plugins->exec_hook('sauserprefs_list', array('section' => $part, 'blocks' => $blocks));
 
         $out = '';
         foreach ($data['blocks'] as $class => $block) {
@@ -1176,22 +1168,21 @@ class sauserprefs extends rcube_plugin
         $address_table->set_row_attribs($row_attrib);
         $address_table->add(array('class' => 'rule'), $fieldtxt);
         $address_table->add(array('class' => 'email'), $value);
-        $del_button = $this->api->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'link', 'class' => 'delete', 'label' => 'delete', 'content' => ' ', 'title' => 'delete'));
+        $del_button = $this->rcube->output->button(array('command' => 'plugin.sauserprefs.addressrule_del', 'type' => 'link', 'class' => 'delete', 'label' => 'delete', 'content' => ' ', 'title' => 'delete'));
         $address_table->add('control', $del_button . $hidden_action->show() . $hidden_field->show() . $hidden_text->show());
     }
 
     private function _score_select($field_name, $field_id, $val, $args = array())
     {
-        $rcmail = rcube::get_instance();
         $locale_info = localeconv();
 
-        if ($config = $rcmail->config->get('sauserprefs_score_options')) {
+        if ($config = $this->rcube->config->get('sauserprefs_score_options')) {
             $config = array_key_exists($field_name, $config) ? $config[$field_name] : $config['*'];
         }
         else {
-            $config = array('min' => 1, 'max' => 10, 'increment' => $rcmail->config->get('sauserprefs_score_inc', 1));
+            $config = array('min' => 1, 'max' => 10, 'increment' => $this->rcube->config->get('sauserprefs_score_inc', 1));
         }
-        $decPlaces = strcspn(strrev((string)$config['increment']), $locale_info['decimal_point']);
+        $decPlaces = self::decimal_places($config['increment'], $locale_info['decimal_point']);
 
         // calc values
         $vals = array();
@@ -1200,7 +1191,7 @@ class sauserprefs extends rcube_plugin
         }
         if (array_key_exists('extra', $config)) {
             foreach ($config['extra'] as $extra) {
-                $decPlaces = strcspn(strrev((string)$extra['increment']), $locale_info['decimal_point']);
+                $decPlaces = self::decimal_places($extra['increment'], $locale_info['decimal_point']);
                 for ($i = $extra['min']; $i <= $extra['max']; $i += $extra['increment']) {
                     $vals[number_format($i, 5, '.', '')] = array('val' => number_format($i, $decPlaces, '.', ''), 'text' => number_format($i, $decPlaces, $locale_info['decimal_point'], ''));
                 }
@@ -1220,6 +1211,18 @@ class sauserprefs extends rcube_plugin
         }
 
         return $input_score->show($val);
+    }
+
+    public static function decimal_places($input, $separator = '.')
+    {
+        $places = 0;
+        $input = (string) $input;
+
+        if (strpos($input, $separator) !== false) {
+            $places = strcspn(strrev($input), $separator);
+        }
+
+        return $places;
     }
 
     public static function map_pref_name($pref, $reverse = false)
@@ -1268,7 +1271,7 @@ class sauserprefs extends rcube_plugin
 
     private function _list_contact_sources($ids)
     {
-        $sources = rcube::get_instance()->get_address_sources();
+        $sources = $this->rcube->get_address_sources();
         $names = array();
 
         foreach ($ids as $id) {
@@ -1282,7 +1285,7 @@ class sauserprefs extends rcube_plugin
 
     private function _load_host_config()
     {
-        $configs = rcube::get_instance()->config->get('sauserprefs_host_config');
+        $configs = $this->rcube->config->get('sauserprefs_host_config');
         if (empty($configs) || !array_key_exists($_SESSION['storage_host'], (array) $configs)) {
             return;
         }
