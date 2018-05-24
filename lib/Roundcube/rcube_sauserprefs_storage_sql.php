@@ -36,6 +36,9 @@ class rcube_sauserprefs_storage_sql
     private $value_field;
     private $bayes_delete_query;
 
+    /**
+     * Object constructor
+     */
     public function __construct($config)
     {
         $this->db_dsnw = $config->get('sauserprefs_db_dsnw');
@@ -48,6 +51,13 @@ class rcube_sauserprefs_storage_sql
         $this->bayes_delete_query = $config->get('sauserprefs_bayes_delete_query');
     }
 
+    /**
+     * Retrieve all SpamAssassin preferences
+     *
+     * @param  string $user sauserprefs_global_userid
+     *
+     * @return array  Array of preferences in format Array($pref_name => $pref_value, ...)
+     */
     public function load_prefs($user)
     {
         $this->_db_connect('r');
@@ -84,6 +94,16 @@ class rcube_sauserprefs_storage_sql
         return $prefs;
     }
 
+    /**
+     * Save new SpamAssassin preferences
+     *
+     * @param  string $user_id      sauserprefs_userid
+     * @param  array  $new_prefs    Array of new preferences to be saved
+     * @param  array  $cur_prefs    Array of current preferences for comparison with $new_prefs (user_prefs + global_prefs)
+     * @param  array  $global_prefs Array of global preferences for comparison with $new_prefs
+     *
+     * @return bool   True on success, False on error
+     */
     public function save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs)
     {
         $result = true;
@@ -178,6 +198,12 @@ class rcube_sauserprefs_storage_sql
         return $result;
     }
 
+    /**
+     * Add whitelist_from pref entries
+     *
+     * @param string $user_id sauserprefs_userid
+     * @param array  $emails  Array of email addresses to add
+     */
     public function whitelist_add($user_id, $emails)
     {
         $this->_db_connect('w');
@@ -196,10 +222,22 @@ class rcube_sauserprefs_storage_sql
                     $user_id,
                     sauserprefs::map_pref_name('whitelist_from'),
                     $email);
+
+                $result = $this->db->affected_rows();
+
+                if (!$result) {
+                    rcube::write_log('errors', 'sauserprefs error: cannot add ' . $email . ' to whitelist_from for ' . $user_id);
+                }
             }
         }
     }
 
+    /**
+     * Delete whitelist_from pref entries
+     *
+     * @param string $user_id sauserprefs_userid
+     * @param array  $emails  Array of email addresses to delete
+     */
     public function whitelist_delete($user_id, $emails)
     {
         $this->_db_connect('w');
@@ -210,9 +248,20 @@ class rcube_sauserprefs_storage_sql
                 $user_id,
                 sauserprefs::map_pref_name('whitelist_from'),
                 $email);
+
+            $result = $this->db->affected_rows();
+
+            if (!$result) {
+                rcube::write_log('errors', 'sauserprefs error: cannot delete ' . $email . ' from whitelist_from for ' . $user_id);
+            }
         }
     }
 
+    /**
+     * Purge learnt Bayes data
+     *
+     * @param string $user_id sauserprefs_userid
+     */
     public function purge_bayes($user_id)
     {
         $result = false;
@@ -235,6 +284,11 @@ class rcube_sauserprefs_storage_sql
         return $result;
     }
 
+    /**
+     * Connect to appropriate database depending on the operation
+     *
+     * @param string $mode Connection mode (r|w)
+     */
     private function _db_connect($mode)
     {
         if (!$this->db) {
