@@ -24,7 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Roundcube. If not, see https://www.gnu.org/licenses/.
  */
-class rcube_sauserprefs_storage_sql
+class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
 {
     private $db;
     private $db_dsnw;
