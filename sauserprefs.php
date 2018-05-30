@@ -154,6 +154,8 @@ class sauserprefs extends rcube_plugin
         }
         else {
             $this->rcube->output->add_handler('sasectionslist', array($this, 'section_list'));
+            // backwards compatibility saprefsframe removed in 1.18
+            $this->rcube->output->add_handler('saprefsframe', array($this, 'preference_frame'));
             $this->rcube->output->send('sauserprefs.sauserprefs');
         }
     }
@@ -200,6 +202,12 @@ class sauserprefs extends rcube_plugin
         $this->rcube->output->include_script('list.js');
 
         return $out;
+    }
+
+    public function preference_frame($attrib)
+    {
+        $attrib['name'] = 'contentframe';
+        return $this->rcube->output->just_parse('<roundcube:object' . html::attrib_string($attrib) . ' />');
     }
 
     public function gen_form($attrib)
