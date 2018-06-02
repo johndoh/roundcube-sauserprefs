@@ -466,9 +466,31 @@ class sauserprefs extends rcube_plugin
     {
         if (in_array($args['source'], $this->addressbook_sync)) {
             $this->_init_storage();
+            $this->_load_global_prefs();
+            $this->_load_user_prefs();
+
+            // list of existing email rules for existence check
+            if (function_exists('array_column')) {
+                $existing_addresses = array_column($this->user_prefs['addresses'], 'value');
+            }
+            else {
+                // for PHP < 5.5.0
+                $existing_addresses = array_map(function($element) { return $element['value']; }, $this->user_prefs['addresses']);
+            }
+
+            $new_prefs = array();
 
             $emails = $this->_gen_email_arr($args['record']);
-            $this->storage->whitelist_add($this->sa_user, $emails);
+            $emails = array_unique($emails);
+            foreach ($emails as $email) {
+                if (!in_array($email, $existing_addresses)) {
+                    $new_prefs['addresses'][] = array('field' => self::map_pref_name('whitelist_from'), 'value' => $email, 'action' => 'INSERT');
+                }
+            }
+
+            if (count($new_prefs) > 0) {
+                $this->storage->save_prefs($this->sa_user, $new_prefs, null, null);
+            }
         }
     }
 
@@ -482,18 +504,39 @@ class sauserprefs extends rcube_plugin
     {
         if (in_array($args['source'], $this->addressbook_sync)) {
             $this->_init_storage();
+            $this->_load_global_prefs();
+            $this->_load_user_prefs();
+
+            // list of existing email rules for existence check
+            if (function_exists('array_column')) {
+                $existing_addresses = array_column($this->user_prefs['addresses'], 'value');
+            }
+            else {
+                // for PHP < 5.5.0
+                $existing_addresses = array_map(function($element) { return $element['value']; }, $this->user_prefs['addresses']);
+            }
 
             if (!is_array($args['id'])) {
                 $args['id'] = array($args['id']);
             }
 
+            $new_prefs = array();
+
             $contacts = $this->rcube->get_address_book($args['source']);
             foreach ($args['id'] as $id) {
                 $emails = $this->_gen_email_arr($contacts->get_record($id, true));
-                $this->storage->whitelist_delete($this->sa_user, $emails);
+                $emails = array_unique($emails);
+                foreach ($emails as $email) {
+                    if (in_array($email, $existing_addresses)) {
+                        $new_prefs['addresses'][] = array('field' => self::map_pref_name('whitelist_from'), 'value' => $email, 'action' => 'DELETE');
+                    }
+                }
             }
-
             $contacts->close();
+
+            if (count($new_prefs) > 0) {
+                $this->storage->save_prefs($this->sa_user, $new_prefs, null, null);
+            }
         }
     }
 

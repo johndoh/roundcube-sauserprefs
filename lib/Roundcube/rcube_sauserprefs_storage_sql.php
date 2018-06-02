@@ -199,65 +199,6 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
     }
 
     /**
-     * Add whitelist_from pref entries
-     *
-     * @param string $user_id sauserprefs_userid
-     * @param array  $emails  Array of email addresses to add
-     */
-    public function whitelist_add($user_id, $emails)
-    {
-        $this->_db_connect('w');
-
-        foreach ($emails as $email) {
-            // check address is not already whitelisted
-            $sql_result = $this->db->query(
-                            "SELECT `{$this->value_field}` FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ? AND `{$this->value_field}` = ?;",
-                            $user_id,
-                            sauserprefs::map_pref_name('whitelist_from'),
-                            $email);
-
-            if (!$this->db->fetch_array($sql_result)) {
-                $this->db->query(
-                    "INSERT INTO `{$this->table_name}` (`{$this->username_field}`, `{$this->preference_field}`, `{$this->value_field}`) VALUES (?, ?, ?);",
-                    $user_id,
-                    sauserprefs::map_pref_name('whitelist_from'),
-                    $email);
-
-                $result = $this->db->affected_rows();
-
-                if (!$result) {
-                    rcube::write_log('errors', 'sauserprefs error: cannot add ' . $email . ' to whitelist_from for ' . $user_id);
-                }
-            }
-        }
-    }
-
-    /**
-     * Delete whitelist_from pref entries
-     *
-     * @param string $user_id sauserprefs_userid
-     * @param array  $emails  Array of email addresses to delete
-     */
-    public function whitelist_delete($user_id, $emails)
-    {
-        $this->_db_connect('w');
-
-        foreach ($emails as $email) {
-            $this->db->query(
-                "DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ? AND `{$this->value_field}` = ?;",
-                $user_id,
-                sauserprefs::map_pref_name('whitelist_from'),
-                $email);
-
-            $result = $this->db->affected_rows();
-
-            if (!$result) {
-                rcube::write_log('errors', 'sauserprefs error: cannot delete ' . $email . ' from whitelist_from for ' . $user_id);
-            }
-        }
-    }
-
-    /**
      * Purge learnt Bayes data
      *
      * @param string $user_id sauserprefs_userid

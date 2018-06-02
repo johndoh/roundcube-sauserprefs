@@ -56,22 +56,6 @@ abstract class rcube_sauserprefs_storage
     abstract function save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs);
 
     /**
-     * Add whitelist_from pref entries
-     *
-     * @param string $user_id sauserprefs_userid
-     * @param array  $emails  Array of email addresses to add
-     */
-    abstract function whitelist_add($user_id, $emails);
-
-    /**
-     * Delete whitelist_from pref entries
-     *
-     * @param string $user_id sauserprefs_userid
-     * @param array  $emails  Array of email addresses to delete
-     */
-    abstract function whitelist_delete($user_id, $emails);
-
-    /**
      * Purge learnt Bayes data
      *
      * @param string $user_id sauserprefs_userid
