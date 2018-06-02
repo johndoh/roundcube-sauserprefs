@@ -770,7 +770,7 @@ class sauserprefs extends rcube_plugin
                     );
 
                     $field_id = 'rcmfd_spamlevelchar';
-                    $input_spamsubject = new html_inputfield(array(
+                    $input_spamlevelchar = new html_inputfield(array(
                         'name' => '_spamlevelchar',
                         'id' => $field_id,
                         'value' => $char,
@@ -780,7 +780,7 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spamlevelchar'] = array(
                         'title' => html::label($field_id, rcmail::Q($this->gettext('spamlevelchar'))),
-                        'content' => $input_spamsubject->show()
+                        'content' => $input_spamlevelchar->show()
                     );
                 }
 
