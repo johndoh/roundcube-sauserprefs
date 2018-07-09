@@ -477,6 +477,34 @@ class sauserprefs extends rcube_plugin
 		return $prefs;
 	}
 
+	private function select_val_list($list,$l_min,$l_max,$varname) {
+		$rcmail = rcube::get_instance();
+		$decPlaces = 0;
+		$i_inc = $rcmail->config->get('sauserprefs_score_inc');
+		if($i_inc < 0.1) {
+			$i_inc = 0.1; $decPlaces=1;
+		} else 
+		   if ($i_inc - (int)$i_inc > 0)
+			$decPlaces = strlen($i_inc - (int)$i_inc) - 2;
+
+		$score_found = false;
+		for ($i = $l_min; $i <= $l_max; $i = $i + $i_inc) {
+			$list->add(number_format($i, $decPlaces, '.', ''),
+			       	   number_format($i, $decPlaces, '.', ''));
+
+			if (!$score_found && $this->user_prefs[$varname] && 
+			     abs((float)$this->user_prefs[$varname] - (float)$i) < $i_inc ) {
+				$score_found = number_format($i, $decPlaces, '.', '');
+			}
+		}
+		if (!$score_found && $this->user_prefs[$varname]) {
+			$score_found = number_format((float)$this->user_prefs[$varname], $decPlaces, '.', '');
+			$list->add(str_replace('%s', $score_found, $this->gettext('otherscore')),
+						$score_found);
+		}
+		return $score_found;
+	}
+
 	private function _prefs_block($part, $attrib)
 	{
 		$rcmail = rcube::get_instance();
@@ -500,24 +528,11 @@ class sauserprefs extends rcube_plugin
 					$input_spamthres = new html_select(array('name' => '_spamthres', 'id' => $field_id));
 					$input_spamthres->add($this->gettext('defaultscore'), '');
 
-					$decPlaces = 0;
-					if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
-						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
-
-					$score_found = false;
-					for ($i = 1; $i <= 10; $i = $i + $rcmail->config->get('sauserprefs_score_inc')) {
-						$input_spamthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
-
-						if (!$score_found && $this->user_prefs['required_score'] && (float)$this->user_prefs['required_score'] == (float)$i)
-							$score_found = true;
-					}
-
-					if (!$score_found && $this->user_prefs['required_score'])
-						$input_spamthres->add(str_replace('%s', $this->user_prefs['required_score'], $this->gettext('otherscore')), (float)$this->user_prefs['required_score']);
+					$score_found = $this->select_val_list($input_spamthres,0.1,10,'required_score');
 
 					$blocks['main']['options']['spamthres'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('spamthres'))),
-						'content' => $input_spamthres->show(number_format($this->user_prefs['required_score'], $decPlaces, '.', ''))
+						'content' => $input_spamthres->show($score_found)
 					);
 
 					$blocks['main']['options']['spamthres_help'] = array(
@@ -854,24 +869,11 @@ class sauserprefs extends rcube_plugin
 					$input_bayesnthres = new html_select(array('name' => '_bayesnonspam', 'id' => $field_id, 'disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0));
 					$input_bayesnthres->add($this->gettext('defaultscore'), '');
 
-					$decPlaces = 1;
-					//if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
-					//	$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
-
-					$score_found = false;
-					for ($i = -1; $i <= 1; $i = $i + 0.1) {
-						$input_bayesnthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
-
-						if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_nonspam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_nonspam'] == (float)$i)
-							$score_found = true;
-					}
-
-					if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_nonspam'])
-						$input_bayesnthres->add(str_replace('%s', $this->user_prefs['bayes_auto_learn_threshold_nonspam'], $this->gettext('otherscore')), (float)$this->user_prefs['bayes_auto_learn_threshold_nonspam']);
+					$score_found = $this->select_val_list($input_bayesnthres,-5.0,5.0,'bayes_auto_learn_threshold_nonspam');
 
 					$blocks['autolearn']['options']['bayesnonspam'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('bayesnonspam'))),
-						'content' => $input_bayesnthres->show(number_format($this->user_prefs['bayes_auto_learn_threshold_nonspam'], $decPlaces, '.', ''))
+						'content' => $input_bayesnthres->show($score_found)
 					);
 
 					$blocks['autolearn']['options']['bayesnonspam_help'] = array(
@@ -886,24 +888,11 @@ class sauserprefs extends rcube_plugin
 					$input_bayesthres = new html_select(array('name' => '_bayesspam', 'id' => $field_id, 'disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes'])?1:0));
 					$input_bayesthres->add($this->gettext('defaultscore'), '');
 
-					$decPlaces = 0;
-					if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
-						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
-
-					$score_found = false;
-					for ($i = 1; $i <= 20; $i = $i + $rcmail->config->get('sauserprefs_score_inc')) {
-						$input_bayesthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
-
-						if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_spam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_spam'] == (float)$i)
-							$score_found = true;
-					}
-
-					if (!$score_found && $this->user_prefs['required_score'])
-						$input_bayesthres->add(str_replace('%s', $this->user_prefs['bayes_auto_learn_threshold_spam'], $this->gettext('otherscore')), (float)$this->user_prefs['bayes_auto_learn_threshold_spam']);
+					$score_found = $this->select_val_list($input_bayesthres,5,20,'bayes_auto_learn_threshold_spam');
 
 					$blocks['autolearn']['options']['bayesspam'] = array(
 						'title' => html::label($field_id, rcmail::Q($this->gettext('bayesspam'))),
-						'content' => $input_bayesthres->show(number_format($this->user_prefs['bayes_auto_learn_threshold_spam'], $decPlaces, '.', ''))
+						'content' => $input_bayesthres->show($score_found)
 					);
 
 					$blocks['autolearn']['options']['bayesspam_help'] = array(
