@@ -146,7 +146,7 @@ class sauserprefs extends rcube_plugin
 	function section_list($attrib)
 	{
 		$rcmail = rcube::get_instance();
-		$no_override = array_flip(rcube::get_instance()->config->get('sauserprefs_dont_override'));
+		$no_override = array_flip(rcube::get_instance()->config->get('sauserprefs_dont_override', array()));
 
 		// add id to message list table if not specified
 		if (!strlen($attrib['id']))
@@ -233,7 +233,7 @@ class sauserprefs extends rcube_plugin
 		$this->_load_global_prefs();
 		$this->_load_user_prefs();
 
-		$no_override = array_flip($rcmail->config->get('sauserprefs_dont_override'));
+		$no_override = array_flip($rcmail->config->get('sauserprefs_dont_override', array()));
 		$new_prefs = array();
 		$result = true;
 
@@ -456,7 +456,7 @@ class sauserprefs extends rcube_plugin
 	private function _load_global_prefs()
 	{
 		$rcmail = rcube::get_instance();
-		$this->global_prefs = $this->_load_prefs($rcmail->config->get('sauserprefs_global_userid'));
+		$this->global_prefs = $this->_load_prefs($rcmail->config->get('sauserprefs_global_userid', '\$GLOBAL'));
 		$this->global_prefs = array_merge($rcmail->config->get('sauserprefs_default_prefs'), $this->global_prefs);
 	}
 
@@ -480,7 +480,7 @@ class sauserprefs extends rcube_plugin
 	private function _prefs_block($part, $attrib)
 	{
 		$rcmail = rcube::get_instance();
-		$no_override = array_flip($rcmail->config->get('sauserprefs_dont_override'));
+		$no_override = array_flip($rcmail->config->get('sauserprefs_dont_override', array()));
 		$locale_info = localeconv();
 		$blocks = array();
 
@@ -501,11 +501,11 @@ class sauserprefs extends rcube_plugin
 					$input_spamthres->add($this->gettext('defaultscore'), '');
 
 					$decPlaces = 0;
-					if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
-						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
+					if ($rcmail->config->get('sauserprefs_score_inc', 1) - (int)$rcmail->config->get('sauserprefs_score_inc', 1) > 0)
+						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc', 1) - (int)$rcmail->config->get('sauserprefs_score_inc', 1)) - 2;
 
 					$score_found = false;
-					for ($i = 1; $i <= 10; $i = $i + $rcmail->config->get('sauserprefs_score_inc')) {
+					for ($i = 1; $i <= 10; $i = $i + $rcmail->config->get('sauserprefs_score_inc', 1)) {
 						$input_spamthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
 
 						if (!$score_found && $this->user_prefs['required_score'] && (float)$this->user_prefs['required_score'] == (float)$i)
@@ -569,19 +569,19 @@ class sauserprefs extends rcube_plugin
 
 					if (!isset($no_override['ok_languages'])) {
 						if ($this->user_prefs['ok_languages'] == "all")
-							$ok_languages = array_keys($rcmail->config->get('sauserprefs_languages'));
+							$ok_languages = array_keys($rcmail->config->get('sauserprefs_languages', array()));
 						else
 							$ok_languages = explode(" ", $this->user_prefs['ok_languages']);
 					}
 					else {
-						$tmp_array = $rcmail->config->get('sauserprefs_languages');
+						$tmp_array = $rcmail->config->get('sauserprefs_languages', array());
 						$rcmail->config->set('sauserprefs_languages', array_intersect_key($tmp_array, array_flip($this->sa_locales)));
 						$ok_languages = array();
 					}
 
 					$i = 0;
 					$locales_langs = array_merge($ok_locales, $ok_languages);
-					foreach ($rcmail->config->get('sauserprefs_languages') as $lang_code => $name) {
+					foreach ($rcmail->config->get('sauserprefs_languages', array()) as $lang_code => $name) {
 						if (in_array($lang_code, $locales_langs))
 							$button = $this->api->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => 'enabled', 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.enabled', 'content' => ' '));
 						else
@@ -887,11 +887,11 @@ class sauserprefs extends rcube_plugin
 					$input_bayesthres->add($this->gettext('defaultscore'), '');
 
 					$decPlaces = 0;
-					if ($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc') > 0)
-						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc') - (int)$rcmail->config->get('sauserprefs_score_inc')) - 2;
+					if ($rcmail->config->get('sauserprefs_score_inc', 1) - (int)$rcmail->config->get('sauserprefs_score_inc', 1) > 0)
+						$decPlaces = strlen($rcmail->config->get('sauserprefs_score_inc', 1) - (int)$rcmail->config->get('sauserprefs_score_inc', 1)) - 2;
 
 					$score_found = false;
-					for ($i = 1; $i <= 20; $i = $i + $rcmail->config->get('sauserprefs_score_inc')) {
+					for ($i = 1; $i <= 20; $i = $i + $rcmail->config->get('sauserprefs_score_inc', 1)) {
 						$input_bayesthres->add(number_format($i, $decPlaces, $locale_info['decimal_point'], ''), number_format($i, $decPlaces, '.', ''));
 
 						if (!$score_found && $this->user_prefs['bayes_auto_learn_threshold_spam'] && (float)$this->user_prefs['bayes_auto_learn_threshold_spam'] == (float)$i)
