@@ -44,6 +44,7 @@ class sauserprefs extends rcube_plugin
     private $sa_user;
     private $bayes_query;
     private $rcube;
+    private $no_override = array();
     public static $deprecated_prefs = array('required_hits' => 'required_score'); // old => new
 
     public function init()
@@ -96,6 +97,7 @@ class sauserprefs extends rcube_plugin
         }
 
         if ($this->rcube->task == 'settings') {
+            $this->no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override', array()));
             $this->add_texts('localization/');
             $this->include_stylesheet($this->local_skin_path() . '/tabstyles.css');
 
@@ -162,8 +164,6 @@ class sauserprefs extends rcube_plugin
 
     public function section_list($attrib)
     {
-        $no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override'));
-
         // add id to message list table if not specified
         if (!strlen($attrib['id'])) {
             $attrib['id'] = 'rcmsectionslist';
@@ -184,7 +184,7 @@ class sauserprefs extends rcube_plugin
         $data = $this->rcube->plugins->exec_hook('sauserprefs_sections_list', array('list' => $this->sections, 'cols' => array('section')));
 
         foreach ($data['list'] as $id => $block) {
-            if (!isset($no_override['{' . $id . '}'])) {
+            if (!isset($this->no_override['{' . $id . '}'])) {
                 $sections[$id] = $block;
             }
         }
@@ -263,21 +263,20 @@ class sauserprefs extends rcube_plugin
         $this->_load_global_prefs();
         $this->_load_user_prefs();
 
-        $no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override'));
         $new_prefs = array();
         $result = true;
 
         switch ($this->cur_section) {
             case 'general':
-                if (!isset($no_override['required_score'])) {
+                if (!isset($this->no_override['required_score'])) {
                     $new_prefs['required_score'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST) ?: $this->global_prefs['required_score'];
                 }
 
-                if (!isset($no_override['rewrite_header Subject'])) {
+                if (!isset($this->no_override['rewrite_header Subject'])) {
                     $new_prefs['rewrite_header Subject'] = rcube_utils::get_input_value('_spamsubject', rcube_utils::INPUT_POST);
                 }
 
-                if (!isset($no_override['ok_locales'])) {
+                if (!isset($this->no_override['ok_locales'])) {
                     $new_prefs['ok_locales'] = '';
                     if (is_array(rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST))) {
                         $input_locals = rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST);
@@ -286,17 +285,17 @@ class sauserprefs extends rcube_plugin
                     }
                 }
 
-                if (!isset($no_override['ok_languages'])) {
+                if (!isset($this->no_override['ok_languages'])) {
                     $new_prefs['ok_languages'] = is_array(rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST)) ? implode(" ", rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST)) : '';
                 }
 
                 break;
             case 'headers':
-                if (!isset($no_override['fold_headers'])) {
+                if (!isset($this->no_override['fold_headers'])) {
                     $new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : "1";
                 }
 
-                if (!isset($no_override['add_header all Level'])) {
+                if (!isset($this->no_override['add_header all Level'])) {
                     $spamchar = empty($_POST['_spamlevelchar']) ? "*" : rcube_utils::get_input_value('_spamlevelchar', rcube_utils::INPUT_POST);
                     $spamchar = substr($spamchar, 0, 1); // input validation, make sure its only ever 1 char
 
@@ -312,51 +311,51 @@ class sauserprefs extends rcube_plugin
 
                 break;
             case 'tests':
-                if (!isset($no_override['use_razor1'])) {
+                if (!isset($this->no_override['use_razor1'])) {
                     $new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? "0" : "1";
                 }
 
-                if (!isset($no_override['use_razor2'])) {
+                if (!isset($this->no_override['use_razor2'])) {
                     $new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? "0" : "1";
                 }
 
-                if (!isset($no_override['use_pyzor'])) {
+                if (!isset($this->no_override['use_pyzor'])) {
                     $new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? "0" : "1";
                 }
 
-                if (!isset($no_override['use_dcc'])) {
+                if (!isset($this->no_override['use_dcc'])) {
                     $new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? "0" : "1";
                 }
 
-                if (!isset($no_override['skip_rbl_checks'])) {
+                if (!isset($this->no_override['skip_rbl_checks'])) {
                     $new_prefs['skip_rbl_checks'] = empty($_POST['_spamskiprblchecks']) ? "1" : "0";
                 }
 
                 break;
             case 'bayes':
-                if (!isset($no_override['use_bayes'])) {
+                if (!isset($this->no_override['use_bayes'])) {
                     $new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? "0" : "1";
                 }
 
-                if (!isset($no_override['bayes_auto_learn'])) {
+                if (!isset($this->no_override['bayes_auto_learn'])) {
                     $new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : "1";
                 }
 
-                if (!isset($no_override['bayes_auto_learn_threshold_nonspam'])) {
+                if (!isset($this->no_override['bayes_auto_learn_threshold_nonspam'])) {
                     $new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_utils::get_input_value('_bayesnonspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_nonspam'];
                 }
 
-                if (!isset($no_override['bayes_auto_learn_threshold_spam'])) {
+                if (!isset($this->no_override['bayes_auto_learn_threshold_spam'])) {
                     $new_prefs['bayes_auto_learn_threshold_spam'] = rcube_utils::get_input_value('_bayesspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_spam'];
                 }
 
-                if (!isset($no_override['use_bayes_rules'])) {
+                if (!isset($this->no_override['use_bayes_rules'])) {
                     $new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : "1";
                 }
 
                 break;
             case 'report':
-                if (!isset($no_override['report_safe'])) {
+                if (!isset($this->no_override['report_safe'])) {
                     $new_prefs['report_safe'] = rcube_utils::get_input_value('_spamreport', rcube_utils::INPUT_POST);
                 }
 
@@ -370,15 +369,15 @@ class sauserprefs extends rcube_plugin
                     $new_prefs['addresses'][] = array('field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act);
                 }
 
-                if (!isset($no_override['use_auto_whitelist'])) {
+                if (!isset($this->no_override['use_auto_whitelist'])) {
                     $new_prefs['use_auto_whitelist'] = empty($_POST['_awl']) ? "0" : "1";
                 }
 
-                if (!isset($no_override['score USER_IN_BLACKLIST'])) {
+                if (!isset($this->no_override['score USER_IN_BLACKLIST'])) {
                     $new_prefs['score USER_IN_BLACKLIST'] = rcube_utils::get_input_value('_score_user_blacklist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_BLACKLIST'];
                 }
 
-                if (!isset($no_override['score USER_IN_WHITELIST'])) {
+                if (!isset($this->no_override['score USER_IN_WHITELIST'])) {
                     $new_prefs['score USER_IN_WHITELIST'] = rcube_utils::get_input_value('_score_user_whitelist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_WHITELIST'];
                 }
 
@@ -567,7 +566,7 @@ class sauserprefs extends rcube_plugin
 
     private function _load_global_prefs()
     {
-        $this->global_prefs = $this->_load_prefs($this->rcube->config->get('sauserprefs_global_userid'));
+        $this->global_prefs = $this->_load_prefs($this->rcube->config->get('sauserprefs_global_userid', '\$GLOBAL'));
         $this->global_prefs = array_merge($this->rcube->config->get('sauserprefs_default_prefs'), $this->global_prefs);
 
         // extract score prefs
@@ -597,7 +596,6 @@ class sauserprefs extends rcube_plugin
 
     private function _prefs_block($part, $attrib)
     {
-        $no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override'));
         $blocks = array();
 
         switch ($part) {
@@ -609,7 +607,7 @@ class sauserprefs extends rcube_plugin
                 );
                 $blocks['langs']['intro'] = html::p(null, rcmail::Q($this->gettext('spamlangexp')));
 
-                if (!isset($no_override['required_score'])) {
+                if (!isset($this->no_override['required_score'])) {
                     $field_id = 'rcmfd_spamthres';
                     $blocks['main']['options']['spamthres'] = array(
                         'title' => html::label($field_id, rcmail::Q($this->gettext('spamthres'))),
@@ -623,7 +621,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['rewrite_header Subject'])) {
+                if (!isset($this->no_override['rewrite_header Subject'])) {
                     $field_id = 'rcmfd_spamsubject';
                     $input_spamsubject = new html_inputfield(array('name' => '_spamsubject', 'id' => $field_id, 'value' => $this->user_prefs['rewrite_header Subject']));
 
@@ -639,7 +637,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['ok_languages']) || !isset($no_override['ok_locales'])) {
+                if (!isset($this->no_override['ok_languages']) || !isset($this->no_override['ok_locales'])) {
                     $select_all = $this->rcube->output->button(array('class' => 'select select-all', 'command' => 'plugin.sauserprefs.select_all_langs', 'type' => 'link', 'label' => 'all'));
                     $select_none = $this->rcube->output->button(array('class' => 'select select-none', 'command' => 'plugin.sauserprefs.select_no_langs', 'type' => 'link', 'label' => 'none'));
                     $select_invert = $this->rcube->output->button(array('class' => 'select select-invert', 'command' => 'plugin.sauserprefs.select_invert_langs', 'type' => 'link', 'label' => 'invert'));
@@ -717,7 +715,7 @@ class sauserprefs extends rcube_plugin
                 );
                 $blocks['main']['intro'] = html::p(null, rcmail::Q($this->gettext('headersexp')));
 
-                if (!isset($no_override['fold_headers'])) {
+                if (!isset($this->no_override['fold_headers'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("fold_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -736,7 +734,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['add_header all Level'])) {
+                if (!isset($this->no_override['add_header all Level'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("level_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -792,7 +790,7 @@ class sauserprefs extends rcube_plugin
                 );
                 $blocks['main']['intro'] = html::p(null, rcmail::Q($this->gettext('spamtestssexp')));
 
-                if (!isset($no_override['use_razor1'])) {
+                if (!isset($this->no_override['use_razor1'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("raz1_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -811,7 +809,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['use_razor2'])) {
+                if (!isset($this->no_override['use_razor2'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("raz2_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -830,7 +828,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['use_pyzor'])) {
+                if (!isset($this->no_override['use_pyzor'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("pyz_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -849,7 +847,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['use_dcc'])) {
+                if (!isset($this->no_override['use_dcc'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("dcc_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -868,7 +866,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['skip_rbl_checks'])) {
+                if (!isset($this->no_override['skip_rbl_checks'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("rbl_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -896,7 +894,7 @@ class sauserprefs extends rcube_plugin
                     'autolearn' => array('name' => rcmail::Q($this->gettext('bayesautooptions')), 'class' => 'bayesprefstable', 'cols' => 2)
                 );
 
-                if (!isset($no_override['use_bayes'])) {
+                if (!isset($this->no_override['use_bayes'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("bayes_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -919,7 +917,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['use_bayes_rules'])) {
+                if (!isset($this->no_override['use_bayes_rules'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("bayesrules_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -938,7 +936,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['bayes_auto_learn'])) {
+                if (!isset($this->no_override['bayes_auto_learn'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("bayesauto_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -963,7 +961,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['bayes_auto_learn_threshold_nonspam'])) {
+                if (!isset($this->no_override['bayes_auto_learn_threshold_nonspam'])) {
                     $field_id = 'rcmfd_bayesnonspam';
                     $args = array('disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes']) ? 1 : 0);
                     $blocks['autolearn']['options']['bayesnonspam'] = array(
@@ -978,7 +976,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['bayes_auto_learn_threshold_spam'])) {
+                if (!isset($this->no_override['bayes_auto_learn_threshold_spam'])) {
                     $field_id = 'rcmfd_bayesspam';
                     $args = array('disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes']) ? 1 : 0);
                     $blocks['autolearn']['options']['bayesspam'] = array(
@@ -1000,7 +998,7 @@ class sauserprefs extends rcube_plugin
                     'main' => array('name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'reportprefstable', 'cols' => 2)
                 );
 
-                if (!isset($no_override['report_safe'])) {
+                if (!isset($this->no_override['report_safe'])) {
                     $field_id = 'rcmfd_spamreport';
                     $input_spamreport0 = new html_radiobutton(array('name' => '_spamreport', 'id' => $field_id . '_0', 'value' => '0'));
                     $blocks['main']['options']['bayesspam0'] = array(
@@ -1081,7 +1079,7 @@ class sauserprefs extends rcube_plugin
 
                 $blocks['main']['content'] = $table->show();
 
-                if (!isset($no_override['use_auto_whitelist'])) {
+                if (!isset($this->no_override['use_auto_whitelist'])) {
                     $help_button = html::span(array('class' => 'helpicon', 'title' => $this->gettext('moreinfo')), '');
                     $help_button = html::a(array('name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("awl_help");', 'title' => $this->gettext('help')), $help_button);
 
@@ -1099,7 +1097,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['score USER_IN_BLACKLIST'])) {
+                if (!isset($this->no_override['score USER_IN_BLACKLIST'])) {
                     $field_id = 'rcmfd_score_user_blacklist';
                     $blocks['advanced']['options']['blacklist'] = array(
                         'title' => html::label($field_id, rcmail::Q($this->gettext('score_blacklist'))),
@@ -1107,7 +1105,7 @@ class sauserprefs extends rcube_plugin
                     );
                 }
 
-                if (!isset($no_override['score USER_IN_WHITELIST'])) {
+                if (!isset($this->no_override['score USER_IN_WHITELIST'])) {
                     $field_id = 'rcmfd_score_user_whitelist';
                     $blocks['advanced']['options']['whitelist'] = array(
                         'title' => html::label($field_id, rcmail::Q($this->gettext('score_whitelist'))),
