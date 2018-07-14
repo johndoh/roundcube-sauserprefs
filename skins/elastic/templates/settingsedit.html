@@ -17,8 +17,7 @@ $('#spam-langs-table,#address-rules-table,#test-scores-table').addClass('table t
 $('table.propform tr.sauphelp.saupsubject td:first').addClass('d-none d-sm-flex');
 
 // add bootstrap styles for radio buttons
-$('[type=radio]', $('.propform', document)).addClass('form-check-input');
-$('[type=radio]', $('.propform', document)).parents('tr').addClass('form-check');
+$('[type=radio]', $('.propform', document)).addClass('form-check-input').parents('tr').addClass('form-check');
 
 // special display for small spam char input box
 $('#rcmfd_spamlevelchar').parents('tr').addClass('form-check');
