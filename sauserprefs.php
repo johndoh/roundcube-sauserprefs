@@ -40,6 +40,15 @@ class sauserprefs extends rcube_plugin
     private $score_prefs = array();
     private $addressbook_import = array();
     private $addressbook_sync = array();
+    private $sa_langs = array('af', 'am', 'ar', 'be', 'bg', 'bs', 'ca', 'cs',
+                              'cy', 'da', 'de', 'el', 'en', 'eo', 'es', 'et',
+                              'eu', 'fa', 'fi', 'fr', 'fy', 'ga', 'gd', 'he',
+                              'hi', 'hr', 'hu', 'hy', 'id', 'is', 'it', 'ja',
+                              'ka', 'ko', 'la', 'lt', 'lv', 'mr', 'ms', 'ne',
+                              'nl', 'no', 'pl', 'pt', 'qu', 'rm', 'ro', 'ru',
+                              'sa', 'sco', 'sk', 'sl', 'sq', 'sr', 'sv', 'sw',
+                              'ta', 'th', 'tl', 'tr', 'uk', 'vi', 'yi', 'zh',
+                              'zh.big5', 'zh.gb2312');
     private $sa_locales = array('en', 'ja', 'ko', 'ru', 'th', 'zh');
     private $sa_user;
     private $bayes_query;
@@ -651,7 +660,18 @@ class sauserprefs extends rcube_plugin
                     $lang_table->add_header('lang', $this->rcube->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'language', 'title' => 'sortby')));
                     $lang_table->add_header('tick', $this->rcube->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#spam-langs-table', 'type' => 'link', 'label' => 'sauserprefs.enabled', 'title' => 'sortby')));
 
-                    if (!isset($no_override['ok_locales'])) {
+                    if ($lang_config = $this->rcube->config->get('sauserprefs_langs_allowed')) {
+                        $this->sa_langs = array_intersect($this->sa_langs, (array) $lang_config);
+                    }
+                    elseif ($lang_config = $this->rcube->config->get('sauserprefs_languages')) {
+                        // backwards compatibility sauserprefs_languages removed 20180714
+                        $this->sa_langs = array_intersect($this->sa_langs, array_keys((array) $lang_config));
+                    }
+
+                    $ok_locales = array();
+                    $ok_languages = array();
+
+                    if (!isset($this->no_override['ok_locales'])) {
                         if ($this->user_prefs['ok_locales'] == "all") {
                             $ok_locales = $this->sa_locales;
                         }
@@ -659,27 +679,23 @@ class sauserprefs extends rcube_plugin
                             $ok_locales = explode(" ", $this->user_prefs['ok_locales']);
                         }
                     }
-                    else {
-                        $ok_locales = array();
-                    }
 
-                    if (!isset($no_override['ok_languages'])) {
+                    if (!isset($this->no_override['ok_languages'])) {
                         if ($this->user_prefs['ok_languages'] == "all") {
-                            $ok_languages = array_keys($this->rcube->config->get('sauserprefs_languages'));
+                            $ok_languages = array_keys($lang_list);
                         }
                         else {
                             $ok_languages = explode(" ", $this->user_prefs['ok_languages']);
                         }
                     }
                     else {
-                        $tmp_array = $this->rcube->config->get('sauserprefs_languages');
-                        $this->rcube->config->set('sauserprefs_languages', array_intersect_key($tmp_array, array_flip($this->sa_locales)));
-                        $ok_languages = array();
+                        // only show langs from localess
+                        $this->sa_langs = array_intersect($this->sa_langs, $this->sa_locales);
                     }
 
                     $i = 0;
                     $locales_langs = array_merge($ok_locales, $ok_languages);
-                    foreach ($this->rcube->config->get('sauserprefs_languages') as $lang_code => $name) {
+                    foreach ($this->sa_langs as $lang_code) {
                         $button = '';
                         $checkbox_display = array();
 
@@ -695,7 +711,7 @@ class sauserprefs extends rcube_plugin
 
                         $input_spamlang = new html_checkbox(array('name' => '_spamlang[]', 'value' => $lang_code) + $checkbox_display);
 
-                        $lang_table->add('lang', $name);
+                        $lang_table->add('lang', $this->gettext('lang_' . $lang_code));
                         $lang_table->add('tick', $button . $input_spamlang->show(in_array($lang_code, $locales_langs) ? $lang_code : ''));
 
                         $i++;

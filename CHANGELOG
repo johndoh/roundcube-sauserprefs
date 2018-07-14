@@ -14,6 +14,8 @@ Roundcube Webmail SAUserPrefs
  * Replace with saprefsframe template object contentframe (req rc 647a7e9)
  * Add sauserprefs_allowed_hosts config option
  * Add sauserprefs_host_config config option
+ * Replace sauserprefs_languages config with sauserprefs_langs_allowed
+ * Allow for localised langugage names
 
 Version 1.17.1 (2017-09-29, rc-1.3)
 =================================================

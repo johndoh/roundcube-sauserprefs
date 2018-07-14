@@ -49,6 +49,76 @@ Rename this to plugins/sauserprefs/config.inc.php
 * Enter the table name, name of the username field, preference field, and value
 field
 
+Supported languages for ok_languages option
+-------------------------------------------
+Taken from Mail::SpamAssassin::Plugin::TextCat
+* af - Afrikaans
+* am - Amharic
+* ar - Arabic
+* be - Byelorussian
+* bg - Bulgarian
+* bs - Bosnian
+* ca - Catalan
+* cs - Czech
+* cy - Welsh
+* da - Danish
+* de - German
+* el - Greek
+* en - English
+* eo - Esperanto
+* es - Spanish
+* et - Estonian
+* eu - Basque
+* fa - Persian
+* fi - Finnish
+* fr - French
+* fy - Frisian
+* ga - Irish Gaelic
+* gd - Scottish Gaelic
+* he - Hebrew
+* hi - Hindi
+* hr - Croatian
+* hu - Hungarian
+* hy - Armenian
+* id - Indonesian
+* is - Icelandic
+* it - Italian
+* ja - Japanese
+* ka - Georgian
+* ko - Korean
+* la - Latin
+* lt - Lithuanian
+* lv - Latvian
+* mr - Marathi
+* ms - Malay
+* ne - Nepali
+* nl - Dutch
+* no - Norwegian
+* pl - Polish
+* pt - Portuguese
+* qu - Quechua
+* rm - Rhaeto-Romance
+* ro - Romanian
+* ru - Russian
+* sa - Sanskrit
+* sco - Scots
+* sk - Slovak
+* sl - Slovenian
+* sq - Albanian
+* sr - Serbian
+* sv - Swedish
+* sw - Swahili
+* ta - Tamil
+* th - Thai
+* tl - Tagalog
+* tr - Turkish
+* uk - Ukrainian
+* vi - Vietnamese
+* yi - Yiddish
+* zh - Chinese (both Traditional and Simplified)
+* zh.big5 - Chinese (Traditional only)
+* zh.gb2312 - Chinese (Simplified only)
+
 Changing the order of the sections
 ----------------------------------
 To change the order of the sections add a sections attribute with the sections
