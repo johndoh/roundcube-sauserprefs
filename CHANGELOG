@@ -16,6 +16,7 @@ Roundcube Webmail SAUserPrefs
  * Add sauserprefs_host_config config option
  * Replace sauserprefs_languages config with sauserprefs_langs_allowed
  * Allow for localised langugage names
+ * Add support for Placeholder plugin
 
 Version 1.17.1 (2017-09-29, rc-1.3)
 =================================================
