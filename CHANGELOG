@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Fix PHP 7.2 count() errors
+
 Version 1.17.1 (2017-09-29, rc-1.3)
 =================================================
  * Fix bug saving locales/langs options
