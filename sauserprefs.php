@@ -128,8 +128,8 @@ class sauserprefs extends rcube_plugin
             $this->register_action('plugin.sauserprefs.whitelist_import', array($this, 'whitelist_import'));
             $this->register_action('plugin.sauserprefs.purge_bayes', array($this, 'purge_bayes'));
 
-            // integration with Placeholder plugin
-            $this->add_hook('placeholder_show', array($this, 'placeholder_show'));
+            // integration with taskwatermark plugin
+            $this->add_hook('taskwatermark_show', array($this, 'taskwatermark_show'));
         }
         elseif (count($this->addressbook_sync) > 0) {
             $this->add_hook('contact_create', array($this, 'contact_add'));
@@ -551,7 +551,7 @@ class sauserprefs extends rcube_plugin
         }
     }
 
-    public function placeholder_show($p)
+    public function taskwatermark_show($p)
     {
         if ($p['action'] == 'plugin_sauserprefs') {
             $this->include_stylesheet($this->local_skin_path() . '/tabstyles.css');
