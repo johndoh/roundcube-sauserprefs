@@ -706,10 +706,8 @@ class sauserprefs extends rcube_plugin
                         $this->sa_langs = array_intersect($this->sa_langs, $this->sa_locales);
                     }
 
-                    $i = 0;
                     $locales_langs = array_merge($ok_locales, $ok_languages);
-
-                    foreach ($this->sa_langs as $lang_code) {
+                    foreach ($this->sa_langs as $i => $lang_code) {
                         $button = '';
                         $checkbox_display = array();
 
@@ -727,8 +725,6 @@ class sauserprefs extends rcube_plugin
 
                         $lang_table->add('lang', $this->gettext('lang_' . $lang_code));
                         $lang_table->add('tick', $button . $input_spamlang->show(in_array($lang_code, $locales_langs) ? $lang_code : ''));
-
-                        $i++;
                     }
 
                     $blocks['langs']['options']['langtable'] = array(
