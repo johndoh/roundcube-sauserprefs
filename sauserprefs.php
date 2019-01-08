@@ -695,7 +695,7 @@ class sauserprefs extends rcube_plugin
 
                     if (!isset($this->no_override['ok_languages'])) {
                         if ($this->user_prefs['ok_languages'] == "all") {
-                            $ok_languages = array_keys($lang_list);
+                            $ok_languages = $this->sa_langs;
                         }
                         else {
                             $ok_languages = explode(" ", $this->user_prefs['ok_languages']);
@@ -708,6 +708,7 @@ class sauserprefs extends rcube_plugin
 
                     $i = 0;
                     $locales_langs = array_merge($ok_locales, $ok_languages);
+
                     foreach ($this->sa_langs as $lang_code) {
                         $button = '';
                         $checkbox_display = array();
