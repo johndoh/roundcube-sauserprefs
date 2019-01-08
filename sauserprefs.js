@@ -49,11 +49,11 @@ rcube_webmail.prototype.sauserprefs_toggle_bayes_auto = function(checkbox) {
 rcube_webmail.prototype.sauserprefs_update_lang = function(chkbox, tickobj, enable) {
     if (enable) {
         chkbox.attr('checked', 'checked');
-        tickobj.attr('title', this.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
+        tickobj.attr('title', this.get_label('enabled', 'sauserprefs')).removeClass('lang-disabled').addClass('lang-enabled');
     }
     else {
         chkbox.removeAttr('checked');
-        tickobj.attr('title', this.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
+        tickobj.attr('title', this.get_label('disabled', 'sauserprefs')).removeClass('lang-enabled').addClass('lang-disabled');
     }
 }
 
@@ -295,11 +295,11 @@ $(document).ready(function() {
                         var dlangs = " " + ref.env.ok_languages + " ";
                         $.each($('input[name="_spamlang[]"]'), function(idx) {
                             $(this).removeAttr('checked');
-                            $('[id^=spam_lang_]').eq(idx).attr('title', ref.get_label('disabled', 'sauserprefs')).removeClass('enabled').addClass('disabled');
+                            $('[id^=spam_lang_]').eq(idx).attr('title', ref.get_label('disabled', 'sauserprefs')).removeClass('lang-enabled').addClass('lang-disabled');
 
                             if (dlangs.indexOf(" " + $(this).val() + " ") > -1 || ref.env.ok_languages == "all") {
                                 $(this).attr('checked', 'checked');
-                                $('[id^=spam_lang_]').eq(idx).attr('title', ref.get_label('enabled', 'sauserprefs')).removeClass('disabled').addClass('enabled');
+                                $('[id^=spam_lang_]').eq(idx).attr('title', ref.get_label('enabled', 'sauserprefs')).removeClass('lang-disabled').addClass('lang-enabled');
                             }
                         });
 

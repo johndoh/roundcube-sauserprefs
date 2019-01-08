@@ -713,7 +713,7 @@ class sauserprefs extends rcube_plugin
                         $checkbox_display = array();
 
                         if ($attrib['lang_list_buttons'] == '1') {
-                            $button_type = in_array($lang_code, $locales_langs) ? 'enabled' : 'disabled';
+                            $button_type = in_array($lang_code, $locales_langs) ? 'lang-enabled' : 'lang-disabled';
                             $button = $this->rcube->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => $button_type, 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.' . $button_type, 'content' => ' '));
                             $checkbox_display = array('style' => 'display: none;');
                         }
