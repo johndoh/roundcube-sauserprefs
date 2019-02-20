@@ -19,6 +19,9 @@ $('table.propform tr.sauphelp.saupsubject td:first').addClass('d-none d-sm-flex'
 // add bootstrap styles for radio buttons
 $('[type=radio]', $('.propform', document)).addClass('form-check-input').parents('tr').addClass('form-check');
 
+// special display for small spam char input box
+$('#rcmfd_spamlevelchar').parents('tr').addClass('saup-spam-char-row');
+
 // relocate help icon at end of text
 $.each($('span.helpicon'), function() {
     var a = $(this).parent();
