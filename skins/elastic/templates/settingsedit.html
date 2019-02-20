@@ -3,7 +3,7 @@
 <h1 class="voice"><roundcube:object name="sectionname" /></h1>
 
 <div class="formcontent">
-    <roundcube:object name="userprefs" form="form" class="propform" input_error_class="is-invalid" lang_list_buttons="1" lang_checkbox_class="icon-checkbox" />
+    <roundcube:object name="userprefs" form="form" class="propform" input_error_class="is-invalid" />
 </div>
 
 <div class="formbuttons">
@@ -18,9 +18,6 @@ $('table.propform tr.sauphelp.saupsubject td:first').addClass('d-none d-sm-flex'
 
 // add bootstrap styles for radio buttons
 $('[type=radio]', $('.propform', document)).addClass('form-check-input').parents('tr').addClass('form-check');
-
-// special display for small spam char input box
-$('#rcmfd_spamlevelchar').parents('tr').addClass('form-check');
 
 // relocate help icon at end of text
 $.each($('span.helpicon'), function() {

@@ -50,10 +50,6 @@ table.propform tr.sauphelp {
 table.langprefstable tr > .scroller,
 table.addressprefstable tr > .scroller {
   width: 100%;
-
-  .icon-checkbox + label::before {
-    float: right;
-  }
 }
 
 #address-rules-cont,
@@ -108,44 +104,16 @@ table.address-rules-table {
       white-space: nowrap;
       max-width: 1px;
     }
+
+    > td.tick {
+      text-align: right;
+      padding: 0 .75rem;
+    }
   }
 }
 
 table.spam-langs-table > tbody > tr > td {
   vertical-align: middle;
-
-  &.tick {
-    text-align: right;
-
-    a {
-      font-size: 1.25rem;
-      line-height: 1;
-
-      &.lang-enabled {
-        color: @color-checkbox-checked;
-
-        &:focus {
-          color: @color-checkbox-checked-focus;
-        }
-
-        &::before {
-          content: @fa-var-toggle-on;
-        }
-      }
-
-      &.lang-disabled {
-        color: @color-checkbox;
-
-        &:focus {
-          color: @color-checkbox-focus;
-        }
-
-        &::before {
-          content: @fa-var-toggle-off;
-        }
-      }
-    }
-  }
 }
 
 table.records-table tr > .tick,
