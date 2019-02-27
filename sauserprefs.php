@@ -77,12 +77,6 @@ class sauserprefs extends rcube_plugin
         $this->sa_user = str_replace('%d', $this->rcube->user->get_username('domain'), $this->sa_user);
         $this->sa_user = str_replace('%i', $identity, $this->sa_user);
 
-        // backwards compatibility sauserprefs_whitelist_abook_id and sauserprefs_whitelist_sync removed 20150117
-        if ($this->rcube->config->get('sauserprefs_whitelist_sync', false)) {
-            $this->addressbook_sync = array($this->rcube->config->get('sauserprefs_whitelist_abook_id'), 0);
-            $this->addressbook_import = array($this->rcube->config->get('sauserprefs_whitelist_abook_id'), 0);
-        }
-
         $abook_sync = $this->rcube->config->get('sauserprefs_abook_sync', false);
         if ($abook_sync === true) {
             $this->addressbook_sync = array(0);
@@ -100,10 +94,6 @@ class sauserprefs extends rcube_plugin
         }
 
         $this->bayes_query = $this->rcube->config->get('sauserprefs_bayes_delete_query');
-        // backwards compatibility sauserprefs_bayes_delete removed 20150117
-        if ($this->rcube->config->get('sauserprefs_bayes_delete') === false) {
-            $this->bayes_query = null;
-        }
 
         if ($this->rcube->task == 'settings') {
             $this->no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override', array()));

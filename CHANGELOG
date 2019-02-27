@@ -18,6 +18,10 @@ Roundcube Webmail SAUserPrefs
  * Allow for localised langugage names
  * Add support for Placeholder plugin
  * Change enabled/disabled classes used in langs table to lang-enabled/lang-disabled for better compatibility with skins
+ * Remove support for depreciated config options:
+   * sauserprefs_whitelist_sync
+   * sauserprefs_whitelist_abook_id
+   * sauserprefs_bayes_delete
 
 Version 1.17.1 (2017-09-29, rc-1.3)
 =================================================
