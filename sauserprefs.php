@@ -149,8 +149,8 @@ class sauserprefs extends rcube_plugin
         if ($this->rcube->action == 'plugin.sauserprefs.edit') {
             $this->user_prefs = array_merge($this->global_prefs, $this->user_prefs);
 
-            // use jQuery for popup window
-            $this->require_plugin('jqueryui');
+            // use jQuery for popup window (required by core, no need to include here)
+            //$this->require_plugin('jqueryui');
             $this->rcube->output->include_script('list.js');
             $this->rcube->output->add_handler('userprefs', array($this, 'gen_form'));
             $this->rcube->output->add_handler('sectionname', array($this, 'prefs_section_name'));
