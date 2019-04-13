@@ -125,8 +125,8 @@ rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
             var result;
 
             if (id == '#spam-langs-table' && $(a).children('td').eq(idx).hasClass('tick') && $(b).children('td').eq(idx).hasClass('tick')) {
-                a = $(a).children('td').eq(idx).children('a:first').hasClass('enabled');
-                b = $(b).children('td').eq(idx).children('a:first').hasClass('enabled');
+                a = $(a).children('td').eq(idx).children('a').first().hasClass('enabled');
+                b = $(b).children('td').eq(idx).children('a').first().hasClass('enabled');
 
                 result = asc ? b - a : a - b;
             }
@@ -347,7 +347,7 @@ $(document).ready(function() {
 
                     rcmail.sauserprefs_table_sort(id, idx, asc);
 
-                    $(obj).parents('thead:first').find('th').removeClass(rcmail.env.sauserprefs_table_sort_asc).removeClass(rcmail.env.sauserprefs_table_sort_desc);
+                    $(obj).parents('thead').first().find('th').removeClass(rcmail.env.sauserprefs_table_sort_asc).removeClass(rcmail.env.sauserprefs_table_sort_desc);
                     $(obj).parent('th').addClass(asc ? rcmail.env.sauserprefs_table_sort_asc : rcmail.env.sauserprefs_table_sort_desc);
 
                     rcmail.env.sauserprefs_sort[id] = [idx, asc];

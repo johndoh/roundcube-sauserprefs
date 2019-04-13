@@ -14,7 +14,7 @@
 <script type="text/javascript">
 // bootstrap display
 $('#spam-langs-table,#address-rules-table,#test-scores-table').addClass('table table-striped');
-$('table.propform tr.sauphelp.saupsubject td:first').addClass('d-none d-sm-flex');
+$('table.propform tr.sauphelp.saupsubject td').first().addClass('d-none d-sm-flex');
 
 // add bootstrap styles for radio buttons
 $('[type=radio]', $('.propform', document)).addClass('form-check-input').parents('tr').addClass('form-check');
@@ -26,7 +26,7 @@ $('#rcmfd_spamlevelchar').parents('tr').addClass('saup-spam-char-row');
 $.each($('span.helpicon'), function() {
     var a = $(this).parent();
     var row = $(this).parents('tr');
-    a.appendTo(row.children('td:first').children('label'));
+    a.appendTo(row.children('td').first().children('label'));
 });
 
 // create input group for adding addresses
@@ -39,8 +39,8 @@ if ($('div.address-input').length == 1) {
 // add headers to score tests table
 if ($('#test-scores-table').length == 1) {
     $('#test-scores-table > thead > tr').addClass('row');
-    $('#test-scores-table > thead > tr > th:first').addClass('col-sm-4');
-    $('#test-scores-table > thead > tr > th:last').addClass('col-sm-8');
+    $('#test-scores-table > thead > tr > th').first().addClass('col-sm-4');
+    $('#test-scores-table > thead > tr > th').last().addClass('col-sm-8');
 }
 
 </script>
