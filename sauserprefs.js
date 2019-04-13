@@ -99,7 +99,7 @@ rcube_webmail.prototype.sauserprefs_addressrule_delete_row = function(obj) {
 
     this.env.address_rule_count--;
 
-    if ($('#address-rules-table tbody').children('tr:visible').length == 0)
+    if ($('#address-rules-table tbody').children('tr').filter(':visible').length == 0)
         $('#address-rules-table tbody').children('tr.noaddressrules').show();
 }
 
@@ -120,7 +120,7 @@ rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
     }
 
     var table = $(id);
-    var rows = table.find('tbody tr:visible').toArray().sort(
+    var rows = table.find('tbody tr').filter(':visible').toArray().sort(
         function(a, b) {
             var result;
 
@@ -141,13 +141,13 @@ rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
         }
     );
 
-    table.children('tbody').children('tr:visible').remove();
+    table.children('tbody').children('tr').filter(':visible').remove();
     for (var i = 0; i < rows.length; i++) {
         table.children('tbody').append(rows[i]);
     }
 
     // move hidden rows to the bottom of the table
-    table.children('tbody').children('tr:hidden').appendTo(table.children('tbody'));
+    table.children('tbody').children('tr').filter(':hidden').appendTo(table.children('tbody'));
 }
 
 rcube_webmail.prototype.sauserprefs_address_import_dialog = function() {
@@ -265,7 +265,7 @@ $(document).ready(function() {
 
                 rcmail.register_command('plugin.sauserprefs.whitelist_delete_all', function() {
                     rcmail.confirm_dialog(rcmail.get_label('spamaddressdeleteall','sauserprefs'), 'delete', function(e, ref) {
-                            $.each($('#address-rules-table tbody tr:visible'), function() { ref.sauserprefs_addressrule_delete_row(this); });
+                            $.each($('#address-rules-table tbody tr').filter(':visible'), function() { ref.sauserprefs_addressrule_delete_row(this); });
                         });
                     return false;
                 }, true);
@@ -329,7 +329,7 @@ $(document).ready(function() {
                         $('#rcmfd_spamlevelchar').val(ref.env.add_header_all_Level.substr(7, 1)); // Spam level char
 
                         // Delete whitelist
-                        $.each($('#address-rules-table tbody tr:visible'), function() { ref.sauserprefs_addressrule_delete_row(this) });
+                        $.each($('#address-rules-table tbody tr').filter(':visible'), function() { ref.sauserprefs_addressrule_delete_row(this) });
 
                         // Toggle dependant fields
                         ref.sauserprefs_toggle_level_char($('#rcmfd_spamlevelstars'));
