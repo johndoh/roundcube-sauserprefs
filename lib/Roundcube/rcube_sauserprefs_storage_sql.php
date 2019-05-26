@@ -118,13 +118,15 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
                     }
                 }
             }
-            elseif (array_key_exists($preference, $cur_prefs) && ($value == "" || $value == $global_prefs[$preference])) {
-                $actions['DELETE'][] = array('field' => $preference, 'value' => null);
+            elseif (array_key_exists($preference, $cur_prefs)) {
+                if ($value == "" || $value == $global_prefs[$preference]) {
+                    $actions['DELETE'][] = array('field' => $preference, 'value' => null);
+                }
+                elseif ($value != $cur_prefs[$preference]) {
+                    $actions['UPDATE'][] = array('field' => $preference, 'value' => $value);
+                }
             }
-            elseif (array_key_exists($preference, $cur_prefs) && $value != $cur_prefs[$preference]) {
-                $actions['UPDATE'][] = array('field' => $preference, 'value' => $value);
-            }
-            elseif (!array_key_exists($preference, $cur_prefs) && $value != $global_prefs[$preference]) {
+            elseif ($value != $global_prefs[$preference]) {
                 $actions['INSERT'][] = array('field' => $preference, 'value' => $value);
             }
         }
@@ -163,32 +165,22 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
                         }
                     }
                     elseif ($type == 'DELETE') {
+                        $sql = "DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?";
+                        $vals = array($user_id, $pref['field']);
+                        $msg = '"' . $pref['field'] . '"';
+
                         if ($pref['value']) {
-                            $this->db->query(
-                                "DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ? AND `{$this->value_field}` = ?;",
-                                $user_id,
-                                $pref['field'],
-                                $pref['value']);
-
-                            $result = $this->db->affected_rows();
-
-                            if (!$result) {
-                                rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $pref['field'] . '" = "' . $pref['value'] . '" for ' . $user_id);
-                                break;
-                            }
+                            $sql .= " AND `{$this->value_field}` = ?";
+                            array_push($vals, $pref['value']);
+                            $msg .= ' = "' . $pref['value'] . '"';
                         }
-                        else {
-                            $this->db->query(
-                                "DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
-                                $user_id,
-                                $pref['field']);
 
-                            $result = $this->db->affected_rows();
+                        $this->db->query($sql, $vals);
+                        $result = $this->db->affected_rows();
 
-                            if (!$result) {
-                                rcube::write_log('errors', 'sauserprefs error: cannot delete "' . $pref['field'] . '" for ' . $user_id);
-                                break;
-                            }
+                        if (!$result) {
+                            rcube::write_log('errors', 'sauserprefs error: cannot delete ' . $msg . ' for ' . $user_id);
+                            break;
                         }
                     }
                 }

@@ -578,6 +578,11 @@ class sauserprefs extends rcube_plugin
 
     private function _load_global_prefs()
     {
+        if (!empty($this->global_prefs)) {
+            // prefs already loaded
+            return;
+        }
+
         $this->global_prefs = $this->_load_prefs($this->rcube->config->get('sauserprefs_global_userid', '\$GLOBAL'));
         $this->global_prefs = array_merge($this->rcube->config->get('sauserprefs_default_prefs'), $this->global_prefs);
 
