@@ -180,11 +180,6 @@ table.reportprefstable tr > .title
   width: 320px;
 }
 
-table.propform tr > .help
-{
-  text-align: right;
-}
-
 div.address-input {
   margin-bottom: 10px;
 }

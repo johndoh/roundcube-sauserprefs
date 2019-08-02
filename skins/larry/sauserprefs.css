@@ -158,32 +158,9 @@ table.spam-langs-table tr > .tick a.lang-disabled
   text-decoration: underline;
 }
 
-table.propform
-{
-  width: 100%;
-  border-spacing: 0;
-  border-collapse: collapse;
-}
-
-table.propform td
-{
-  width: 80%;
-  padding: 4px 10px;
-  background: #eee;
-  border-bottom: 2px solid #fff;
-}
-
 table.addressprefstable td
 {
   width: auto;
-}
-
-table.propform tr > .title
-{
-  width: 20%;
-  color: #333;
-  padding-right: 20px;
-  white-space: nowrap;
 }
 
 div.address-input {

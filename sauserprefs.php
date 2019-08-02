@@ -1045,7 +1045,7 @@ class sauserprefs extends rcube_plugin
             case 'addresses':
                 $blocks = array(
                     'main' => array('name' => rcmail::Q($this->gettext('mainoptions'))),
-                    'advanced' => array('name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => 'addressadvancedtable propform', 'cols' => 2)
+                    'advanced' => array('name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => $attrib['class'] . ' addressadvancedtable', 'cols' => 2)
                 );
 
                 $data = html::p(null, rcmail::Q($this->gettext('whitelistexp')));
@@ -1073,7 +1073,7 @@ class sauserprefs extends rcube_plugin
                 $import = count($this->addressbook_import) > 0 ? $this->rcube->output->button(array('class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
                 $delete_all = $this->rcube->output->button(array('class' => 'delete-all', 'command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
 
-                $table = new html_table(array('class' => 'addressprefstable propform', 'cols' => 4));
+                $table = new html_table(array('class' => $attrib['tbl_class'] . ' addressprefstable', 'cols' => 4));
                 $table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import . "&nbsp;&nbsp;" . $delete_all);
 
                 $address_table = new html_table(array('id' => 'address-rules-table', 'class' => 'records-table sortable-table address-rules-table fixedheader', 'cellspacing' => '0', 'cols' => 3));
@@ -1137,7 +1137,7 @@ class sauserprefs extends rcube_plugin
                 // import overlay
                 if (count($this->addressbook_import) > 0) {
                     $sources = $this->rcube->get_address_sources();
-                    $sources_table = new html_table(array('class' => 'propform', 'cols' => 2));
+                    $sources_table = new html_table(array('class' => $attrib['tbl_class'], 'cols' => 2));
                     foreach ($this->addressbook_import as $id) {
                         if (array_key_exists($id, $sources)) {
                             $field_id = 'rcmfd_saupimport' . $id;
@@ -1161,7 +1161,7 @@ class sauserprefs extends rcube_plugin
                     'main' => array('name' => rcmail::Q($this->gettext('mainoptions'))),
                 );
 
-                $score_table = new html_table(array('id' => 'test-scores-table', 'class' => 'propform test-scores-table', 'cols' => 2));
+                $score_table = new html_table(array('id' => 'test-scores-table', 'class' => $attrib['tbl_class'] . ' test-scores-table', 'cols' => 2));
                 $score_table->add_header('test', rcmail::Q($this->gettext('test')));
                 $score_table->add_header('score', rcmail::Q($this->gettext('score')));
 
@@ -1187,7 +1187,7 @@ class sauserprefs extends rcube_plugin
             }
 
             if (!empty($block['options'])) {
-                $table = new html_table(array('class' => 'propform ' . $block['class'], 'cols' => $block['cols']));
+                $table = new html_table(array('class' => $attrib['class'] . ' ' . $block['class'], 'cols' => $block['cols']));
 
                 foreach ($block['options'] as $row) {
                     if (isset($row['row_attribs'])) {
