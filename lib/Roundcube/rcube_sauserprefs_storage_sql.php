@@ -7,7 +7,7 @@
  *
  * @author Philip Weir
  *
- * Copyright (C) 2012-2014 Philip Weir
+ * Copyright (C) Philip Weir
  *
  * This program is a Roundcube (https://roundcube.net) plugin.
  *
