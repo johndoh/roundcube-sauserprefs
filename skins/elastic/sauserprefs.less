@@ -57,6 +57,11 @@ table.addressprefstable tr > .scroller {
   height: 400px;
   overflow: auto;
   width: 100%;
+
+  html.layout-small &,
+  html.layout-phone & {
+    height: auto;
+  }
 }
 
 table.sortable-table > thead > tr > th {
@@ -238,14 +243,6 @@ button.btn.saupusedefault::before {
 html.touch {
   #rcmfd_spamlevelchar {
     margin-left: -5px;
-  }
-}
-
-html.layout-small,
-html.layout-phone {
-  #address-rules-cont,
-  #spam-langs-cont {
-    height: auto;
   }
 }
 
