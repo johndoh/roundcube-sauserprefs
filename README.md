@@ -5,8 +5,6 @@ from within Roundcube. It interacts with preferences storied in a database via
 SQL. For more information on setting up SpamAssassin to work with a database
 please see the [SpamAssassin Wiki][usingsql].
 
-Tested with SpamAssassin Version 3.3
-
 Inspiration for this plugin was taken from:
 [WebUserPrefs][webuserprefs]
 
