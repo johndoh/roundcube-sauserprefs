@@ -131,7 +131,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
             }
         }
 
-        if (count($actions) > 0) {
+        if (!empty($actions)) {
             $this->_db_connect('w');
             $result = false;
             foreach ($actions as $type => $prefs) {

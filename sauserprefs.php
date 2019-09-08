@@ -121,7 +121,7 @@ class sauserprefs extends rcube_plugin
             // integration with taskwatermark plugin
             $this->add_hook('taskwatermark_show', array($this, 'taskwatermark_show'));
         }
-        elseif (count($this->addressbook_sync) > 0) {
+        elseif (!empty($this->addressbook_sync)) {
             $this->add_hook('contact_create', array($this, 'contact_add'));
             $this->add_hook('contact_update', array($this, 'contact_save'));
             $this->add_hook('contact_delete', array($this, 'contact_delete'));
@@ -192,7 +192,7 @@ class sauserprefs extends rcube_plugin
         }
 
         // remove the test scores section if its not needed
-        if (count($this->score_prefs) == 0) {
+        if (empty($this->score_prefs)) {
             unset($sections['scores']);
         }
 
@@ -489,7 +489,7 @@ class sauserprefs extends rcube_plugin
                 }
             }
 
-            if (count($new_prefs) > 0) {
+            if (!empty($new_prefs)) {
                 $this->storage->save_prefs($this->sa_user, $new_prefs, null, null);
             }
         }
@@ -535,7 +535,7 @@ class sauserprefs extends rcube_plugin
             }
             $contacts->close();
 
-            if (count($new_prefs) > 0) {
+            if (!empty($new_prefs)) {
                 $this->storage->save_prefs($this->sa_user, $new_prefs, null, null);
             }
         }
@@ -1050,7 +1050,7 @@ class sauserprefs extends rcube_plugin
 
                 $data = html::p(null, rcmail::Q($this->gettext('whitelistexp')));
 
-                if (count($this->addressbook_sync) > 0) {
+                if (!empty($this->addressbook_sync)) {
                     $data .= rcmail::Q(str_replace('%s', $this->_list_contact_sources($this->addressbook_sync), $this->gettext('autowhitelist'))) . "<br /><br />";
                 }
 
@@ -1070,7 +1070,7 @@ class sauserprefs extends rcube_plugin
 
                 $blocks['main']['intro'] .= html::div('address-input grouped', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
 
-                $import = count($this->addressbook_import) > 0 ? $this->rcube->output->button(array('class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
+                $import = !empty($this->addressbook_import) ? $this->rcube->output->button(array('class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
                 $delete_all = $this->rcube->output->button(array('class' => 'delete-all', 'command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
 
                 $table = new html_table(array('class' => $attrib['tbl_class'] . ' addressprefstable', 'cols' => 4));
@@ -1081,7 +1081,7 @@ class sauserprefs extends rcube_plugin
                 $address_table->add_header('email', $this->rcube->output->button(array('command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'email', 'title' => 'sortby')));
                 $address_table->add_header('control', '&nbsp;');
 
-                $this->rcube->output->set_env('address_rule_count', !empty($this->user_prefs['addresses']) ? count($this->user_prefs['addresses']) : 0);
+                $this->rcube->output->set_env('address_rule_count', is_array($this->user_prefs['addresses']) ? count($this->user_prefs['addresses']) : 0);
                 foreach ((array) $this->user_prefs['addresses'] as $address) {
                     $this->_address_row($address_table, $address['field'], $address['value'], $attrib);
                 }
@@ -1135,7 +1135,7 @@ class sauserprefs extends rcube_plugin
                 }
 
                 // import overlay
-                if (count($this->addressbook_import) > 0) {
+                if (!empty($this->addressbook_import)) {
                     $sources = $this->rcube->get_address_sources();
                     $sources_table = new html_table(array('class' => $attrib['tbl_class'], 'cols' => 2));
                     foreach ($this->addressbook_import as $id) {
