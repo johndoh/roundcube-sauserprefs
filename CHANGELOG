@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.18 (2019-10-27, rc-1.4)
+=================================================
  * Depreciate sortedASC & sortedDESC class, use sorted-asc & sorted-desc instead
  * Replace sauserprefs_score_inc config with sauserprefs_score_options
  * Add use_auto_whitelist option
