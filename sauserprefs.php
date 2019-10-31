@@ -209,6 +209,7 @@ class sauserprefs extends rcube_plugin
     public function preference_frame($attrib)
     {
         $attrib['name'] = 'contentframe';
+
         return $this->rcube->output->just_parse('<roundcube:object' . html::attrib_string($attrib) . ' />');
     }
 
@@ -476,7 +477,7 @@ class sauserprefs extends rcube_plugin
             }
             else {
                 // for PHP < 5.5.0
-                $existing_addresses = array_map(function($element) { return $element['value']; }, $this->user_prefs['addresses']);
+                $existing_addresses = array_map(function ($element) { return $element['value']; }, $this->user_prefs['addresses']);
             }
 
             $new_prefs = array();
@@ -514,7 +515,7 @@ class sauserprefs extends rcube_plugin
             }
             else {
                 // for PHP < 5.5.0
-                $existing_addresses = array_map(function($element) { return $element['value']; }, $this->user_prefs['addresses']);
+                $existing_addresses = array_map(function ($element) { return $element['value']; }, $this->user_prefs['addresses']);
             }
 
             if (!is_array($args['id'])) {
