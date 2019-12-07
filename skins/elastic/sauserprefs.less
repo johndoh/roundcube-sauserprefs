@@ -39,11 +39,17 @@
   }
 }
 
-table.propform tr.sauphelp {
-  margin-top: (ceil((@grid-gutter-height / 2) * -1));
+table.propform {
+  tr.sauphelp {
+    margin-top: (ceil((@grid-gutter-height / 2) * -1));
 
-  td {
-    color: @color-form-hint;
+    td {
+      color: @color-form-hint;
+    }
+  }
+
+  td.bayesdelete {
+    padding-left: 0;
   }
 }
 
@@ -232,12 +238,9 @@ div.address-input {
   min-width: 100px;
 }
 
-button.btn.saupusedefault::before {
+button.btn.saupusedefault::before,
+div.footer .saupusedefault::before {
   .font-icon-solid(@fa-var-undo);
-}
-
-#layout > .content > div.footer .saupusedefault {
-  display: none;
 }
 
 html.touch {

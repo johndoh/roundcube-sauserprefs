@@ -38,6 +38,8 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
 
     /**
      * Object constructor
+     *
+     * @param mixed $config Roundcube config object
      */
     public function __construct($config)
     {
@@ -54,9 +56,9 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
     /**
      * Retrieve all SpamAssassin preferences
      *
-     * @param  string $user sauserprefs_global_userid
+     * @param string $user sauserprefs_global_userid
      *
-     * @return array  Array of preferences in format Array($pref_name => $pref_value, ...)
+     * @return array Array of preferences in format Array($pref_name => $pref_value, ...)
      */
     public function load_prefs($user)
     {
@@ -97,12 +99,12 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
     /**
      * Save new SpamAssassin preferences
      *
-     * @param  string $user_id      sauserprefs_userid
-     * @param  array  $new_prefs    Array of new preferences to be saved
-     * @param  array  $cur_prefs    Array of current preferences for comparison with $new_prefs (user_prefs + global_prefs)
-     * @param  array  $global_prefs Array of global preferences for comparison with $new_prefs
+     * @param string $user_id      sauserprefs_userid
+     * @param array  $new_prefs    Array of new preferences to be saved
+     * @param array  $cur_prefs    Array of current preferences for comparison with $new_prefs (user_prefs + global_prefs)
+     * @param array  $global_prefs Array of global preferences for comparison with $new_prefs
      *
-     * @return bool   True on success, False on error
+     * @return bool True on success, False on error
      */
     public function save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs)
     {
