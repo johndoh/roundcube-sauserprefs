@@ -20,7 +20,7 @@ Version 1.18 (2019-10-27, rc-1.4)
  * Add sauserprefs_host_config config option
  * Replace sauserprefs_languages config with sauserprefs_langs_allowed
  * Allow for localised langugage names
- * Add support for Placeholder plugin
+ * Add support for Taskwatermark plugin
  * Change enabled/disabled classes used in langs table to lang-enabled/lang-disabled for better compatibility with skins
  * Remove support for depreciated config options:
    * sauserprefs_whitelist_sync
