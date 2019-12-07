@@ -904,15 +904,16 @@ class sauserprefs extends rcube_plugin
                         'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes(this)'
                     ));
 
-                    if (!empty($this->bayes_query)) {
-                        $delete_link = "&nbsp;&nbsp;&nbsp;" . html::span(array('id' => 'listcontrols'), $this->rcube->output->button(array('command' => 'plugin.sauserprefs.purge_bayes', 'type' => 'link', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp')));
-                    }
-
                     $blocks['main']['options']['spamusebayes'] = array(
                         'title' => html::label($field_id, rcmail::Q($this->gettext('usebayes'))),
                         'content_attribs' => array('colspan' => 2),
-                        'content' => $input_spamtest->show($this->user_prefs['use_bayes']) . $delete_link . $this->_help_button('bayes_help')
+                        'content' => $input_spamtest->show($this->user_prefs['use_bayes']) . $this->_help_button('bayes_help')
                     );
+
+                    $blocks['main']['options']['spambayes_help'] = array(
+                        'row_attribs' => array('id' => 'bayes_help', 'style' => 'display: none;', 'class' => 'sauphelp'),
+                        'content_attribs' => array('colspan' => 2),
+                        'content' => rcmail::Q($this->gettext('bayeshelp'))
                     );
                 }
 
@@ -951,6 +952,13 @@ class sauserprefs extends rcube_plugin
                         'row_attribs' => array('id' => 'bayesauto_help', 'style' => 'display: none;', 'class' => 'sauphelp'),
                         'content_attribs' => array('colspan' => 2),
                         'content' => rcmail::Q($this->gettext('bayesautohelp'))
+                    );
+                }
+
+                if (!empty($this->bayes_query)) {
+                    $blocks['main']['options']['spamdelbayes'] = array(
+                        'content_attribs' => array('colspan' => 3, 'class' => 'bayesdelete'),
+                        'content' => $this->rcube->output->button(array('command' => 'plugin.sauserprefs.purge_bayes', 'class' => 'button mainaction delete', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp'))
                     );
                 }
 

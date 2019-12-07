@@ -39,11 +39,17 @@
   }
 }
 
-table.propform tr.sauphelp {
-  margin-top: (ceil((@grid-gutter-height / 2) * -1));
+table.propform {
+  tr.sauphelp {
+    margin-top: (ceil((@grid-gutter-height / 2) * -1));
 
-  td {
-    color: @color-form-hint;
+    td {
+      color: @color-form-hint;
+    }
+  }
+
+  td.bayesdelete {
+    padding-left: 0;
   }
 }
 
