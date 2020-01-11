@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.18.1 (2020-01-11, rc-1.4)
+=================================================
  * (Elastic) Fix display of Delete button in Bayes settings
 
 Version 1.18 (2019-10-27, rc-1.4)
