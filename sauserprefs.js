@@ -125,8 +125,14 @@ rcube_webmail.prototype.sauserprefs_table_sort = function(id, idx, asc) {
             var result;
 
             if (id == '#spam-langs-table' && $(a).children('td').eq(idx).hasClass('tick') && $(b).children('td').eq(idx).hasClass('tick')) {
-                a = $(a).children('td').eq(idx).children('a').first().hasClass('enabled');
-                b = $(b).children('td').eq(idx).children('a').first().hasClass('enabled');
+                if ($(a).children('td').eq(idx).find('a').length > 0) {
+                    a = $(a).children('td').eq(idx).find('a').first().hasClass('lang-enabled');
+                    b = $(b).children('td').eq(idx).find('a').first().hasClass('lang-enabled');
+                }
+                else {
+                    a = $(a).children('td').eq(idx).find('input').first().is(':checked');
+                    b = $(b).children('td').eq(idx).find('input').first().is(':checked');
+                }
 
                 result = asc ? b - a : a - b;
             }
