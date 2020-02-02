@@ -81,6 +81,9 @@ table.sortable-table > thead > tr > th {
     &:extend(.font-icon-class);
     display: inline-block;
     float: none;
+    margin-left: .1em;
+    font-size: .9rem;
+    color: @color-list-icon;
   }
 
   &.sorted-asc > a::after {
@@ -97,10 +100,30 @@ table.address-rules-table {
   margin-bottom: 0;
   overflow: hidden;
 
-  > thead > tr {
-   > th.lang,
-   > th.email {
-      width: 100%;
+  &.fixedcopy {
+    z-index: 2;
+  }
+
+  > thead {
+    > tr > th {
+      &.lang,
+      &.email {
+        width: auto;
+      }
+
+      &.rule {
+        width: 10em;
+      }
+
+      &.tick {
+        width: 10em;
+        text-align: right;
+      }
+
+      &.control {
+        width: 2.5em;
+        text-align: right;
+      }
     }
   }
 
