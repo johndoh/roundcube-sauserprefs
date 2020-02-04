@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Revert depreciation of sortedASC & sortedDESC
+
 Version 1.18.1 (2020-01-11, rc-1.4)
 =================================================
  * (Elastic) Fix display of Delete button in Bayes settings

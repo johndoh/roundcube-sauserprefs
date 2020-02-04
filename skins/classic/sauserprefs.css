@@ -39,8 +39,8 @@ table.sortable-table thead th a
   text-decoration: none;
 }
 
-table.sortable-table thead th.sorted-asc,
-table.spam-langs-table thead th.sorted-desc
+table.sortable-table thead th.sortedASC,
+table.spam-langs-table thead th.sortedDESC
 {
   background-position: 0px -26px;
 }
@@ -60,12 +60,12 @@ table.spam-langs-table thead th.tick a
   padding-right: 24px;
 }
 
-table.sortable-table thead tr th.sorted-asc a
+table.sortable-table thead tr th.sortedASC a
 {
   background: url(images/sort.gif) no-repeat right -14px;
 }
 
-table.sortable-table thead tr th.sorted-desc a
+table.sortable-table thead tr th.sortedDESC a
 {
   background: url(images/sort.gif) no-repeat right 0;
 }

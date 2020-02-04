@@ -182,8 +182,8 @@ function sauserprefs_check_email(input) {
 $(document).ready(function() {
     if (window.rcmail) {
         // set table sorting classes
-        rcmail.env.sauserprefs_table_sort_asc = 'sortedASC sorted-asc'; // sortedASC class depreciated in v1.18
-        rcmail.env.sauserprefs_table_sort_desc =  'sortedDESC sorted-desc'; // sortedDESC class depreciated in v1.18
+        rcmail.env.sauserprefs_table_sort_asc = 'sortedASC'; // sortedASC class used in core
+        rcmail.env.sauserprefs_table_sort_desc = 'sortedDESC'; // sortedDESC class used in core
 
         $.each(['#spam-langs-table', '#address-rules-table'], function(idx, id) {
             if ($(id).length == 1) {
@@ -197,7 +197,6 @@ $(document).ready(function() {
                 // sort table according to user prefs
                 rcmail.sauserprefs_table_sort(id);
             }
-
         });
 
         rcmail.addEventListener('init', function() {
