@@ -39,6 +39,14 @@
   }
 }
 
+table.fixedcopy {
+    display: table;
+
+    > thead {
+        background-color: @color-layout-list-background;
+    }
+}
+
 table.propform {
   tr.sauphelp {
     margin-top: (ceil((@grid-gutter-height / 2) * -1));

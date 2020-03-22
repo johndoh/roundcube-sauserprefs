@@ -12,6 +12,9 @@
 </div>
 
 <script>
+// Set the scrollable parent object for the table's fixed header
+rcube_list_widget.prototype.container = 'div.formcontent';
+
 // bootstrap display
 $('#spam-langs-table,#address-rules-table,#test-scores-table').addClass('table table-striped');
 $('table.propform tr.sauphelp.saupsubject td').first().addClass('d-none d-sm-flex');
