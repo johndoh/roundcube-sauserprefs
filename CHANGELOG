@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.18.2 (2020-04-27, rc-1.4)
+=================================================
  * Revert depreciation of sortedASC & sortedDESC
 
 Version 1.18.1 (2020-01-11, rc-1.4)
