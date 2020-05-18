@@ -216,7 +216,7 @@ $config['sauserprefs_default_prefs'] = array(
 
 [usingsql]: https://wiki.apache.org/spamassassin/UsingSQL
 [webuserprefs]: https://sourceforge.net/projects/webuserprefs/
-[rcplugrepo]: https://plugins.roundcube.net/packages/johndoh/sauserprefs
+[rcplugrepo]: https://plugins.roundcube.net/#/packages/johndoh/sauserprefs
 [releases]: https://github.com/johndoh/roundcube-sauserprefs/releases
 [rcjqui]: https://github.com/roundcube/roundcubemail/tree/master/plugins/jqueryui
 [gpl]: https://www.gnu.org/licenses/gpl.html
