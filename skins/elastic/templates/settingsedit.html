@@ -22,6 +22,9 @@ $('table.propform tr.sauphelp.saupsubject td').first().addClass('d-none d-sm-fle
 // add bootstrap styles for radio buttons
 $('[type=radio]', $('.propform', document)).addClass('form-check-input').parents('tr').addClass('form-check');
 
+// add bootstrap styles for selects (done here to prevent flicker in dark mode)
+$('select', $('.propform', document)).addClass('custom-select');
+
 // special display for small spam char input box
 $('#rcmfd_spamlevelchar').parents('tr').addClass('saup-spam-char-row');
 
@@ -36,7 +39,7 @@ $.each($('span.helpicon'), function() {
 if ($('div.address-input').length == 1) {
     $('div.address-input').addClass('input-group');
     $('#rcmfd_spamaddressrule').wrap($('<span>').addClass('input-group-prepend'));
-    $('#rcmbtn_add_address').wrap($('<span>').addClass('input-group-append'));
+    $('#rcmbtn_add_address').wrap($('<span>').addClass('input-group-append')).addClass('btn btn-secondary');
 }
 
 // add headers to score tests table
@@ -45,7 +48,6 @@ if ($('#test-scores-table').length == 1) {
     $('#test-scores-table > thead > tr > th').first().addClass('col-sm-4');
     $('#test-scores-table > thead > tr > th').last().addClass('col-sm-8');
 }
-
 </script>
 
 <roundcube:include file="includes/footer.html" />
