@@ -129,7 +129,7 @@ table.address-rules-table {
       }
 
       &.control {
-        width: 2.5em;
+        width: 4em;
         text-align: right;
       }
     }
@@ -150,6 +150,11 @@ table.address-rules-table {
     > td.tick {
       text-align: right;
       padding: 0 .75rem;
+    }
+
+    > td.control {
+      text-align: right;
+      padding: 0 .25rem;
     }
   }
 }
@@ -195,11 +200,11 @@ table.records-table tr > .control {
 
 .whitelist_from > td.rule,
 .whitelist_to > td.rule {
-  color: @color-whitelist;
+  color: @color-whitelist !important;
 }
 
 .blacklist_from > td.rule {
-  color: @color-blacklist;
+  color: @color-blacklist !important;
 }
 
 #test-scores-table {
@@ -326,10 +331,50 @@ html.layout-phone {
 
   .whitelist_from > td.email,
   .whitelist_to > td.email {
-    color: @color-whitelist;
+    color: @color-whitelist !important;
   }
 
   .blacklist_from > td.email {
-    color: @color-blacklist;
+    color: @color-blacklist !important;
+  }
+}
+
+// dark mode
+& when (@dark-mode-enabled = true) {
+  html.dark-mode {
+    .table-striped tbody tr:nth-of-type(2n+1) {
+        background-color: rgba(0,0,0,.15);
+    }
+
+    .form-control:disabled {
+        background-color: @color-dark-checkbox;
+    }
+
+    #address-rules-cont,
+    #spam-langs-cont {
+        // Firefox does not inherit scrollbar size from the html element
+        scrollbar-width: thin;
+    }
+
+    table.fixedcopy {
+      > thead {
+          background-color: @color-dark-background;
+      }
+    }
+
+    table.sortable-table > thead > tr > th > a {
+      color: @color-dark-font;
+
+      &::after {
+        color: fadeout(@color-dark-font, 50%);
+      }
+    }
+
+    table.records-table tr > .tick,
+    table.records-table tr > .control {
+      > a.delete::before {
+        color: @color-dark-font;
+      }
+    }
   }
 }

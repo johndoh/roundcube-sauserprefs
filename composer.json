@@ -19,7 +19,7 @@
   },
   "extra": {
     "roundcube": {
-      "min-version": "1.5-git"
+      "min-version": "1.5-dev"
     }
   }
 }

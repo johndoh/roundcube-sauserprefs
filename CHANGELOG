@@ -2,6 +2,7 @@ Roundcube Webmail SAUserPrefs
 =============================
 
  * Support fixed table headers in Elastic sink (req rc 81dcf4a)
+ * Support Dark Mode in Elastic
 
 Version 1.18.2 (2020-04-27, rc-1.4)
 =================================================
