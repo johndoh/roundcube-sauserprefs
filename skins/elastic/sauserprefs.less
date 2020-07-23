@@ -6,8 +6,8 @@
 @import (reference) "../../../../skins/elastic/styles/mixins";
 
 @grid-gutter-height: 15px;
-@color-whitelist: #28a745;
-@color-blacklist: #dc3545;
+@color-allowlist: #28a745;
+@color-blocklist: #dc3545;
 
 .listing.iconized tr {
   &.general > td.section::before {
@@ -198,13 +198,13 @@ table.records-table tr > .control {
   }
 }
 
-.whitelist_from > td.rule,
-.whitelist_to > td.rule {
-  color: @color-whitelist !important;
+.allowlist_from > td.rule,
+.allowlist_to > td.rule {
+  color: @color-allowlist !important;
 }
 
-.blacklist_from > td.rule {
-  color: @color-blacklist !important;
+.blocklist_from > td.rule {
+  color: @color-blocklist !important;
 }
 
 #test-scores-table {
@@ -329,13 +329,13 @@ html.layout-phone {
     display: none;
   }
 
-  .whitelist_from > td.email,
-  .whitelist_to > td.email {
-    color: @color-whitelist !important;
+  .allowlist_from > td.email,
+  .allowlist_to > td.email {
+    color: @color-allowlist !important;
   }
 
-  .blacklist_from > td.email {
-    color: @color-blacklist !important;
+  .blocklist_from > td.email {
+    color: @color-blocklist !important;
   }
 }
 

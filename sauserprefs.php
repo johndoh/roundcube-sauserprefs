@@ -54,7 +54,11 @@ class sauserprefs extends rcube_plugin
     private $bayes_query;
     private $rcube;
     private $no_override = array();
-    public static $deprecated_prefs = array('required_hits' => 'required_score'); // old => new
+
+    // old => new
+    public static $deprecated_prefs = array(
+        'required_hits' => 'required_score'
+    );
 
     public function init()
     {
@@ -97,6 +101,15 @@ class sauserprefs extends rcube_plugin
 
         if ($this->rcube->task == 'settings') {
             $this->no_override = array_flip($this->rcube->config->get('sauserprefs_dont_override', array()));
+
+            // replace deprecated prefs
+            foreach (self::$deprecated_prefs as $old => $new) {
+                if (array_key_exists($old, $this->no_override) && !array_key_exists($new, $this->no_override)) {
+                    $this->no_override[$new] = $this->no_override[$old];
+                    unset($this->no_override[$old]);
+                }
+            }
+
             $this->add_texts('localization/');
             $this->include_stylesheet($this->local_skin_path() . '/tabstyles.css');
 
@@ -115,7 +128,7 @@ class sauserprefs extends rcube_plugin
             $this->register_action('plugin.sauserprefs', array($this, 'init_html'));
             $this->register_action('plugin.sauserprefs.edit', array($this, 'init_html'));
             $this->register_action('plugin.sauserprefs.save', array($this, 'save'));
-            $this->register_action('plugin.sauserprefs.whitelist_import', array($this, 'whitelist_import'));
+            $this->register_action('plugin.sauserprefs.allowlist_import', array($this, 'allowlist_import'));
             $this->register_action('plugin.sauserprefs.purge_bayes', array($this, 'purge_bayes'));
 
             // integration with taskwatermark plugin
@@ -220,7 +233,7 @@ class sauserprefs extends rcube_plugin
             'sauserprefs.spamaddresserror', 'sauserprefs.spamaddressdelete',
             'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
             'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm', 'sauserprefs.purgebayesconfirm',
-            'sauserprefs.whitelist_from', 'sauserprefs.saupusedefault', 'sauserprefs.importaddresses',
+            'sauserprefs.allowlist_from', 'sauserprefs.saupusedefault', 'sauserprefs.importaddresses',
             'sauserprefs.selectimportsource', 'import');
 
         // output table sorting prefs
@@ -369,7 +382,20 @@ class sauserprefs extends rcube_plugin
                 $vals = rcube_utils::get_input_value('_address_rule_value', rcube_utils::INPUT_POST);
 
                 foreach ($acts as $idx => $act) {
-                    $new_prefs['addresses'][] = array('field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act);
+                    switch ($prefs[$idx]) {
+                        case "whitelist_from":
+                        case "allowlist_from":
+                            $new_prefs['addresses'][] = array('field' => 'whitelist_from', 'value' => $vals[$idx], 'action' => $act);
+                            break;
+                        case "blacklist_from":
+                        case "blocklist_from":
+                            $new_prefs['addresses'][] = array('field' => 'blacklist_from', 'value' => $vals[$idx], 'action' => $act);
+                            break;
+                        case "whitelist_to":
+                        case "allowlist_to":
+                            $new_prefs['addresses'][] = array('field' => 'whitelist_to', 'value' => $vals[$idx], 'action' => $act);
+                            break;
+                    }
                 }
 
                 if (!isset($this->no_override['use_auto_whitelist'])) {
@@ -377,11 +403,11 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($this->no_override['score USER_IN_BLACKLIST'])) {
-                    $new_prefs['score USER_IN_BLACKLIST'] = rcube_utils::get_input_value('_score_user_blacklist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_BLACKLIST'];
+                    $new_prefs['score USER_IN_BLACKLIST'] = rcube_utils::get_input_value('_score_user_blocklist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_BLACKLIST'];
                 }
 
                 if (!isset($this->no_override['score USER_IN_WHITELIST'])) {
-                    $new_prefs['score USER_IN_WHITELIST'] = rcube_utils::get_input_value('_score_user_whitelist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_WHITELIST'];
+                    $new_prefs['score USER_IN_WHITELIST'] = rcube_utils::get_input_value('_score_user_allowlist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_WHITELIST'];
                 }
 
                 break;
@@ -417,7 +443,7 @@ class sauserprefs extends rcube_plugin
         $this->init_html();
     }
 
-    public function whitelist_import()
+    public function allowlist_import()
     {
         $selected_sources = rcube_utils::get_input_value('_sources', rcube_utils::INPUT_POST);
         if (!is_array($selected_sources)) {
@@ -486,7 +512,7 @@ class sauserprefs extends rcube_plugin
             $emails = array_unique($emails);
             foreach ($emails as $email) {
                 if (!in_array($email, $existing_addresses)) {
-                    $new_prefs['addresses'][] = array('field' => self::map_pref_name('whitelist_from'), 'value' => $email, 'action' => 'INSERT');
+                    $new_prefs['addresses'][] = array('field' => 'whitelist_from', 'value' => $email, 'action' => 'INSERT');
                 }
             }
 
@@ -530,7 +556,7 @@ class sauserprefs extends rcube_plugin
                 $emails = array_unique($emails);
                 foreach ($emails as $email) {
                     if (in_array($email, $existing_addresses)) {
-                        $new_prefs['addresses'][] = array('field' => self::map_pref_name('whitelist_from'), 'value' => $email, 'action' => 'DELETE');
+                        $new_prefs['addresses'][] = array('field' => 'whitelist_from', 'value' => $email, 'action' => 'DELETE');
                     }
                 }
             }
@@ -585,7 +611,16 @@ class sauserprefs extends rcube_plugin
         }
 
         $this->global_prefs = $this->_load_prefs($this->rcube->config->get('sauserprefs_global_userid', '\$GLOBAL'));
-        $this->global_prefs = array_merge($this->rcube->config->get('sauserprefs_default_prefs'), $this->global_prefs);
+
+        $default_prefs = $this->rcube->config->get('sauserprefs_default_prefs', array());
+        // replace deprecated prefs
+        foreach (self::$deprecated_prefs as $old => $new) {
+            if (array_key_exists($old, $default_prefs) && !array_key_exists($new, $default_prefs)) {
+                $default_prefs[$new] = $default_prefs[$old];
+                unset($default_prefs[$old]);
+            }
+        }
+        $this->global_prefs = array_merge($default_prefs, $this->global_prefs);
 
         // extract score prefs
         foreach (array_keys($this->global_prefs) as $test) {
@@ -1028,19 +1063,19 @@ class sauserprefs extends rcube_plugin
                     'advanced' => array('name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => $attrib['class'] . ' addressadvancedtable', 'cols' => 2)
                 );
 
-                $data = html::p(null, rcmail::Q($this->gettext('whitelistexp')));
+                $data = html::p(null, rcmail::Q($this->gettext('allowlistexp')));
 
                 if (!empty($this->addressbook_sync)) {
-                    $data .= rcmail::Q(str_replace('%s', $this->_list_contact_sources($this->addressbook_sync), $this->gettext('autowhitelist'))) . "<br /><br />";
+                    $data .= rcmail::Q(str_replace('%s', $this->_list_contact_sources($this->addressbook_sync), $this->gettext('autoallowlist'))) . "<br /><br />";
                 }
 
                 $blocks['main']['intro'] = $data;
 
                 $field_id = 'rcmfd_spamaddressrule';
                 $input_spamaddressrule = new html_select(array('name' => '_spamaddressrule', 'id' => $field_id));
-                $input_spamaddressrule->add($this->gettext('whitelist_from'), 'whitelist_from');
-                $input_spamaddressrule->add($this->gettext('blacklist_from'), 'blacklist_from');
-                $input_spamaddressrule->add($this->gettext('whitelist_to'), 'whitelist_to');
+                $input_spamaddressrule->add($this->gettext('allowlist_from'), 'allowlist_from');
+                $input_spamaddressrule->add($this->gettext('blocklist_from'), 'blocklist_from');
+                $input_spamaddressrule->add($this->gettext('allowlist_to'), 'allowlist_to');
 
                 $field_id = 'rcmfd_spamaddress';
                 $input_spamaddress = new html_inputfield(array('name' => '_spamaddress', 'id' => $field_id, 'title' => rcmail::Q($this->gettext('email')), 'placeholder' => rcmail::Q($this->gettext('email'))));
@@ -1051,7 +1086,7 @@ class sauserprefs extends rcube_plugin
                 $blocks['main']['intro'] .= html::div('address-input grouped', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
 
                 $import = !empty($this->addressbook_import) ? $this->rcube->output->button(array('class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
-                $delete_all = $this->rcube->output->button(array('class' => 'delete-all', 'command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
+                $delete_all = $this->rcube->output->button(array('class' => 'delete-all', 'command' => 'plugin.sauserprefs.allowlist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
 
                 $table = new html_table(array('class' => $attrib['tbl_class'] . ' addressprefstable', 'cols' => 4));
                 $table->add(array('colspan' => 4, 'id' => 'listcontrols'), $import . "&nbsp;&nbsp;" . $delete_all);
@@ -1096,18 +1131,18 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($this->no_override['score USER_IN_BLACKLIST'])) {
-                    $field_id = 'rcmfd_score_user_blacklist';
-                    $blocks['advanced']['options']['blacklist'] = array(
-                        'title' => html::label($field_id, rcmail::Q($this->gettext('score_blacklist'))),
-                        'content' => $this->_score_select('_score_user_blacklist', $field_id, $this->user_prefs['score USER_IN_BLACKLIST'])
+                    $field_id = 'rcmfd_score_user_blocklist';
+                    $blocks['advanced']['options']['blocklist'] = array(
+                        'title' => html::label($field_id, rcmail::Q($this->gettext('score_blocklist'))),
+                        'content' => $this->_score_select('_score_user_blocklist', $field_id, $this->user_prefs['score USER_IN_BLACKLIST'])
                     );
                 }
 
                 if (!isset($this->no_override['score USER_IN_WHITELIST'])) {
-                    $field_id = 'rcmfd_score_user_whitelist';
-                    $blocks['advanced']['options']['whitelist'] = array(
-                        'title' => html::label($field_id, rcmail::Q($this->gettext('score_whitelist'))),
-                        'content' => $this->_score_select('_score_user_whitelist', $field_id, $this->user_prefs['score USER_IN_WHITELIST'])
+                    $field_id = 'rcmfd_score_user_allowlist';
+                    $blocks['advanced']['options']['allowlist'] = array(
+                        'title' => html::label($field_id, rcmail::Q($this->gettext('score_allowlist'))),
+                        'content' => $this->_score_select('_score_user_allowlist', $field_id, $this->user_prefs['score USER_IN_WHITELIST'])
                     );
                 }
 
@@ -1201,17 +1236,20 @@ class sauserprefs extends rcube_plugin
 
         switch ($field) {
             case "whitelist_from":
-                $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('whitelist_from'));
+                $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('allowlist_from'));
+                $class = 'allowlist_from';
                 break;
             case "blacklist_from":
-                $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('blacklist_from'));
+                $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('blocklist_from'));
+                $class = 'blocklist_from';
                 break;
             case "whitelist_to":
-                $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('whitelist_to'));
+                $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('allowlist_to'));
+                $class = 'allowlist_to';
                 break;
         }
 
-        $row_attrib = !isset($field) ? array_merge($row_attrib, array('style' => 'display: none;')) : array_merge($row_attrib, array('class' => $field));
+        $row_attrib = !isset($field) ? array_merge($row_attrib, array('style' => 'display: none;')) : array_merge($row_attrib, array('class' => $class));
         $address_table->set_row_attribs($row_attrib);
         $address_table->add(array('class' => 'rule'), $fieldtxt);
         $address_table->add(array('class' => 'email'), $value);
