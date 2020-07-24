@@ -6,6 +6,7 @@
 @import (reference) "../../../../skins/elastic/styles/mixins";
 
 @grid-gutter-height: 15px;
+@scrollbox-height: 400px;
 @color-allowlist: #28a745;
 @color-blocklist: #dc3545;
 
@@ -40,11 +41,11 @@
 }
 
 table.fixedcopy {
-    display: table;
+  display: table;
 
-    > thead {
-        background-color: @color-layout-list-background;
-    }
+  > thead {
+    background-color: @color-layout-list-background;
+  }
 }
 
 table.propform {
@@ -68,7 +69,7 @@ table.addressprefstable tr > .scroller {
 
 #address-rules-cont,
 #spam-langs-cont {
-  height: 400px;
+  height: @scrollbox-height;
   overflow: auto;
   width: 100%;
 
@@ -343,22 +344,22 @@ html.layout-phone {
 & when (@dark-mode-enabled = true) {
   html.dark-mode {
     .table-striped tbody tr:nth-of-type(2n+1) {
-        background-color: rgba(0,0,0,.15);
+      background-color: rgba(0,0,0,.15);
     }
 
     .form-control:disabled {
-        background-color: @color-dark-checkbox;
+      background-color: @color-dark-checkbox;
     }
 
     #address-rules-cont,
     #spam-langs-cont {
-        // Firefox does not inherit scrollbar size from the html element
-        scrollbar-width: thin;
+      // Firefox does not inherit scrollbar size from the html element
+      scrollbar-width: thin;
     }
 
     table.fixedcopy {
       > thead {
-          background-color: @color-dark-background;
+        background-color: @color-dark-background;
       }
     }
 
@@ -378,3 +379,5 @@ html.layout-phone {
     }
   }
 }
+
+@import (optional) "_custom";

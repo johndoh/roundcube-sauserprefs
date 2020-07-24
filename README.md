@@ -20,6 +20,7 @@ repository.
 Requirements
 ------------
 * [Roundcube jQueryUI plugin][rcjqui]
+* SpamAssassin 3.0 or above
 
 License
 -------
@@ -213,6 +214,12 @@ $config['sauserprefs_default_prefs'] = array(
   'score SYMBOLIC_TEST_NAME' => 2.0,
 );
 ```
+
+Customizing the Elastic skin
+----------------------------
+The colors and styles used by this plugin can be overridden by adding a
+`_custom.less` file to the `skins/elastic` sub-folder of this plugin and
+then recompiling the CSS.
 
 [usingsql]: https://wiki.apache.org/spamassassin/UsingSQL
 [webuserprefs]: https://sourceforge.net/projects/webuserprefs/
