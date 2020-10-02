@@ -35,13 +35,6 @@ $.each($('span.helpicon'), function() {
     a.appendTo(row.children('td').first().children('label'));
 });
 
-// create input group for adding addresses
-if ($('div.address-input').length == 1) {
-    $('div.address-input').addClass('input-group');
-    $('#rcmfd_spamaddressrule').wrap($('<span>').addClass('input-group-prepend'));
-    $('#rcmbtn_add_address').wrap($('<span>').addClass('input-group-append')).addClass('btn btn-secondary');
-}
-
 // add headers to score tests table
 if ($('#test-scores-table').length == 1) {
     $('#test-scores-table > thead > tr').addClass('row');
