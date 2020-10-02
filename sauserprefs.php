@@ -1048,7 +1048,7 @@ class sauserprefs extends rcube_plugin
                 $field_id = 'rcmbtn_add_address';
                 $button_addaddress = $this->rcube->output->button(array('id' => $field_id, 'command' => 'plugin.sauserprefs.addressrule_add', 'type' => 'input', 'class' => 'button', 'label' => 'sauserprefs.addrule'));
 
-                $blocks['main']['intro'] .= html::div('address-input grouped', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
+                $blocks['main']['intro'] .= html::div('address-input grouped form-inline', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
 
                 $import = !empty($this->addressbook_import) ? $this->rcube->output->button(array('class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook')) : '';
                 $delete_all = $this->rcube->output->button(array('class' => 'delete-all', 'command' => 'plugin.sauserprefs.whitelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip'));
