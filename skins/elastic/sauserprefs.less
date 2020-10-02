@@ -282,7 +282,7 @@ div.address-input {
 
   html.layout-small &,
   html.layout-phone & {
-    // stack the input-group on small screens and fix the borders
+    // stack the inputs on small screens
     > input,
     > select {
       width: 100% !important;
@@ -292,14 +292,6 @@ div.address-input {
       margin: 5px 0;
       width: 100% !important;
     }
-  }
-}
-
-// Bootstrap 4.0.0 does not expect form-control elements in input-group-prepend but it makes layout easier so fix the border
-.input-group-prepend:first-child {
-  > select:last-child {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
   }
 }
 
