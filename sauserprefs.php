@@ -238,10 +238,10 @@ class sauserprefs extends rcube_plugin
 
         // output table sorting prefs
         $sorts = $this->rcube->config->get('sauserprefs_sort', array());
-        if (!array_key_exists('#spam-langs-table', $sorts)) {
+        if (!isset($sorts['#spam-langs-table'])) {
             $sorts['#spam-langs-table'] = array(0, 'true');
         }
-        if (!array_key_exists('#address-rules-table', $sorts)) {
+        if (!isset($sorts['#address-rules-table'])) {
             $sorts['#address-rules-table'] = array(1, 'true');
         }
         $this->rcube->output->set_env('sauserprefs_sort', $sorts);
@@ -1278,7 +1278,7 @@ class sauserprefs extends rcube_plugin
         for ($i = $config['min']; $i <= $config['max']; $i += $config['increment']) {
             $vals[number_format($i, 5, '.', '')] = array('val' => number_format($i, $decPlaces, '.', ''), 'text' => number_format($i, $decPlaces, $locale_info['decimal_point'], ''));
         }
-        if (array_key_exists('extra', $config)) {
+        if (isset($config['extra'])) {
             foreach ($config['extra'] as $extra) {
                 $decPlaces = self::decimal_places($extra['increment'], $locale_info['decimal_point']);
                 for ($i = $extra['min']; $i <= $extra['max']; $i += $extra['increment']) {
