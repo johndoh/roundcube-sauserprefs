@@ -640,7 +640,7 @@ class sauserprefs extends rcube_plugin
         $prefs = $this->storage->load_prefs($user);
 
         // sort address rules
-        if (is_array($prefs['addresses'])) {
+        if (isset($prefs['addresses']) && is_array($prefs['addresses'])) {
             usort($prefs['addresses'], array($this, 'sort_addresses'));
         }
 
@@ -742,7 +742,7 @@ class sauserprefs extends rcube_plugin
                         $button = '';
                         $checkbox_display = array();
 
-                        if ($attrib['lang_list_buttons'] == '1') {
+                        if (isset($attrib['lang_list_buttons']) && $attrib['lang_list_buttons'] == '1') {
                             $button_type = in_array($lang_code, $locales_langs) ? 'enabled' : 'disabled';
                             $button = $this->rcube->output->button(array('command' => 'plugin.sauserprefs.message_lang', 'prop' => $lang_code, 'type' => 'link', 'class' => 'lang-' . $button_type, 'id' => 'spam_lang_' . $i, 'title' => 'sauserprefs.' . $button_type, 'content' => ' '));
                             $checkbox_display = array('style' => 'display: none;');
@@ -1210,7 +1210,7 @@ class sauserprefs extends rcube_plugin
                         $table->add('title', $row['title']);
                     }
 
-                    $table->add($row['content_attribs'], $row['content']);
+                    $table->add(isset($row['content_attribs']) ? $row['content_attribs'] : null, $row['content']);
 
                     if (isset($row['help'])) {
                         $table->add('help', $row['help']);
@@ -1221,7 +1221,7 @@ class sauserprefs extends rcube_plugin
             }
 
             if (!empty($content)) {
-                $out .= html::tag('fieldset', $class, html::tag('legend', null, $block['name']) . $block['intro'] . $content);
+                $out .= html::tag('fieldset', $class, html::tag('legend', null, $block['name']) . (isset($block['intro']) ? $block['intro'] : '') . $content);
             }
         }
 
@@ -1247,6 +1247,10 @@ class sauserprefs extends rcube_plugin
                 $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('allowlist_to'));
                 $class = 'allowlist_to';
                 break;
+            default:
+                // for default/placeholder row
+                $fieldtxt = '';
+                $class = '';
         }
 
         $row_attrib = !isset($field) ? array_merge($row_attrib, array('style' => 'display: none;')) : array_merge($row_attrib, array('class' => $class));
