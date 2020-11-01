@@ -63,7 +63,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
     public function load_prefs($user)
     {
         $this->_db_connect('r');
-        $prefs = array();
+        $prefs = [];
 
         $sql_result = $this->db->query(
             "SELECT `{$this->preference_field}`, `{$this->value_field}` FROM `{$this->table_name}` WHERE `{$this->username_field}` = ?;",
@@ -75,7 +75,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
             $pref_value = $sql_arr[$this->value_field];
 
             if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to') {
-                $prefs['addresses'][] = array('field' => $pref_name, 'value' => $pref_value);
+                $prefs['addresses'][] = ['field' => $pref_name, 'value' => $pref_value];
             }
             else {
                 $prefs[$pref_name] = $pref_value;
@@ -111,7 +111,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
         $result = true;
 
         // process prefs
-        $actions = array();
+        $actions = [];
         foreach ($new_prefs as $preference => $value) {
             if ($preference == 'addresses') {
                 foreach ($value as $address) {
@@ -122,14 +122,14 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
             }
             elseif (array_key_exists($preference, $cur_prefs)) {
                 if ($value == "" || $value == $global_prefs[$preference]) {
-                    $actions['DELETE'][] = array('field' => $preference, 'value' => null);
+                    $actions['DELETE'][] = ['field' => $preference, 'value' => null];
                 }
                 elseif ($value != $cur_prefs[$preference]) {
-                    $actions['UPDATE'][] = array('field' => $preference, 'value' => $value);
+                    $actions['UPDATE'][] = ['field' => $preference, 'value' => $value];
                 }
             }
             elseif ($value != $global_prefs[$preference]) {
-                $actions['INSERT'][] = array('field' => $preference, 'value' => $value);
+                $actions['INSERT'][] = ['field' => $preference, 'value' => $value];
             }
         }
 
@@ -168,7 +168,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
                     }
                     elseif ($type == 'DELETE') {
                         $sql = "DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?";
-                        $vals = array($user_id, $pref['field']);
+                        $vals = [$user_id, $pref['field']];
                         $msg = '"' . $pref['field'] . '"';
 
                         if ($pref['value']) {
@@ -201,7 +201,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
     {
         $result = false;
         $this->_db_connect('w');
-        $queries = !is_array($this->bayes_delete_query) ? array($this->bayes_delete_query) : $this->bayes_delete_query;
+        $queries = !is_array($this->bayes_delete_query) ? [$this->bayes_delete_query] : $this->bayes_delete_query;
 
         foreach ($queries as $sql) {
             $sql = str_replace('%u', $this->db->quote($user_id, 'text'), $sql);
@@ -235,11 +235,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
 
         // check DB connections and exit on failure
         if ($err_str = $this->db->is_error()) {
-            rcube::raise_error(array(
-                'code' => 603,
-                'type' => 'db',
-                'message' => $err_str
-            ), false, true);
+            rcube::raise_error(['code' => 603, 'type' => 'db', 'message' => $err_str], false, true);
         }
     }
 }
