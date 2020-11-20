@@ -3,8 +3,13 @@ Roundcube Webmail SAUserPrefs
 
  * Support fixed table headers in Elastic sink (req rc 81dcf4a)
  * Support Dark Mode in Elastic
- * Fix bug where Delete All was not working on Address Rules
  * Support for customizing Elastic skin
+ * Replace references to white/blacklist with allow/block list (WIP see #57)
+
+Version 1.18.3 (2020-11-20, rc-1.4)
+=================================================
+ * Improve address rule input
+ * Fix bug where Delete All was not working on Address Rules
 
 Version 1.18.2 (2020-04-27, rc-1.4)
 =================================================
