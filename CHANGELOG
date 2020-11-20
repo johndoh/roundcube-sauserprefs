@@ -1,6 +1,11 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.18.3 (2020-11-20, rc-1.4)
+=================================================
+ * Improve address rule input
+ * Fix address rule delete button
+
 Version 1.18.2 (2020-04-27, rc-1.4)
 =================================================
  * Revert depreciation of sortedASC & sortedDESC

@@ -87,7 +87,11 @@ rcube_webmail.prototype.sauserprefs_addressrule_insert_row = function(p) {
 }
 
 rcube_webmail.prototype.sauserprefs_addressrule_delete_row = function(obj) {
-    var actField = $(obj).closest('td').find('input[name="_address_rule_act[]"]');
+    var actField = $(obj).find('input[name="_address_rule_act[]"]');
+
+    // skip empty rows
+    if (!actField.parent().is(':visible'))
+        return;
 
     if (actField.val() == "INSERT") {
         $(obj).closest('tr').remove();
@@ -233,7 +237,7 @@ $(document).ready(function() {
 
                 rcmail.register_command('plugin.sauserprefs.addressrule_del', function(props, obj) {
                     rcmail.confirm_dialog(rcmail.get_label('spamaddressdelete','sauserprefs'), 'delete', function(e, ref) {
-                            ref.sauserprefs_addressrule_delete_row(obj);
+                            ref.sauserprefs_addressrule_delete_row($(obj).parent());
                         });
                     return false;
                 }, true);
@@ -270,7 +274,7 @@ $(document).ready(function() {
 
                 rcmail.register_command('plugin.sauserprefs.whitelist_delete_all', function() {
                     rcmail.confirm_dialog(rcmail.get_label('spamaddressdeleteall','sauserprefs'), 'delete', function(e, ref) {
-                            $.each($('#address-rules-table tbody tr').filter(':visible'), function() { ref.sauserprefs_addressrule_delete_row(this); });
+                            $.each($('#address-rules-table tbody tr'), function() { ref.sauserprefs_addressrule_delete_row(this); });
                         });
                     return false;
                 }, true);
@@ -334,7 +338,7 @@ $(document).ready(function() {
                         $('#rcmfd_spamlevelchar').val(ref.env.add_header_all_Level.substr(7, 1)); // Spam level char
 
                         // Delete whitelist
-                        $.each($('#address-rules-table tbody tr').filter(':visible'), function() { ref.sauserprefs_addressrule_delete_row(this) });
+                        $.each($('#address-rules-table tbody tr'), function() { ref.sauserprefs_addressrule_delete_row(this) });
 
                         // Toggle dependant fields
                         ref.sauserprefs_toggle_level_char($('#rcmfd_spamlevelstars'));

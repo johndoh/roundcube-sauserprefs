@@ -19,6 +19,9 @@ $('table.propform tr.sauphelp.saupsubject td').first().addClass('d-none d-sm-fle
 // add bootstrap styles for radio buttons
 $('[type=radio]', $('.propform', document)).addClass('form-check-input').parents('tr').addClass('form-check');
 
+// add bootstrap styles for selects (done here to prevent flicker in dark mode)
+$('select', $('.propform', document)).addClass('custom-select');
+
 // special display for small spam char input box
 $('#rcmfd_spamlevelchar').parents('tr').addClass('saup-spam-char-row');
 
@@ -35,7 +38,6 @@ if ($('#test-scores-table').length == 1) {
     $('#test-scores-table > thead > tr > th').first().addClass('col-sm-4');
     $('#test-scores-table > thead > tr > th').last().addClass('col-sm-8');
 }
-
 </script>
 
 <roundcube:include file="includes/footer.html" />
