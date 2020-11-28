@@ -42,36 +42,36 @@ $config['sauserprefs_global_userid'] = '\$GLOBAL';
 // possible values:
 //   false - synchronisation disabled
 //   true - synchronise with default address book
-//   array - an array of address book ids to synchronise with e.g. array('0', 'global'); '0' = the default address book
+//   array - an array of address book ids to synchronise with e.g. ['0', 'global']; '0' = the default address book
 $config['sauserprefs_abook_sync'] = false;
 
 // set to false to disable address book import
 // possible values:
 //   false - address import disabled
 //   true - import addresses from default address book
-//   array - an array of address book ids to import e.g. array('0', 'global'); '0' = the default address book
+//   array - an array of address book ids to import e.g. ['0', 'global']; '0' = the default address book
 $config['sauserprefs_abook_import'] = false;
 
 // don't allow these settings to be overriden by the user
-// eg. $config['sauserprefs_dont_override'] = array('required_score','rewrite_header Subject');
+// eg. $config['sauserprefs_dont_override'] = ['required_score', 'rewrite_header Subject'];
 // to disable entire sections enter the secion name surrounded by braces. Sections are: general,tests,bayes,headers,report,addresses
-// eg. $config['sauserprefs_dont_override'] = array('{tests}');
-$config['sauserprefs_dont_override'] = array();
+// eg. $config['sauserprefs_dont_override'] = ['{tests}'];
+$config['sauserprefs_dont_override'] = [];
 
 // activate SAUserPrefs for selected mail hosts only. If this is not set all mail hosts are allowed.
-// example: $config['sauserprefs_allowed_hosts'] = array('mail1.domain.tld', 'mail2.domain.tld');
+// example: $config['sauserprefs_allowed_hosts'] = ['mail1.domain.tld', 'mail2.domain.tld'];
 $config['sauserprefs_allowed_hosts'] = null;
 
 // load specific config for different mail hosts
-// example: $config['sauserprefs_host_config'] = array(
+// example: $config['sauserprefs_host_config'] = [
 //    'mail1.domain.tld' => 'mail1_config.inc.php',
-//    'mail2.domain.tld' => 'mail2_config.inc.php',
-// );
+//    'mail2.domain.tld' => 'mail2_config.inc.php'
+// ];
 $config['sauserprefs_host_config'] = null;
 
 // default settings
 // these are overridden by $GLOBAL and user settings from the database
-$config['sauserprefs_default_prefs'] = array(
+$config['sauserprefs_default_prefs'] = [
                                     'required_score' => 5,
                                     'rewrite_header Subject' => '',
                                     'ok_languages' => 'all',
@@ -92,35 +92,35 @@ $config['sauserprefs_default_prefs'] = array(
                                     'use_auto_whitelist' => 0,
                                     'score USER_IN_BLACKLIST' => 10,
                                     'score USER_IN_WHITELIST' => -10
-                                );
+                                ];
 
 // score options
 // define the ranges for the various score select boxes
-// '[field name]' => array('min' => [min], 'max' => [max], 'increment' => [increment], 'extra' => array())
+// '[field name]' => ['min' => 1, 'max' => 10, 'increment' => 1, 'extra' => []]
 // note: the 'extra' key is optional and should contain further arrays with min, max and increment keys
-$config['sauserprefs_score_options'] = array(
-                                    '*' => array('min' => 1, 'max' => 10, 'increment' => 1),
-                                    '_bayesnonspam' => array('min' => -1, 'max' => 1, 'increment' => 0.1),
-                                    '_bayesspam' => array('min' => 1, 'max' => 20, 'increment' => 1),
-                                    '_score_user_blacklist' => array('min' => 0, 'max' => 100, 'increment' => 10, 'extra' => array(array('min' => 1, 'max' => 10, 'increment' => 1))),
-                                    '_score_user_whitelist' => array('min' => -100, 'max' => -1, 'increment' => 10, 'extra' => array(array('min' => -10, 'max' => -1, 'increment' => 1)))
-                                );
+$config['sauserprefs_score_options'] = [
+                                    '*' => ['min' => 1, 'max' => 10, 'increment' => 1],
+                                    '_bayesnonspam' => ['min' => -1, 'max' => 1, 'increment' => 0.1],
+                                    '_bayesspam' => ['min' => 1, 'max' => 20, 'increment' => 1],
+                                    '_score_user_blacklist' => ['min' => 0, 'max' => 100, 'increment' => 10, 'extra' => [['min' => 1, 'max' => 10, 'increment' => 1]]],
+                                    '_score_user_whitelist' => ['min' => -100, 'max' => -1, 'increment' => 10, 'extra' => [['min' => -10, 'max' => -1, 'increment' => 1]]]
+                                ];
 
 // delete user bayesian data stored in database
 // the query can contain the following macros that will be expanded as follows:
 //      %u is replaced with the username from the sauserprefs_userid setting above
 // use an array to run multiple queries
 // set to null to disable this option
-// eg. $config['sauserprefs_bayes_delete_query'] = array(
+// eg. $config['sauserprefs_bayes_delete_query'] = [
 //                                              'DELETE FROM bayes_seen WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
 //                                              'DELETE FROM bayes_token WHERE id IN (SELECT id FROM bayes_vars WHERE username = %u);',
 //                                              'DELETE FROM bayes_vars WHERE username = %u;'
-//                                              );
+//                                              ];
 $config['sauserprefs_bayes_delete_query'] = null;
 
 // allowed languages
 // set to array of language codes to limit the language list available for the ok_languages option
-// eg array('en', 'es', 'ru', 'zh');
+// eg ['en', 'es', 'ru', 'zh'];
 // see the README for a full list of supported languages
 // set to null for all possible languages
 $config['sauserprefs_langs_allowed'] = null;
