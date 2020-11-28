@@ -40,15 +40,17 @@ class sauserprefs extends rcube_plugin
     private $score_prefs = [];
     private $addressbook_import = [];
     private $addressbook_sync = [];
-    private $sa_langs = ['af', 'am', 'ar', 'be', 'bg', 'bs', 'ca', 'cs',
-                              'cy', 'da', 'de', 'el', 'en', 'eo', 'es', 'et',
-                              'eu', 'fa', 'fi', 'fr', 'fy', 'ga', 'gd', 'he',
-                              'hi', 'hr', 'hu', 'hy', 'id', 'is', 'it', 'ja',
-                              'ka', 'ko', 'la', 'lt', 'lv', 'mr', 'ms', 'ne',
-                              'nl', 'no', 'pl', 'pt', 'qu', 'rm', 'ro', 'ru',
-                              'sa', 'sco', 'sk', 'sl', 'sq', 'sr', 'sv', 'sw',
-                              'ta', 'th', 'tl', 'tr', 'uk', 'vi', 'yi', 'zh',
-                              'zh.big5', 'zh.gb2312'];
+    private $sa_langs = [
+        'af', 'am', 'ar', 'be', 'bg', 'bs', 'ca', 'cs',
+        'cy', 'da', 'de', 'el', 'en', 'eo', 'es', 'et',
+        'eu', 'fa', 'fi', 'fr', 'fy', 'ga', 'gd', 'he',
+        'hi', 'hr', 'hu', 'hy', 'id', 'is', 'it', 'ja',
+        'ka', 'ko', 'la', 'lt', 'lv', 'mr', 'ms', 'ne',
+        'nl', 'no', 'pl', 'pt', 'qu', 'rm', 'ro', 'ru',
+        'sa', 'sco', 'sk', 'sl', 'sq', 'sr', 'sv', 'sw',
+        'ta', 'th', 'tl', 'tr', 'uk', 'vi', 'yi', 'zh',
+        'zh.big5', 'zh.gb2312',
+    ];
     private $sa_locales = ['en', 'ja', 'ko', 'ru', 'th', 'zh'];
     private $sa_user;
     private $bayes_query;
@@ -57,7 +59,7 @@ class sauserprefs extends rcube_plugin
 
     // old => new
     public static $deprecated_prefs = [
-        'required_hits' => 'required_score'
+        'required_hits' => 'required_score',
     ];
 
     public function init()
@@ -421,7 +423,10 @@ class sauserprefs extends rcube_plugin
 
         // allow additional actions before prefs are saved
         $data = $this->rcube->plugins->exec_hook('sauserprefs_save', [
-            'section' => $this->cur_section, 'cur_prefs' => $this->user_prefs, 'new_prefs' => $new_prefs, 'global_prefs' => $this->global_prefs
+            'section' => $this->cur_section,
+            'cur_prefs' => $this->user_prefs,
+            'new_prefs' => $new_prefs,
+            'global_prefs' => $this->global_prefs,
         ]);
 
         if (!$data['abort']) {
@@ -597,7 +602,7 @@ class sauserprefs extends rcube_plugin
                 // no storage found, raise error
                 rcube::raise_error(['code' => 604, 'type' => 'sauserprefs',
                     'line' => __LINE__, 'file' => __FILE__,
-                    'message' => "Failed to find storage driver. Check sauserprefs_storage config option"
+                    'message' => "Failed to find storage driver. Check sauserprefs_storage config option",
                 ], true, true);
             }
         }
@@ -656,7 +661,7 @@ class sauserprefs extends rcube_plugin
             case 'general':
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'generalprefstable', 'cols' => 2],
-                    'langs' => ['name' => rcmail::Q($this->gettext('langoptions')), 'class' => 'langprefstable', 'cols' => 1]
+                    'langs' => ['name' => rcmail::Q($this->gettext('langoptions')), 'class' => 'langprefstable', 'cols' => 1],
                 ];
                 $blocks['langs']['intro'] = html::p(null, rcmail::Q($this->gettext('spamlangexp')));
 
@@ -664,13 +669,13 @@ class sauserprefs extends rcube_plugin
                     $field_id = 'rcmfd_spamthres';
                     $blocks['main']['options']['spamthres'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('spamthres'))),
-                        'content' => $this->_score_select('_spamthres', $field_id, $this->user_prefs['required_score'])
+                        'content' => $this->_score_select('_spamthres', $field_id, $this->user_prefs['required_score']),
                     ];
 
                     $blocks['main']['options']['spamthres_help'] = [
                         'row_attribs' => ['class' => 'sauphelp saupthres'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('spamthresexp'))
+                        'content' => rcmail::Q($this->gettext('spamthresexp')),
                     ];
                 }
 
@@ -680,13 +685,13 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spamsubject'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('spamsubject'))),
-                        'content' => $input_spamsubject->show()
+                        'content' => $input_spamsubject->show(),
                     ];
 
                     $blocks['main']['options']['spamsubject_help'] = [
                         'row_attribs' => ['class' => 'sauphelp saupsubject'],
                         'title' => '&nbsp;',
-                        'content' => rcmail::Q($this->gettext('spamsubjectblank'))
+                        'content' => rcmail::Q($this->gettext('spamsubjectblank')),
                     ];
                 }
 
@@ -697,7 +702,7 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['langs']['options']['header'] = [
                         'content_attribs' => ['id' => 'listcontrols'],
-                        'content' => $this->gettext('select') . ":&nbsp;&nbsp;" . $select_all . "&nbsp;&nbsp;" . $select_invert . "&nbsp;&nbsp;" . $select_none
+                        'content' => $this->gettext('select') . ":&nbsp;&nbsp;" . $select_all . "&nbsp;&nbsp;" . $select_invert . "&nbsp;&nbsp;" . $select_none,
                     ];
 
                     $lang_table = new html_table(['id' => 'spam-langs-table', 'class' => 'records-table listing sortable-table spam-langs-table fixedheader', 'cellspacing' => '0', 'cols' => 2]);
@@ -760,7 +765,7 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['langs']['options']['langtable'] = [
                         'content_attribs' => ['class' => 'scroller'],
-                        'content' => html::div(['id' => 'spam-langs-cont'], $lang_table->show())
+                        'content' => html::div(['id' => 'spam-langs-cont'], $lang_table->show()),
                     ];
                 }
 
@@ -768,7 +773,7 @@ class sauserprefs extends rcube_plugin
             // Header settings
             case 'headers':
                 $blocks = [
-                    'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'headersprefstable', 'cols' => 2]
+                    'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'headersprefstable', 'cols' => 2],
                 ];
                 $blocks['main']['intro'] = html::p(null, rcmail::Q($this->gettext('headersexp')));
 
@@ -778,13 +783,13 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spamfoldheaders'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('foldheaders'))),
-                        'content' => $input_spamreport->show($this->user_prefs['fold_headers']) . $this->_help_button('fold_help')
+                        'content' => $input_spamreport->show($this->user_prefs['fold_headers']) . $this->_help_button('fold_help'),
                     ];
 
                     $blocks['main']['options']['spamfoldheaders_help'] = [
                         'row_attribs' => ['id' => 'fold_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('foldhelp'))
+                        'content' => rcmail::Q($this->gettext('foldhelp')),
                     ];
                 }
 
@@ -804,18 +809,18 @@ class sauserprefs extends rcube_plugin
                         'name' => '_spamlevelstars',
                         'id' => $field_id,
                         'value' => '1',
-                        'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_level_char(this)'
+                        'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_level_char(this)',
                     ]);
 
                     $blocks['main']['options']['spamlevelstars'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('spamlevelstars'))),
-                        'content' => $input_spamreport->show($enabled) . $this->_help_button('level_help')
+                        'content' => $input_spamreport->show($enabled) . $this->_help_button('level_help'),
                     ];
 
                     $blocks['main']['options']['spamlevelstars_help'] = [
                         'row_attribs' => ['id' => 'level_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('levelhelp'))
+                        'content' => rcmail::Q($this->gettext('levelhelp')),
                     ];
 
                     $field_id = 'rcmfd_spamlevelchar';
@@ -824,12 +829,12 @@ class sauserprefs extends rcube_plugin
                         'id' => $field_id,
                         'value' => $char,
                         'maxlength' => '1',
-                        'disabled' => $enabled ? 0 : 1
+                        'disabled' => $enabled ? 0 : 1,
                     ]);
 
                     $blocks['main']['options']['spamlevelchar'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('spamlevelchar'))),
-                        'content' => $input_spamlevelchar->show()
+                        'content' => $input_spamlevelchar->show(),
                     ];
                 }
 
@@ -837,7 +842,7 @@ class sauserprefs extends rcube_plugin
             // Test settings
             case 'tests':
                 $blocks = [
-                    'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'testsprefstable', 'cols' => 2]
+                    'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'testsprefstable', 'cols' => 2],
                 ];
                 $blocks['main']['intro'] = html::p(null, rcmail::Q($this->gettext('spamtestssexp')));
 
@@ -847,13 +852,13 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spamuserazor1'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('userazor1'))),
-                        'content' => $input_spamtest->show($this->user_prefs['use_razor1']) . $this->_help_button('raz1_help')
+                        'content' => $input_spamtest->show($this->user_prefs['use_razor1']) . $this->_help_button('raz1_help'),
                     ];
 
                     $blocks['main']['options']['spamuserazor1_help'] = [
                         'row_attribs' => ['id' => 'raz1_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('raz1help'))
+                        'content' => rcmail::Q($this->gettext('raz1help')),
                     ];
                 }
 
@@ -863,13 +868,13 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spamuserazor2'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('userazor2'))),
-                        'content' => $input_spamtest->show($this->user_prefs['use_razor2']) . $this->_help_button('raz2_help')
+                        'content' => $input_spamtest->show($this->user_prefs['use_razor2']) . $this->_help_button('raz2_help'),
                     ];
 
                     $blocks['main']['options']['spamuserazor2_help'] = [
                         'row_attribs' => ['id' => 'raz2_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('raz2help'))
+                        'content' => rcmail::Q($this->gettext('raz2help')),
                     ];
                 }
 
@@ -879,13 +884,13 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spamusepyzor'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('usepyzor'))),
-                        'content' => $input_spamtest->show($this->user_prefs['use_pyzor']) . $this->_help_button('pyz_help')
+                        'content' => $input_spamtest->show($this->user_prefs['use_pyzor']) . $this->_help_button('pyz_help'),
                     ];
 
                     $blocks['main']['options']['spamusepyzor_help'] = [
                         'row_attribs' => ['id' => 'pyz_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('pyzhelp'))
+                        'content' => rcmail::Q($this->gettext('pyzhelp')),
                     ];
                 }
 
@@ -895,13 +900,13 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spamusedcc'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('usedcc'))),
-                        'content' => $input_spamtest->show($this->user_prefs['use_dcc']) . $this->_help_button('dcc_help')
+                        'content' => $input_spamtest->show($this->user_prefs['use_dcc']) . $this->_help_button('dcc_help'),
                     ];
 
                     $blocks['main']['options']['spamusedcc_help'] = [
                         'row_attribs' => ['id' => 'dcc_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('dcchelp'))
+                        'content' => rcmail::Q($this->gettext('dcchelp')),
                     ];
                 }
 
@@ -912,13 +917,13 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spamskiprblchecks'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('skiprblchecks'))),
-                        'content' => $input_spamtest->show($enabled) . $this->_help_button('rbl_help')
+                        'content' => $input_spamtest->show($enabled) . $this->_help_button('rbl_help'),
                     ];
 
                     $blocks['main']['options']['spamskiprblchecks_help'] = [
                         'row_attribs' => ['id' => 'rbl_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('rblhelp'))
+                        'content' => rcmail::Q($this->gettext('rblhelp')),
                     ];
                 }
 
@@ -927,7 +932,7 @@ class sauserprefs extends rcube_plugin
             case 'bayes':
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'bayesprefstable', 'cols' => 2],
-                    'autolearn' => ['name' => rcmail::Q($this->gettext('bayesautooptions')), 'class' => 'bayesprefstable', 'cols' => 2]
+                    'autolearn' => ['name' => rcmail::Q($this->gettext('bayesautooptions')), 'class' => 'bayesprefstable', 'cols' => 2],
                 ];
 
                 if (!isset($this->no_override['use_bayes'])) {
@@ -936,19 +941,19 @@ class sauserprefs extends rcube_plugin
                         'name' => '_spamusebayes',
                         'id' => $field_id,
                         'value' => '1',
-                        'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes(this)'
+                        'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes(this)',
                     ]);
 
                     $blocks['main']['options']['spamusebayes'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('usebayes'))),
                         'content_attribs' => ['colspan' => 2],
-                        'content' => $input_spamtest->show($this->user_prefs['use_bayes']) . $this->_help_button('bayes_help')
+                        'content' => $input_spamtest->show($this->user_prefs['use_bayes']) . $this->_help_button('bayes_help'),
                     ];
 
                     $blocks['main']['options']['spambayes_help'] = [
                         'row_attribs' => ['id' => 'bayes_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('bayeshelp'))
+                        'content' => rcmail::Q($this->gettext('bayeshelp')),
                     ];
                 }
 
@@ -958,13 +963,13 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['main']['options']['spambayesrules'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('bayesrules'))),
-                        'content' => $input_spamtest->show($this->user_prefs['use_bayes_rules']) . $this->_help_button('bayesrules_help')
+                        'content' => $input_spamtest->show($this->user_prefs['use_bayes_rules']) . $this->_help_button('bayesrules_help'),
                     ];
 
                     $blocks['main']['options']['spambayesrules_help'] = [
                         'row_attribs' => ['id' => 'bayesrules_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('bayesruleshlp'))
+                        'content' => rcmail::Q($this->gettext('bayesruleshlp')),
                     ];
                 }
 
@@ -975,25 +980,25 @@ class sauserprefs extends rcube_plugin
                         'id' => $field_id,
                         'value' => '1',
                         'onchange' => rcmail_output::JS_OBJECT_NAME . '.sauserprefs_toggle_bayes_auto(this)',
-                        'disabled' => $this->user_prefs['use_bayes'] ? 0 : 1
+                        'disabled' => $this->user_prefs['use_bayes'] ? 0 : 1,
                     ]);
 
                     $blocks['main']['options']['spambayesautolearn'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('bayesautolearn'))),
-                        'content' => $input_spamtest->show($this->user_prefs['bayes_auto_learn']) . $this->_help_button('bayesauto_help')
+                        'content' => $input_spamtest->show($this->user_prefs['bayes_auto_learn']) . $this->_help_button('bayesauto_help'),
                     ];
 
                     $blocks['main']['options']['spambayesautolearn_help'] = [
                         'row_attribs' => ['id' => 'bayesauto_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('bayesautohelp'))
+                        'content' => rcmail::Q($this->gettext('bayesautohelp')),
                     ];
                 }
 
                 if (!empty($this->bayes_query)) {
                     $blocks['main']['options']['spamdelbayes'] = [
                         'content_attribs' => ['colspan' => 3, 'class' => 'bayesdelete'],
-                        'content' => $this->rcube->output->button(['command' => 'plugin.sauserprefs.purge_bayes', 'class' => 'button mainaction delete', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp'])
+                        'content' => $this->rcube->output->button(['command' => 'plugin.sauserprefs.purge_bayes', 'class' => 'button mainaction delete', 'label' => 'sauserprefs.purgebayes', 'title' => 'sauserprefs.purgebayesexp']),
                     ];
                 }
 
@@ -1002,13 +1007,13 @@ class sauserprefs extends rcube_plugin
                     $args = ['disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes']) ? 1 : 0];
                     $blocks['autolearn']['options']['bayesnonspam'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('bayesnonspam'))),
-                        'content' => $this->_score_select('_bayesnonspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_nonspam'], $args)
+                        'content' => $this->_score_select('_bayesnonspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_nonspam'], $args),
                     ];
 
                     $blocks['autolearn']['options']['bayesnonspam_help'] = [
                         'row_attribs' => ['class' => 'sauphelp saupbayesnonspam'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('bayesnonspamexp'))
+                        'content' => rcmail::Q($this->gettext('bayesnonspamexp')),
                     ];
                 }
 
@@ -1017,13 +1022,13 @@ class sauserprefs extends rcube_plugin
                     $args = ['disabled' => (!$this->user_prefs['bayes_auto_learn'] || !$this->user_prefs['use_bayes']) ? 1 : 0];
                     $blocks['autolearn']['options']['bayesspam'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('bayesspam'))),
-                        'content' => $this->_score_select('_bayesspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_spam'], $args)
+                        'content' => $this->_score_select('_bayesspam', $field_id, $this->user_prefs['bayes_auto_learn_threshold_spam'], $args),
                     ];
 
                     $blocks['autolearn']['options']['bayesspam_help'] = [
                         'row_attribs' => ['class' => 'sauphelp saupbayesspam'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('bayesspamexp'))
+                        'content' => rcmail::Q($this->gettext('bayesspamexp')),
                     ];
                 }
 
@@ -1031,7 +1036,7 @@ class sauserprefs extends rcube_plugin
             // Report settings
             case 'report':
                 $blocks = [
-                    'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'reportprefstable', 'cols' => 2]
+                    'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'reportprefstable', 'cols' => 2],
                 ];
 
                 if (!isset($this->no_override['report_safe'])) {
@@ -1039,19 +1044,19 @@ class sauserprefs extends rcube_plugin
                     $input_spamreport0 = new html_radiobutton(['name' => '_spamreport', 'id' => $field_id . '_0', 'value' => '0']);
                     $blocks['main']['options']['bayesspam0'] = [
                         'title' => html::label($field_id . '_0', rcmail::Q($this->gettext('spamreport0'))),
-                        'content' => $input_spamreport0->show($this->user_prefs['report_safe'])
+                        'content' => $input_spamreport0->show($this->user_prefs['report_safe']),
                     ];
 
                     $input_spamreport1 = new html_radiobutton(['name' => '_spamreport', 'id' => $field_id . '_1', 'value' => '1']);
                     $blocks['main']['options']['bayesspam1'] = [
                         'title' => html::label($field_id . '_1', rcmail::Q($this->gettext('spamreport1'))),
-                        'content' => $input_spamreport1->show($this->user_prefs['report_safe'])
+                        'content' => $input_spamreport1->show($this->user_prefs['report_safe']),
                     ];
 
                     $input_spamreport2 = new html_radiobutton(['name' => '_spamreport', 'id' => $field_id . '_2', 'value' => '2']);
                     $blocks['main']['options']['bayesspam2'] = [
                         'title' => html::label($field_id . '_2', rcmail::Q($this->gettext('spamreport2'))),
-                        'content' => $input_spamreport2->show($this->user_prefs['report_safe'])
+                        'content' => $input_spamreport2->show($this->user_prefs['report_safe']),
                     ];
                 }
 
@@ -1060,7 +1065,7 @@ class sauserprefs extends rcube_plugin
             case 'addresses':
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions'))],
-                    'advanced' => ['name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => $attrib['class'] . ' addressadvancedtable', 'cols' => 2]
+                    'advanced' => ['name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => $attrib['class'] . ' addressadvancedtable', 'cols' => 2],
                 ];
 
                 $data = html::p(null, rcmail::Q($this->gettext('allowlistexp')));
@@ -1120,13 +1125,13 @@ class sauserprefs extends rcube_plugin
                     $input_awl = new html_checkbox(['name' => '_awl', 'id' => $field_id, 'value' => '1']);
                     $blocks['advanced']['options']['awl'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('useawl'))),
-                        'content' => $input_awl->show($this->user_prefs['use_auto_whitelist']) . $this->_help_button('awl_help')
+                        'content' => $input_awl->show($this->user_prefs['use_auto_whitelist']) . $this->_help_button('awl_help'),
                     ];
 
                     $blocks['advanced']['options']['awl_help'] = [
                         'row_attribs' => ['id' => 'awl_help', 'style' => 'display: none;', 'class' => 'sauphelp'],
                         'content_attribs' => ['colspan' => 2],
-                        'content' => rcmail::Q($this->gettext('useawlexp'))
+                        'content' => rcmail::Q($this->gettext('useawlexp')),
                     ];
                 }
 
@@ -1134,7 +1139,7 @@ class sauserprefs extends rcube_plugin
                     $field_id = 'rcmfd_score_user_blocklist';
                     $blocks['advanced']['options']['blocklist'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('score_blocklist'))),
-                        'content' => $this->_score_select('_score_user_blocklist', $field_id, $this->user_prefs['score USER_IN_BLACKLIST'])
+                        'content' => $this->_score_select('_score_user_blocklist', $field_id, $this->user_prefs['score USER_IN_BLACKLIST']),
                     ];
                 }
 
@@ -1142,7 +1147,7 @@ class sauserprefs extends rcube_plugin
                     $field_id = 'rcmfd_score_user_allowlist';
                     $blocks['advanced']['options']['allowlist'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('score_allowlist'))),
-                        'content' => $this->_score_select('_score_user_allowlist', $field_id, $this->user_prefs['score USER_IN_WHITELIST'])
+                        'content' => $this->_score_select('_score_user_allowlist', $field_id, $this->user_prefs['score USER_IN_WHITELIST']),
                     ];
                 }
 
@@ -1162,7 +1167,7 @@ class sauserprefs extends rcube_plugin
                     // add overlay input box to html page
                     $this->rcube->output->add_footer(html::tag('div', [
                         'id' => 'saup_addressimport',
-                        'style' => 'display: none;'
+                        'style' => 'display: none;',
                     ], html::p(null, rcube::Q($this->gettext('importexp'))) . html::div('formcontent', $sources_table->show())));
                 }
 
