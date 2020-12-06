@@ -1,7 +1,7 @@
 <?php
 /* Author: petrduchek */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['managespam'] = 'Spravovat nastavení detekce spamu';
 $labels['sauserprefssettings'] = 'Nastavení spamu';
@@ -50,7 +50,7 @@ $labels['bayesspam'] = 'Hranice pro spam';
 $labels['bayesrules'] = 'Použít Bayesovská pravidla';
 $labels['help'] = 'Nápověda';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Nastavení spamu bylo úspěšně změněno';
 $messages['sauserpreffailed'] = 'Chyba: Nastavení spamu se nepodařilo změnit';
 $messages['spamthresexp'] = 'Veškeré e-maily se skóre vyšším něž je určená hranice budou označeny jako spam. Zvýšením této hranice sa zvýší počet nerozpoznaných spamů, na druhou stranu se sníží počet e-mailů chybně označených jako spam.';

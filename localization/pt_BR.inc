@@ -1,7 +1,7 @@
 <?php
 /* Author: Alexandre Correa */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['sauserprefssettings'] = 'Configurações Spam';
 $labels['spamgeneralsettings'] = 'Configurações Gerais';
@@ -49,7 +49,7 @@ $labels['bayesspam'] = 'Potuação de Spam';
 $labels['bayesrules'] = 'Usar regras \'Baysian\'';
 $labels['help'] = 'Ajuda';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Configurações de SPAM salvas';
 $messages['sauserpreffailed'] = 'Erro: Não foi possível alterar configurações de SPAM';
 $messages['spamthresexp'] = 'Qualquer valor acima da pontuação será marcado como SPAM. Aumentando a pontuação pode aumentar a quantidade de SPAM não detectado, mas evita que uma mensagem verdadeira seja marcada como SPAM.';

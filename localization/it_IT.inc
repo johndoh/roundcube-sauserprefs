@@ -1,7 +1,7 @@
 <?php
 /* Author: Alessio Cecchi */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['managespam'] = 'Gestisci le impostazioni di rilevamento dello Spam';
 $labels['sauserprefssettings'] = 'Impostazioni spam';
@@ -50,7 +50,7 @@ $labels['bayesspam'] = 'Soglia di Spam';
 $labels['bayesrules'] = 'Utilizza i filtri Bayesiani';
 $labels['help'] = 'Aiuto';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Cambiamenti applicati con successo';
 $messages['sauserpreffailed'] = 'Errore: imposibile salvare i cambiamenti';
 $messages['spamthresexp'] = 'Tutto quello che oltre passa il punteggio verrà segnalato come spam. Aumentare il punteggio significa aumentare i messaggi di spam non segnalati, ma riduce il richio di falsi positivi.';

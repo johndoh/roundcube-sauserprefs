@@ -1,7 +1,7 @@
 <?php
 /* Author: Michal Michalac */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['managespam'] = 'Spravovať nastavenia detekcie nevyžiadanej pošty';
 $labels['sauserprefssettings'] = 'Nastavenia Spam-u';
@@ -59,7 +59,7 @@ $labels['testscores'] = 'Testovacie skóre';
 $labels['test'] = 'Test';
 $labels['score'] = 'Skóre';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Nastavenia spamu úspešne zmenené';
 $messages['sauserpreffailed'] = 'Chyba: Nastavenia spamu sa nepodarilo zmeniť';
 $messages['spamthresexp'] = "Všetky maily so skóre vyšším, ako určená hranica, budú označené ako spam.\nZvýšením tejto hranice sa zväčší počet nerozpoznaných spamov, na druhej strane sa ale zníži počet mailov chybne označených ako spam."; 

@@ -1,7 +1,7 @@
 <?php
 /* Author: Philip Weir */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Junk';
 $labels['managespam'] = 'Manage junk detection settings';
 $labels['sauserprefssettings'] = 'Junk settings';
@@ -126,7 +126,7 @@ $labels['lang_zh'] = 'Chinese (both Traditional and Simplified)';
 $labels['lang_zh.big5'] = 'Chinese (Traditional only)';
 $labels['lang_zh.gb2312'] = 'Chinese (Simplified only)';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Successfully changed junk settings';
 $messages['sauserpreffailed'] = 'Error: Cannot change junk settings';
 $messages['spamthresexp'] = 'Anything above the threshold is marked as junk. Increasing this threshold will increase the amount of junk missed, but will reduce the risk of false positives.';

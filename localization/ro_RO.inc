@@ -1,7 +1,7 @@
 <?php
 /* Author: Ovidiu Bica */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['sauserprefssettings'] = 'Setari spam';
 $labels['spamgeneralsettings'] = 'Setari generale';
@@ -49,7 +49,7 @@ $labels['bayesspam'] = 'Prag limita spam';
 $labels['bayesrules'] = 'Foloseste reguli Bayesian';
 $labels['help'] = 'Ajutor';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Setarile de SPAM au fost setate cu succes.';
 $messages['sauserpreffailed'] = 'Eroare: Nu pot actualiza setarile de spam.';
 $messages['spamthresexp'] = 'Orice mesaj mai mare de acest prag va fi marcat ca spam. Crescand acest prag va mari numarul de mesaje spam nedetectate insa va reduce numarul de mesaje interpretate gresit ca spam.';

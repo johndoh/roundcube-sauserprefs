@@ -3,7 +3,7 @@
    Updates: Tomasz Chiliński
 */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['managespam'] = 'Ustawienia wykrywania spamu';
 $labels['sauserprefssettings'] = 'Ustawienia spamu';
@@ -52,7 +52,7 @@ $labels['bayesspam'] = 'Próg spamu';
 $labels['bayesrules'] = 'Używaj reguł sieci bayesowskich';
 $labels['help'] = 'Pomoc';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Zmiany ustawień spamu zakończone sukcesem';
 $messages['sauserpreffailed'] = 'Error: Nie można zmienić ustawień spamu';
 $messages['spamthresexp'] = 'Wszystko powyżej progu jest oznaczane jako spam. Po zwiększeniu tego progu wzrośnie ilość spamu nieodebranego, ale zmniejszy się ryzyko fałszywych alarmów.';

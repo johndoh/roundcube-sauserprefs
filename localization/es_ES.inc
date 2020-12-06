@@ -1,7 +1,7 @@
 <?php
 /* Author: Joan Riera Pol */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['sauserprefssettings'] = 'Preferencias de Spam';
 $labels['spamgeneralsettings'] = 'Preferencias Generales';
@@ -49,7 +49,7 @@ $labels['bayesspam'] = 'Umbral de Spam';
 $labels['bayesrules'] = 'Usar reglas Bayesianas';
 $labels['help'] = 'Ayuda';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Preferencias de spam modificadas';
 $messages['sauserpreffailed'] = 'Error: No se han podido modificar las preferencias de spam';
 $messages['spamthresexp'] = 'Cualquier correo por encima del umbral será marcado como spam. Ampliando este umbral se incrementará la cantidad de spam no filtrado, pero reducirá el riesgo de falsos positivos.';

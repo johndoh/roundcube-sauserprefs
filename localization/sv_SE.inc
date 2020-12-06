@@ -1,7 +1,7 @@
 <?php
 /* Author: Reino Wallin */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Skräppost';
 $labels['sauserprefssettings'] = 'Inställningar för skräppost';
 $labels['spamgeneralsettings'] = 'Allmänna inställningar';
@@ -49,7 +49,7 @@ $labels['bayesspam'] = 'Tröskelvärde för skräppost';
 $labels['bayesrules'] = 'Använd bayesregler';
 $labels['help'] = 'Hjälp';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Dina inställningar för skräppost har sparats';
 $messages['sauserpreffailed'] = 'Fel: Det går inte att spara dina inställningar för skräppost';
 $messages['spamthresexp'] = 'Alla brev som vid granskningen av SpamAssassin får ett värde som överstiger tröskelvärdet för skräppost blir märkta som skräppost. Ökar man tröskelvärdet innebär det att viss skräppost inte blir märkt som skräppost, men man reducerar också risken att vanliga brev blir märkta som skräppost.';

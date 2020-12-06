@@ -41,7 +41,7 @@ abstract class rcube_sauserprefs_storage
      *
      * @param string $user sauserprefs_global_userid
      *
-     * @return array Array of preferences in format Array($pref_name => $pref_value, ...)
+     * @return array Array of preferences in format [$pref_name => $pref_value, ...]
      */
     abstract public function load_prefs($user);
 

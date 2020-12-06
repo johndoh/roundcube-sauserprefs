@@ -1,7 +1,7 @@
 <?php
 /* Author: Jérémy Bobbio based on previous translation by magik_cypress */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['managespam'] = 'Gérer les paramètres de détection des spams';
 $labels['sauserprefssettings'] = 'Préférences liées au spams';
@@ -50,7 +50,7 @@ $labels['bayesspam'] = 'Seuil des spams';
 $labels['bayesrules'] = 'Utiliser le filtre bayésien pour la détection';
 $labels['help'] = 'Aide';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Préférences modifiées avec succès';
 $messages['sauserpreffailed'] = 'Erreur : impossible de modifier les préférences';
 $messages['spamthresexp'] = 'Tout ce qui se trouve au dessus du seuil sera considéré comme spam. Augmenter le seuil va donc augmenter le nombre de spams qui ne seront pas détectés, mais réduira les risques de faux positifs.';

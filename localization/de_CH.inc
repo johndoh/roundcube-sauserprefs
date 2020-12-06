@@ -1,7 +1,7 @@
 <?php
 /* Author: Simon Tauber */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['managespam'] = 'Verwalten der Spamfilter-Einstellungen';
 $labels['sauserprefssettings'] = 'Spam Einstellungen';
@@ -50,7 +50,7 @@ $labels['bayesspam'] = '"Spam" Schwellenwert';
 $labels['bayesrules'] = 'Bayesische Regeln verwenden';
 $labels['help'] = 'Hilfe';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Spam Einstellungen erfolgreich geändert';
 $messages['sauserpreffailed'] = 'Fehler: Spam-Einstellungen konnten nicht geändert werden';
 $messages['spamthresexp'] = 'Alles über dem Schwellenwert wird als Spam markiert. Erhöhen des Schwellenwerts minimiert die verpassten Meldungen, aber erhöht die Möglichkeit der falschen Einstufung.';

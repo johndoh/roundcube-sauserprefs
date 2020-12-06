@@ -1,7 +1,7 @@
 <?php
 /* Author: David Garabana Barro */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Correo lixo';
 $labels['sauserprefssettings'] = 'Axustes de correo lixo';
 $labels['spamgeneralsettings'] = 'Axustes xerais';
@@ -49,7 +49,7 @@ $labels['bayesspam'] = 'Umbral de "correo lixo"';
 $labels['bayesrules'] = 'Empregar regras bayesianas';
 $labels['help'] = 'Axuda';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Modificáronse correctamente os axustes de correo lixo';
 $messages['sauserpreffailed'] = 'Produciuse un erro: Non se poden modificar os axustes de correo lixo';
 $messages['spamthresexp'] = 'Calquera puntuación por enbira desde umbral é marcado coma correo lixo. Se sube este umbral, aumentará a cantidade de correo lixo non detectado, pero tamén reducirá o risco de que se produzan falsos positivos.';

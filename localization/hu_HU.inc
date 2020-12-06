@@ -1,7 +1,7 @@
 <?php
 /* Author: Zoltan Nagy */
 
-$labels = array();
+$labels = [];
 $labels['sauserprefs'] = 'Spam';
 $labels['sauserprefssettings'] = 'Spam beállítás';
 $labels['spamgeneralsettings'] = 'Általános beállítás';
@@ -39,7 +39,7 @@ $labels['defaultscore'] = 'Alapérték';
 $labels['otherscore'] = 'Egyéb (%s)';
 $labels['saupusedefault'] = 'Alapértékek visszaállítása';
 
-$messages = array();
+$messages = [];
 $messages['sauserprefchanged'] = 'Sikeresen megváltoztatta a spam beállításokat';
 $messages['sauserpreffailed'] = 'Hiba: nem sikerült a spam beállítások megváltoztatása';
 $messages['spamthresexp'] = 'Minden, ami a küszöbérték feletti érték, spamként lesz jelölve. A küszöbértékének a növelése, növeli a bejutó spameket, de csökkenti a hamis spamjelölést.';
