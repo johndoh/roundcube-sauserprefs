@@ -115,7 +115,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
         foreach ($new_prefs as $preference => $value) {
             if ($preference == 'addresses') {
                 foreach ($value as $address) {
-                    if ($address['action']) {
+                    if (!empty($address['action']) && !empty($address['value'])) {
                         $actions[$address['action']][] = $address;
                     }
                 }
@@ -171,7 +171,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
                         $vals = [$user_id, $pref['field']];
                         $msg = '"' . $pref['field'] . '"';
 
-                        if ($pref['value']) {
+                        if (!empty($pref['value'])) {
                             $sql .= " AND `{$this->value_field}` = ?";
                             array_push($vals, $pref['value']);
                             $msg .= ' = "' . $pref['value'] . '"';
