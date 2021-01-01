@@ -482,9 +482,7 @@ class sauserprefs extends rcube_plugin
 
             $new_prefs = array();
 
-            $emails = $this->_gen_email_arr($args['record']);
-            $emails = array_unique($emails);
-            foreach ($emails as $email) {
+            foreach ($this->_gen_email_arr($args['record']) as $email) {
                 if (!in_array($email, $existing_addresses)) {
                     $new_prefs['addresses'][] = array('field' => self::map_pref_name('whitelist_from'), 'value' => $email, 'action' => 'INSERT');
                 }
@@ -527,7 +525,6 @@ class sauserprefs extends rcube_plugin
             $contacts = $this->rcube->get_address_book($args['source']);
             foreach ($args['id'] as $id) {
                 $emails = $this->_gen_email_arr($contacts->get_record($id, true));
-                $emails = array_unique($emails);
                 foreach ($emails as $email) {
                     if (in_array($email, $existing_addresses)) {
                         $new_prefs['addresses'][] = array('field' => self::map_pref_name('whitelist_from'), 'value' => $email, 'action' => 'DELETE');
@@ -1315,16 +1312,14 @@ class sauserprefs extends rcube_plugin
         foreach ($contact as $key => $value) {
             if (preg_match('/^email(:(.+))?$/i', $key, $matches)) {
                 foreach ((array) $value as $subkey => $subval) {
-                    if ($matches[2]) {
-                        $emails[$matches[2] . $subkey] = $subval;
-                    }
-                    else {
-                        $emails['email' . $subkey] = $subval;
+                    if (!empty($subval)) {
+                        $emails[] = $subval;
                     }
                 }
             }
         }
 
+        $emails = array_unique($emails);
         return $emails;
     }
 

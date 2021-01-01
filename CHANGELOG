@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.18.4 (2021-01-01, rc-1.4)
+=================================================
+ * Fix bug where blank entries could be added to allowlist on contact sync
+
 Version 1.18.3 (2020-11-20, rc-1.4)
 =================================================
  * Improve address rule input
