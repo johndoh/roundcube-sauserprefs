@@ -5,8 +5,11 @@ Roundcube Webmail SAUserPrefs
  * Support Dark Mode in Elastic
  * Support for customizing Elastic skin
  * Replace references to white/blacklist with allow/block list (WIP see #57)
- * Fix bug where blank entries could be added to allowlist on contact sync
  * Drop support for PHP < 5.5
+
+Version 1.18.4 (2021-01-01, rc-1.4)
+=================================================
+ * Fix bug where blank entries could be added to allowlist on contact sync
 
 Version 1.18.3 (2020-11-20, rc-1.4)
 =================================================
