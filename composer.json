@@ -1,7 +1,7 @@
 {
   "name": "johndoh/sauserprefs",
   "description": "Control SpamAssassin settings from within Roundcube",
-  "keywords": ["spamassassin","preferences"],
+  "keywords": ["spamassassin", "preferences"],
   "homepage": "https://github.com/johndoh/roundcube-sauserprefs/",
   "license": "GPL-3.0",
   "type": "roundcube-plugin",
@@ -19,7 +19,8 @@
   },
   "extra": {
     "roundcube": {
-      "min-version": "1.5-dev"
+      "min-version": "1.5-dev",
+      "persistent-files": ["config.inc.php", "skins/elastic/_custom.less"]
     }
   }
 }
