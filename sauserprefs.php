@@ -439,7 +439,7 @@ class sauserprefs extends rcube_plugin
             }
         }
         else {
-            $this->rcube->output->command('display_message', $data['message'] ? $data['message'] : $this->gettext('sauserpreffailed'), 'error');
+            $this->rcube->output->command('display_message', isset($data['message']) ? $data['message'] : $this->gettext('sauserpreffailed'), 'error');
         }
 
         // go to next step
@@ -572,7 +572,7 @@ class sauserprefs extends rcube_plugin
     {
         if (!$this->storage) {
             // Add include path for internal classes
-            $include_path = $this->home . '/lib' . PATH_SEPARATOR;
+            $include_path = $this->home . '/lib' . \PATH_SEPARATOR;
             $include_path .= ini_get('include_path');
             set_include_path($include_path);
 
@@ -1351,6 +1351,7 @@ class sauserprefs extends rcube_plugin
         }
 
         $emails = array_unique($emails);
+
         return $emails;
     }
 

@@ -173,7 +173,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
 
                         if (!empty($pref['value'])) {
                             $sql .= " AND `{$this->value_field}` = ?";
-                            array_push($vals, $pref['value']);
+                            $vals[] = $pref['value'];
                             $msg .= ' = "' . $pref['value'] . '"';
                         }
 
