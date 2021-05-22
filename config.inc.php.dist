@@ -89,7 +89,9 @@ $config['sauserprefs_default_prefs'] = [
                                     'bayes_auto_learn_threshold_nonspam' => 0.1,
                                     'bayes_auto_learn_threshold_spam' => 12.0,
                                     'use_bayes_rules' => 1,
+                                    // AWL plugin, use one of use_auto_whitelist or use_txrep
                                     'use_auto_whitelist' => 0,
+                                    //'use_txrep' => 0,
                                     'score USER_IN_BLACKLIST' => 10,
                                     'score USER_IN_WHITELIST' => -10
                                 ];

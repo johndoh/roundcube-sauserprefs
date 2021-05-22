@@ -57,6 +57,8 @@ class sauserprefs extends rcube_plugin
     private $rcube;
     private $no_override = [];
 
+    private $awl_plugin = 'use_auto_whitelist';
+
     // old => new
     public static $deprecated_prefs = [
         'required_hits' => 'required_score',
@@ -400,8 +402,8 @@ class sauserprefs extends rcube_plugin
                     }
                 }
 
-                if (!isset($this->no_override['use_auto_whitelist'])) {
-                    $new_prefs['use_auto_whitelist'] = empty($_POST['_awl']) ? "0" : "1";
+                if (!isset($this->no_override[$this->awl_plugin])) {
+                    $new_prefs[$this->awl_plugin] = empty($_POST['_awl']) ? "0" : "1";
                 }
 
                 if (!isset($this->no_override['score USER_IN_BLACKLIST'])) {
@@ -617,6 +619,11 @@ class sauserprefs extends rcube_plugin
             if (!in_array($test, ['score USER_IN_BLACKLIST', 'score USER_IN_WHITELIST']) && preg_match('/^score\s([A-Z0-9_]+)$/', $test, $matches)) {
                 $this->score_prefs[] = $matches[1];
             }
+        }
+
+        // configure awl plugin
+        if (array_key_exists('use_txrep', $this->global_prefs)) {
+            $this->awl_plugin = 'use_txrep';
         }
     }
 
@@ -1105,12 +1112,12 @@ class sauserprefs extends rcube_plugin
 
                 $blocks['main']['content'] = $table->show();
 
-                if (!isset($this->no_override['use_auto_whitelist'])) {
+                if (!isset($this->no_override[$this->awl_plugin])) {
                     $field_id = 'rcmfd_awl';
                     $input_awl = new html_checkbox(['name' => '_awl', 'id' => $field_id, 'value' => '1']);
                     $blocks['advanced']['options']['awl'] = [
                         'title' => html::label($field_id, rcmail::Q($this->gettext('useawl'))),
-                        'content' => $input_awl->show($this->user_prefs['use_auto_whitelist']) . $this->_help_button('awl_help'),
+                        'content' => $input_awl->show($this->user_prefs[$this->awl_plugin]) . $this->_help_button('awl_help'),
                     ];
 
                     $blocks['advanced']['options']['awl_help'] = [
