@@ -126,7 +126,7 @@ class sauserprefs extends rcube_plugin
                 'addresses' => ['id' => 'addresses', 'class' => 'addresses', 'section' => $this->gettext('spamaddressrules')],
                 'scores' => ['id' => 'scores', 'class' => 'scores', 'section' => $this->gettext('testscores')],
             ];
-            $this->cur_section = rcube_utils::get_input_value('_section', rcube_utils::INPUT_GPC);
+            $this->cur_section = rcube_utils::get_input_string('_section', rcube_utils::INPUT_GPC);
 
             $this->add_hook('settings_actions', [$this, 'settings_tab']);
             $this->register_action('plugin.sauserprefs', [$this, 'init_html']);
@@ -289,11 +289,11 @@ class sauserprefs extends rcube_plugin
         switch ($this->cur_section) {
             case 'general':
                 if (!isset($this->no_override['required_score'])) {
-                    $new_prefs['required_score'] = rcube_utils::get_input_value('_spamthres', rcube_utils::INPUT_POST) ?: $this->global_prefs['required_score'];
+                    $new_prefs['required_score'] = rcube_utils::get_input_string('_spamthres', rcube_utils::INPUT_POST) ?: $this->global_prefs['required_score'];
                 }
 
                 if (!isset($this->no_override['rewrite_header Subject'])) {
-                    $new_prefs['rewrite_header Subject'] = rcube_utils::get_input_value('_spamsubject', rcube_utils::INPUT_POST);
+                    $new_prefs['rewrite_header Subject'] = rcube_utils::get_input_string('_spamsubject', rcube_utils::INPUT_POST);
                 }
 
                 if (!isset($this->no_override['ok_locales'])) {
@@ -316,10 +316,10 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($this->no_override['add_header all Level'])) {
-                    $spamchar = empty($_POST['_spamlevelchar']) ? "*" : rcube_utils::get_input_value('_spamlevelchar', rcube_utils::INPUT_POST);
+                    $spamchar = empty($_POST['_spamlevelchar']) ? "*" : rcube_utils::get_input_string('_spamlevelchar', rcube_utils::INPUT_POST);
                     $spamchar = substr($spamchar, 0, 1); // input validation, make sure its only ever 1 char
 
-                    if (rcube_utils::get_input_value('_spamlevelstars', rcube_utils::INPUT_POST) == "1") {
+                    if (rcube_utils::get_input_string('_spamlevelstars', rcube_utils::INPUT_POST) == "1") {
                         $new_prefs['add_header all Level'] = "_STARS(" . $spamchar . ")_";
                         $new_prefs['remove_header all'] = "0";
                     }
@@ -362,11 +362,11 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($this->no_override['bayes_auto_learn_threshold_nonspam'])) {
-                    $new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_utils::get_input_value('_bayesnonspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_nonspam'];
+                    $new_prefs['bayes_auto_learn_threshold_nonspam'] = rcube_utils::get_input_string('_bayesnonspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_nonspam'];
                 }
 
                 if (!isset($this->no_override['bayes_auto_learn_threshold_spam'])) {
-                    $new_prefs['bayes_auto_learn_threshold_spam'] = rcube_utils::get_input_value('_bayesspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_spam'];
+                    $new_prefs['bayes_auto_learn_threshold_spam'] = rcube_utils::get_input_string('_bayesspam', rcube_utils::INPUT_POST) ?: $this->global_prefs['bayes_auto_learn_threshold_spam'];
                 }
 
                 if (!isset($this->no_override['use_bayes_rules'])) {
@@ -376,14 +376,14 @@ class sauserprefs extends rcube_plugin
                 break;
             case 'report':
                 if (!isset($this->no_override['report_safe'])) {
-                    $new_prefs['report_safe'] = rcube_utils::get_input_value('_spamreport', rcube_utils::INPUT_POST);
+                    $new_prefs['report_safe'] = rcube_utils::get_input_string('_spamreport', rcube_utils::INPUT_POST);
                 }
 
                 break;
             case 'addresses':
-                $acts = rcube_utils::get_input_value('_address_rule_act', rcube_utils::INPUT_POST);
-                $prefs = rcube_utils::get_input_value('_address_rule_field', rcube_utils::INPUT_POST);
-                $vals = rcube_utils::get_input_value('_address_rule_value', rcube_utils::INPUT_POST);
+                $acts = rcube_utils::get_input_string('_address_rule_act', rcube_utils::INPUT_POST);
+                $prefs = rcube_utils::get_input_string('_address_rule_field', rcube_utils::INPUT_POST);
+                $vals = rcube_utils::get_input_string('_address_rule_value', rcube_utils::INPUT_POST);
 
                 foreach ($acts as $idx => $act) {
                     switch ($prefs[$idx]) {
@@ -407,17 +407,17 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($this->no_override['score USER_IN_BLACKLIST'])) {
-                    $new_prefs['score USER_IN_BLACKLIST'] = rcube_utils::get_input_value('_score_user_blocklist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_BLACKLIST'];
+                    $new_prefs['score USER_IN_BLACKLIST'] = rcube_utils::get_input_string('_score_user_blocklist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_BLACKLIST'];
                 }
 
                 if (!isset($this->no_override['score USER_IN_WHITELIST'])) {
-                    $new_prefs['score USER_IN_WHITELIST'] = rcube_utils::get_input_value('_score_user_allowlist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_WHITELIST'];
+                    $new_prefs['score USER_IN_WHITELIST'] = rcube_utils::get_input_string('_score_user_allowlist', rcube_utils::INPUT_POST) ?: $this->global_prefs['score USER_IN_WHITELIST'];
                 }
 
                 break;
             case 'scores':
                 foreach ($this->score_prefs as $test) {
-                    $new_prefs['score ' . $test] = rcube_utils::get_input_value('_score_' . $test, rcube_utils::INPUT_POST) ?: $this->global_prefs['score ' . $test];
+                    $new_prefs['score ' . $test] = rcube_utils::get_input_string('_score_' . $test, rcube_utils::INPUT_POST) ?: $this->global_prefs['score ' . $test];
                 }
 
                 break;
