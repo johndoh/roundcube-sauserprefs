@@ -441,7 +441,7 @@ class sauserprefs extends rcube_plugin
             }
         }
         else {
-            $this->rcube->output->command('display_message', isset($data['message']) ? $data['message'] : $this->gettext('sauserpreffailed'), 'error');
+            $this->rcube->output->command('display_message', $data['message'] ?? $this->gettext('sauserpreffailed'), 'error');
         }
 
         // go to next step
@@ -1207,7 +1207,7 @@ class sauserprefs extends rcube_plugin
                         $table->add('title', $row['title']);
                     }
 
-                    $table->add(isset($row['content_attribs']) ? $row['content_attribs'] : null, $row['content']);
+                    $table->add($row['content_attribs'] ?? null, $row['content']);
 
                     if (isset($row['help'])) {
                         $table->add('help', $row['help']);
@@ -1218,7 +1218,7 @@ class sauserprefs extends rcube_plugin
             }
 
             if (!empty($content)) {
-                $out .= html::tag('fieldset', $class, html::tag('legend', null, $block['name']) . (isset($block['intro']) ? $block['intro'] : '') . $content);
+                $out .= html::tag('fieldset', $class, html::tag('legend', null, $block['name']) . ($block['intro'] ?? '') . $content);
             }
         }
 
