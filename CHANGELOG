@@ -1,6 +1,14 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.19.2 (2021-11-07, rc-1.5)
+=================================================
+ * Fix adding/removing addresses in address rules
+
+Version 1.19.1 (2021-10-30, rc-1.5)
+=================================================
+ * Revert accidental PHP version requirement change (PHP 7.0 will be required for next version)
+
 Version 1.19 (2021-10-19, rc-1.5)
 =================================================
  * Support fixed table headers in Elastic skin (req rc 81dcf4a)
