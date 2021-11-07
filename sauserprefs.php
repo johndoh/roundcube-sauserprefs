@@ -381,9 +381,9 @@ class sauserprefs extends rcube_plugin
 
                 break;
             case 'addresses':
-                $acts = rcube_utils::get_input_string('_address_rule_act', rcube_utils::INPUT_POST);
-                $prefs = rcube_utils::get_input_string('_address_rule_field', rcube_utils::INPUT_POST);
-                $vals = rcube_utils::get_input_string('_address_rule_value', rcube_utils::INPUT_POST);
+                $acts = rcube_utils::get_input_value('_address_rule_act', rcube_utils::INPUT_POST);
+                $prefs = rcube_utils::get_input_value('_address_rule_field', rcube_utils::INPUT_POST);
+                $vals = rcube_utils::get_input_value('_address_rule_value', rcube_utils::INPUT_POST);
 
                 foreach ($acts as $idx => $act) {
                     switch ($prefs[$idx]) {
