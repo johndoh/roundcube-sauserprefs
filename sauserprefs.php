@@ -757,7 +757,7 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['langs']['options']['langtable'] = [
                         'content_attribs' => ['class' => 'scroller'],
-                        'content' => html::div(['id' => 'spam-langs-cont'], $lang_table->show()),
+                        'content' => html::div(['id' => 'spam-langs-cont', 'class' => 'scroller'], $lang_table->show()),
                     ];
                 }
 
@@ -1108,7 +1108,7 @@ class sauserprefs extends rcube_plugin
 
                 $this->_address_row($address_table, null, null, $attrib, ['class' => 'newaddressrule']);
 
-                $table->add(['colspan' => 4, 'class' => 'scroller'], html::div(['id' => 'address-rules-cont'], $address_table->show()));
+                $table->add(['colspan' => 4, 'class' => 'scroller'], html::div(['id' => 'address-rules-cont', 'class' => 'scroller'], $address_table->show()));
 
                 $blocks['main']['content'] = $table->show();
 
