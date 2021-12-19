@@ -1,6 +1,10 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+Version 1.19.3 (2021-12-19, rc-1.5)
+=================================================
+ * Fix inheritance of scroll bar style in Elastic skin
+
 Version 1.19.2 (2021-11-07, rc-1.5)
 =================================================
  * Fix adding/removing addresses in address rules
