@@ -1093,15 +1093,18 @@ class sauserprefs extends rcube_plugin
                 $address_table->add_header('email', $this->rcube->output->button(['command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'email', 'title' => 'sortby']));
                 $address_table->add_header('control', '&nbsp;');
 
-                $this->rcube->output->set_env('address_rule_count', is_array($this->user_prefs['addresses']) ? count($this->user_prefs['addresses']) : 0);
-                foreach ((array) $this->user_prefs['addresses'] as $address) {
-                    $this->_address_row($address_table, $address['field'], $address['value'], $attrib);
+                if (isset($this->user_prefs['addresses'])) {
+                    $this->rcube->output->set_env('address_rule_count', count($this->user_prefs['addresses']));
+                    foreach ((array) $this->user_prefs['addresses'] as $address) {
+                        $this->_address_row($address_table, $address['field'], $address['value'], $attrib);
+                    }
+                }
+                else {
+                    $this->rcube->output->set_env('address_rule_count', 0);
                 }
 
                 // add no address and new address rows at the end
-                if (!empty($this->user_prefs['addresses'])) {
-                    $norules = 'display: none;';
-                }
+                $norules = !empty($this->user_prefs['addresses']) ? 'display: none;': '';
 
                 $address_table->set_row_attribs(['class' => 'noaddressrules', 'style' => $norules]);
                 $address_table->add(['colspan' => '3'], rcube_utils::rep_specialchars_output($this->gettext('noaddressrules')));
