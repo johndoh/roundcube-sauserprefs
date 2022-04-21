@@ -104,8 +104,8 @@ $config['sauserprefs_score_options'] = [
                                     '*' => ['min' => 1, 'max' => 10, 'increment' => 1],
                                     '_bayesnonspam' => ['min' => -1, 'max' => 1, 'increment' => 0.1],
                                     '_bayesspam' => ['min' => 1, 'max' => 20, 'increment' => 1],
-                                    '_score_user_blacklist' => ['min' => 0, 'max' => 100, 'increment' => 10, 'extra' => [['min' => 1, 'max' => 10, 'increment' => 1]]],
-                                    '_score_user_whitelist' => ['min' => -100, 'max' => -1, 'increment' => 10, 'extra' => [['min' => -10, 'max' => -1, 'increment' => 1]]]
+                                    '_score_user_blocklist' => ['min' => 0, 'max' => 100, 'increment' => 10, 'extra' => [['min' => 1, 'max' => 10, 'increment' => 1]]],
+                                    '_score_user_allowlist' => ['min' => -100, 'max' => -1, 'increment' => 10, 'extra' => [['min' => -10, 'max' => -1, 'increment' => 1]]]
                                 ];
 
 // delete user bayesian data stored in database
