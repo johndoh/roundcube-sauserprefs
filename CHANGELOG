@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+ * Fix miss-matched score_allow/blocklist labels (#68)
+
 Version 1.19.3 (2021-12-19, rc-1.5)
 =================================================
  * Fix inheritance of scroll bar style in Elastic skin
