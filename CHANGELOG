@@ -3,6 +3,7 @@ Roundcube Webmail SAUserPrefs
 
  * Drop support for PHP < 7.0
  * Fix miss-matched score_allow/blocklist labels (#68)
+ * Add backwards compatibility for _score_user_black/whitelist (#68)
 
 Version 1.19.3 (2021-12-19, rc-1.5)
 =================================================

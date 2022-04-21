@@ -1266,7 +1266,20 @@ class sauserprefs extends rcube_plugin
         $locale_info = localeconv();
 
         if ($config = $this->rcube->config->get('sauserprefs_score_options')) {
-            $config = array_key_exists($field_name, $config) ? $config[$field_name] : $config['*'];
+            if (array_key_exists($field_name, $config)) {
+                $config = $config[$field_name];
+            }
+            elseif ($field_name == '_score_user_blocklist' && array_key_exists('_score_user_blacklist', $config)) {
+                // backwards compatibility, _score_user_blacklist removed in 1.19
+                $config = $config['_score_user_blacklist'];
+            }
+            elseif ($field_name == '_score_user_allowlist' && array_key_exists('_score_user_whitelist', $config)) {
+                // backwards compatibility, _score_user_whitelist removed in 1.19
+                $config = $config['_score_user_whitelist'];
+            }
+            else {
+                $config = $config['*'];
+            }
         }
         else {
             $config = ['min' => 1, 'max' => 10, 'increment' => $this->rcube->config->get('sauserprefs_score_inc', 1)];
