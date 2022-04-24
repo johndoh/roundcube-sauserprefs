@@ -38,7 +38,7 @@ $config['sauserprefs_userid'] = '%u';
 // username of the global or default settings user in the database, normaly $GLOBAL or @GLOBAL
 $config['sauserprefs_global_userid'] = '\$GLOBAL';
 
-// enable address whitelist synchronisation with address book(s)
+// enable address welcomelist synchronisation with address book(s)
 // possible values:
 //   false - synchronisation disabled
 //   true - synchronise with default address book
@@ -69,6 +69,12 @@ $config['sauserprefs_allowed_hosts'] = null;
 // ];
 $config['sauserprefs_host_config'] = null;
 
+// SpamAssassin Version 4
+// Some configs have been renamed in SAv4, old config names are depreciated
+// see https://bz.apache.org/SpamAssassin/show_bug.cgi?id=7826 for more info
+// setting this config to true will make this plugin use the new config names
+$config['sauserprefs_sav4'] = false;
+
 // default settings
 // these are overridden by $GLOBAL and user settings from the database
 $config['sauserprefs_default_prefs'] = [
@@ -89,11 +95,11 @@ $config['sauserprefs_default_prefs'] = [
                                     'bayes_auto_learn_threshold_nonspam' => 0.1,
                                     'bayes_auto_learn_threshold_spam' => 12.0,
                                     'use_bayes_rules' => 1,
-                                    // AWL plugin, use one of use_auto_whitelist or use_txrep
-                                    'use_auto_whitelist' => 0,
+                                    // AWL plugin, use one of use_auto_welcomelist (previously use_auto_whitelist) or use_txrep
+                                    'use_auto_welcomelist' => 0,
                                     //'use_txrep' => 0,
-                                    'score USER_IN_BLACKLIST' => 10,
-                                    'score USER_IN_WHITELIST' => -10
+                                    'score USER_IN_BLOCKLIST' => 10,
+                                    'score USER_IN_WELCOMELIST' => -10
                                 ];
 
 // score options

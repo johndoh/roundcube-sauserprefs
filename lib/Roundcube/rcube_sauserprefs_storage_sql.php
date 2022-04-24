@@ -74,7 +74,8 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
             $pref_name = sauserprefs::map_pref_name($pref_name);
             $pref_value = $sql_arr[$this->value_field];
 
-            if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to') {
+            if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to' ||
+                $pref_name == 'welcomelist_from' || $pref_name == 'blocklist_from' || $pref_name == 'welcomelist_to') {
                 $prefs['addresses'][] = ['field' => $pref_name, 'value' => $pref_value];
             }
             else {
@@ -82,7 +83,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
             }
 
             // update deprecated prefs in db
-            if ($sql_arr[$this->preference_field] != $pref_name) {
+            if ($sql_arr[$this->preference_field] != $pref_name && (sauserprefs::$SAv4 || (!sauserprefs::$SAv4 && !array_key_exists($sql_arr[$this->preference_field], sauserprefs::$SAv4_prefs)))) {
                 $this->_db_connect('w');
 
                 $this->db->query(
