@@ -108,8 +108,8 @@ rcube_webmail.prototype.sauserprefs_addressrule_delete_row = function(obj) {
 }
 
 rcube_webmail.prototype.sauserprefs_addressrule_import = function(address) {
-    parent.rcmail.set_busy(false, null, this.env.sauserprefs_allowlist);
-    this.sauserprefs_addressrule_insert_row({'type': 'allowlist_from', 'desc': this.get_label('allowlist_from','sauserprefs'), 'address': address});
+    parent.rcmail.set_busy(false, null, this.env.sauserprefs_welcomelist);
+    this.sauserprefs_addressrule_insert_row({'type': 'welcomelist_from', 'desc': this.get_label('welcomelist_from','sauserprefs'), 'address': address});
 }
 
 rcube_webmail.prototype.sauserprefs_help = function(sel) {
@@ -165,7 +165,7 @@ rcube_webmail.prototype.sauserprefs_address_import_dialog = function() {
     this.simple_dialog(dialog.show(), this.gettext('sauserprefs.importaddresses'), function() {
         if (dialog.find('input:checked').length > 0) {
             var sources = dialog.find('input:checked').map(function(){ return $(this).val(); }).get();
-            rcmail.command('plugin.sauserprefs.import_allowlist', sources);
+            rcmail.command('plugin.sauserprefs.import_welcomelist', sources);
             return true;
         }
         else {
@@ -272,16 +272,16 @@ $(document).ready(function() {
                     }
                 }, true);
 
-                rcmail.register_command('plugin.sauserprefs.allowlist_delete_all', function() {
+                rcmail.register_command('plugin.sauserprefs.welcomelist_delete_all', function() {
                     rcmail.confirm_dialog(rcmail.get_label('spamaddressdeleteall','sauserprefs'), 'delete', function(e, ref) {
                             $.each($('#address-rules-table tbody tr'), function() { ref.sauserprefs_addressrule_delete_row(this); });
                         });
                     return false;
                 }, true);
 
-                rcmail.register_command('plugin.sauserprefs.import_allowlist', function(props) {
-                    rcmail.env.sauserprefs_allowlist = rcmail.set_busy(true, 'sauserprefs.importingaddresses');
-                    rcmail.http_request('plugin.sauserprefs.allowlist_import', { _sources: props }, rcmail.env.sauserprefs_allowlist, 'POST');
+                rcmail.register_command('plugin.sauserprefs.import_welcomelist', function(props) {
+                    rcmail.env.sauserprefs_welcomelist = rcmail.set_busy(true, 'sauserprefs.importingaddresses');
+                    rcmail.http_request('plugin.sauserprefs.welcomelist_import', { _sources: props }, rcmail.env.sauserprefs_welcomelist, 'POST');
                     return false;
                 }, true);
 
@@ -337,7 +337,7 @@ $(document).ready(function() {
                         $('#rcmfd_bayesnonspam,#rcmfd_bayesspam').val(''); // Bayes non spam/spam score
                         $('#rcmfd_spamlevelchar').val(ref.env.add_header_all_Level.substr(7, 1)); // Spam level char
 
-                        // Delete allowlist
+                        // Delete welcomelist
                         $.each($('#address-rules-table tbody tr'), function() { ref.sauserprefs_addressrule_delete_row(this) });
 
                         // Toggle dependant fields

@@ -132,7 +132,7 @@ class sauserprefs extends rcube_plugin
             $this->register_action('plugin.sauserprefs', [$this, 'init_html']);
             $this->register_action('plugin.sauserprefs.edit', [$this, 'init_html']);
             $this->register_action('plugin.sauserprefs.save', [$this, 'save']);
-            $this->register_action('plugin.sauserprefs.allowlist_import', [$this, 'allowlist_import']);
+            $this->register_action('plugin.sauserprefs.welcomelist_import', [$this, 'welcomelist_import']);
             $this->register_action('plugin.sauserprefs.purge_bayes', [$this, 'purge_bayes']);
 
             // integration with taskwatermark plugin
@@ -237,7 +237,7 @@ class sauserprefs extends rcube_plugin
             'sauserprefs.spamaddresserror', 'sauserprefs.spamaddressdelete',
             'sauserprefs.spamaddressdeleteall', 'sauserprefs.enabled', 'sauserprefs.disabled',
             'sauserprefs.importingaddresses', 'sauserprefs.usedefaultconfirm', 'sauserprefs.purgebayesconfirm',
-            'sauserprefs.allowlist_from', 'sauserprefs.saupusedefault', 'sauserprefs.importaddresses',
+            'sauserprefs.welcomelist_from', 'sauserprefs.saupusedefault', 'sauserprefs.importaddresses',
             'sauserprefs.selectimportsource', 'import');
 
         // output table sorting prefs
@@ -450,7 +450,7 @@ class sauserprefs extends rcube_plugin
         $this->init_html();
     }
 
-    public function allowlist_import()
+    public function welcomelist_import()
     {
         $selected_sources = rcube_utils::get_input_value('_sources', rcube_utils::INPUT_POST);
         if (!is_array($selected_sources)) {
@@ -1060,19 +1060,19 @@ class sauserprefs extends rcube_plugin
                     'advanced' => ['name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => $attrib['class'] . ' addressadvancedtable', 'cols' => 2],
                 ];
 
-                $data = html::p(null, rcmail::Q($this->gettext('allowlistexp')));
+                $data = html::p(null, rcmail::Q($this->gettext('welcomelistexp')));
 
                 if (!empty($this->addressbook_sync)) {
-                    $data .= rcmail::Q(str_replace('%s', $this->_list_contact_sources($this->addressbook_sync), $this->gettext('autoallowlist'))) . "<br /><br />";
+                    $data .= rcmail::Q(str_replace('%s', $this->_list_contact_sources($this->addressbook_sync), $this->gettext('autowelcomelist'))) . "<br /><br />";
                 }
 
                 $blocks['main']['intro'] = $data;
 
                 $field_id = 'rcmfd_spamaddressrule';
                 $input_spamaddressrule = new html_select(['name' => '_spamaddressrule', 'id' => $field_id]);
-                $input_spamaddressrule->add($this->gettext('allowlist_from'), 'allowlist_from');
+                $input_spamaddressrule->add($this->gettext('welcomelist_from'), 'welcomelist_from');
                 $input_spamaddressrule->add($this->gettext('blocklist_from'), 'blocklist_from');
-                $input_spamaddressrule->add($this->gettext('allowlist_to'), 'allowlist_to');
+                $input_spamaddressrule->add($this->gettext('welcomelist_to'), 'welcomelist_to');
 
                 $field_id = 'rcmfd_spamaddress';
                 $input_spamaddress = new html_inputfield(['name' => '_spamaddress', 'id' => $field_id, 'title' => rcmail::Q($this->gettext('email')), 'placeholder' => rcmail::Q($this->gettext('email'))]);
@@ -1083,7 +1083,7 @@ class sauserprefs extends rcube_plugin
                 $blocks['main']['intro'] .= html::div('address-input grouped form-inline', $input_spamaddressrule->show() . $input_spamaddress->show() . $button_addaddress);
 
                 $import = !empty($this->addressbook_import) ? $this->rcube->output->button(['class' => 'import', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_address_import_dialog();', 'type' => 'link', 'label' => 'sauserprefs.importaddresses', 'title' => 'sauserprefs.importfromaddressbook']) : '';
-                $delete_all = $this->rcube->output->button(['class' => 'delete-all', 'command' => 'plugin.sauserprefs.allowlist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip']);
+                $delete_all = $this->rcube->output->button(['class' => 'delete-all', 'command' => 'plugin.sauserprefs.welcomelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip']);
 
                 $table = new html_table(['class' => $attrib['tbl_class'] . ' addressprefstable', 'cols' => 4]);
                 $table->add(['colspan' => 4, 'id' => 'listcontrols'], $import . "&nbsp;&nbsp;" . $delete_all);
@@ -1273,9 +1273,13 @@ class sauserprefs extends rcube_plugin
                 // backwards compatibility, _score_user_blacklist removed in 1.19
                 $config = $config['_score_user_blacklist'];
             }
-            elseif ($field_name == '_score_user_allowlist' && array_key_exists('_score_user_whitelist', $config)) {
+            elseif ($field_name == '_score_user_welcomelist' && array_key_exists('_score_user_whitelist', $config)) {
                 // backwards compatibility, _score_user_whitelist removed in 1.19
                 $config = $config['_score_user_whitelist'];
+            }
+            elseif ($field_name == '_score_user_welcomelist' && array_key_exists('_score_user_allowlist', $config)) {
+                // backwards compatibility, _score_user_allowlist removed in 1.20
+                $config = $config['_score_user_allowlist'];
             }
             else {
                 $config = $config['*'];

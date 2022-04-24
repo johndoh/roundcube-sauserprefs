@@ -110,8 +110,8 @@ table.spam-langs-table tr > .tick a.lang-disabled
   background-position: 0 -36px;
 }
 
-.allowlist_from td.rule,
-.allowlist_to td.rule
+.welcomelist_from td.rule,
+.welcomelist_to td.rule
 {
   color: #008800;
   text-align: left;
