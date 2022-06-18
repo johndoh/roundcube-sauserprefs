@@ -48,6 +48,13 @@ Rename this to plugins/sauserprefs/config.inc.php
 * Enter the table name, name of the username field, preference field, and value
 field
 
+SpamAssassin v4
+---------------
+To enable support for SpamAssassin v4 set `$config['sauserprefs_sav4'] = true;`
+in your config file. This replaces old rule names such as `whitelist_from` with
+with their v4 equivalent automatically. Note: Some default prefs in your config
+file may need to be updated. See SpamAssassin docs for more details.
+
 Supported languages for ok_languages option
 -------------------------------------------
 Taken from Mail::SpamAssassin::Plugin::TextCat
