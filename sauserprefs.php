@@ -267,7 +267,7 @@ class sauserprefs extends rcube_plugin
         $this->rcube->output->set_env('sauserprefs_sort', $sorts);
 
         // define input error class
-        $this->rcube->output->set_env('sauserprefs_input_error_class', $attrib['input_error_class'] ?: 'error');
+        $this->rcube->output->set_env('sauserprefs_input_error_class', !empty($attrib['input_error_class']) ? $attrib['input_error_class'] : 'error');
 
         // output global prefs as default in env
         foreach ($this->global_prefs as $key => $val) {
