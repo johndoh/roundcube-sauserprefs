@@ -359,8 +359,8 @@ $(document).ready(function() {
                     $(obj).parents('thead').first().find('th').removeClass(rcmail.env.sauserprefs_table_sort_asc).removeClass(rcmail.env.sauserprefs_table_sort_desc);
                     $(obj).parent('th').addClass(asc ? rcmail.env.sauserprefs_table_sort_asc : rcmail.env.sauserprefs_table_sort_desc);
 
-                    rcmail.env.sauserprefs_sort[id] = [idx, asc];
-                    rcmail.save_pref({name: 'sauserprefs_sort', value: rcmail.env.sauserprefs_sort, env: true});
+                    rcmail.env.sauserprefs_sort[id] = [idx, asc.toString()];
+                    rcmail.save_pref({name: 'sauserprefs_sort', value: JSON.stringify(rcmail.env.sauserprefs_sort), env: true});
 
                     return false;
                 }, true);

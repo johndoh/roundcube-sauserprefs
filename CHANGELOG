@@ -1,6 +1,8 @@
 Roundcube Webmail SAUserPrefs
 =============================
 
+* Fix saving/restoring table sort settings (#72)
+
 Version 1.20 (2022-06-18, rc-1.5)
 =================================================
  * Drop support for PHP < 7.0
