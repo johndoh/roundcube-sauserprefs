@@ -86,6 +86,9 @@ class sauserprefs extends rcube_plugin
         $this->load_config();
         $this->_load_host_config();
 
+        // set SpamAssassin v4 mode (added v1.20)
+        self::$SAv4 = $this->rcube->config->get('sauserprefs_sav4', false);
+
         // Host exceptions
         $hosts = $this->rcube->config->get('sauserprefs_allowed_hosts');
         if (!empty($hosts) && !in_array($_SESSION['storage_host'], (array) $hosts)) {
@@ -1461,8 +1464,5 @@ class sauserprefs extends rcube_plugin
 
         $file = $configs[$_SESSION['storage_host']];
         $this->load_config($file);
-
-        // set SpamAssassin v4 mode (added v1.20)
-        self::$SAv4 = $this->rcube->config->get('sauserprefs_sav4', false);
     }
 }
