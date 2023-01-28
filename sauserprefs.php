@@ -260,7 +260,7 @@ class sauserprefs extends rcube_plugin
             'sauserprefs.selectimportsource', 'import');
 
         // output table sorting prefs
-        $sorts = $this->rcube->config->get('sauserprefs_sort');
+        $sorts = $this->rcube->config->get('sauserprefs_sort', '{}');
         $sorts = json_decode($sorts, true);
         if (!isset($sorts['#spam-langs-table'])) {
             $sorts['#spam-langs-table'] = [0, 'true'];
@@ -842,7 +842,7 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($this->no_override['add_header all Level'])) {
-                    if ($this->user_prefs['remove_header all'] != 'Level') {
+                    if (!isset($this->user_prefs['remove_header all']) || $this->user_prefs['remove_header all'] != 'Level') {
                         $enabled = "1";
                         $char = $this->user_prefs['add_header all Level'];
                         $char = substr($char, 7, 1);
