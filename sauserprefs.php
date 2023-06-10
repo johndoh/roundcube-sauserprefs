@@ -498,9 +498,9 @@ class sauserprefs extends rcube_plugin
                     return $output;
                 };
 
-            $new_prefs = $translator($new_prefs);
-            $cur_prefs = $translator($cur_prefs);
-            $global_prefs = $translator($global_prefs);
+            $new_prefs = is_array($new_prefs) ? $translator($new_prefs) : $new_prefs;
+            $cur_prefs = is_array($cur_prefs) ? $translator($cur_prefs) : $cur_prefs;
+            $global_prefs = is_array($global_prefs) ? $translator($global_prefs) : $global_prefs;
         }
 
         return $this->storage->save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs);
