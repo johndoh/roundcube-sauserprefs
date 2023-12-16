@@ -470,33 +470,34 @@ class sauserprefs extends rcube_plugin
         $this->init_html();
     }
 
-    private function _save($user_id, $new_prefs, $cur_prefs, $global_prefs) {
+    private function _save($user_id, $new_prefs, $cur_prefs, $global_prefs)
+    {
         if (!self::$SAv4) {
             $names = array_flip(self::$SAv4_prefs);
 
             // process prefs names for different SA versions
-            $translator = function($input) use ($names) {
-                    $output = [];
+            $translator = function ($input) use ($names) {
+                $output = [];
 
-                    foreach ($input as $key => $val) {
-                        if ($key == 'addresses') {
-                            $output[$key] = $val;
-                            foreach ($output[$key] as &$address) {
-                                if (array_key_exists($address['field'], $names)) {
-                                    $address['field'] = $names[$address['field']];
-                                }
+                foreach ($input as $key => $val) {
+                    if ($key == 'addresses') {
+                        $output[$key] = $val;
+                        foreach ($output[$key] as &$address) {
+                            if (array_key_exists($address['field'], $names)) {
+                                $address['field'] = $names[$address['field']];
                             }
                         }
-                        elseif (array_key_exists($key, $names)) {
-                            $output[$names[$key]] = $val;
-                        }
-                        else {
-                            $output[$key] = $val;
-                        }
                     }
+                    elseif (array_key_exists($key, $names)) {
+                        $output[$names[$key]] = $val;
+                    }
+                    else {
+                        $output[$key] = $val;
+                    }
+                }
 
-                    return $output;
-                };
+                return $output;
+            };
 
             $new_prefs = is_array($new_prefs) ? $translator($new_prefs) : $new_prefs;
             $cur_prefs = is_array($cur_prefs) ? $translator($cur_prefs) : $cur_prefs;
@@ -705,8 +706,9 @@ class sauserprefs extends rcube_plugin
         $blocks = [];
 
         switch ($part) {
-            // General tests
             case 'general':
+                // General tests
+
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'generalprefstable', 'cols' => 2],
                     'langs' => ['name' => rcmail::Q($this->gettext('langoptions')), 'class' => 'langprefstable', 'cols' => 1],
@@ -818,8 +820,9 @@ class sauserprefs extends rcube_plugin
                 }
 
                 break;
-            // Header settings
             case 'headers':
+                // Header settings
+
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'headersprefstable', 'cols' => 2],
                 ];
@@ -887,8 +890,9 @@ class sauserprefs extends rcube_plugin
                 }
 
                 break;
-            // Test settings
             case 'tests':
+                // Test settings
+
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'testsprefstable', 'cols' => 2],
                 ];
@@ -976,8 +980,9 @@ class sauserprefs extends rcube_plugin
                 }
 
                 break;
-            // Bayes settings
             case 'bayes':
+                // Bayes settings
+
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'bayesprefstable', 'cols' => 2],
                     'autolearn' => ['name' => rcmail::Q($this->gettext('bayesautooptions')), 'class' => 'bayesprefstable', 'cols' => 2],
@@ -1081,8 +1086,9 @@ class sauserprefs extends rcube_plugin
                 }
 
                 break;
-            // Report settings
             case 'report':
+                // Report settings
+
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions')), 'class' => 'reportprefstable', 'cols' => 2],
                 ];
@@ -1109,8 +1115,9 @@ class sauserprefs extends rcube_plugin
                 }
 
                 break;
-            // Address settings
             case 'addresses':
+                // Address settings
+
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions'))],
                     'advanced' => ['name' => rcmail::Q($this->gettext('advancedoptions')), 'class' => $attrib['class'] . ' addressadvancedtable', 'cols' => 2],
@@ -1160,7 +1167,7 @@ class sauserprefs extends rcube_plugin
                 }
 
                 // add no address and new address rows at the end
-                $norules = !empty($this->user_prefs['addresses']) ? 'display: none;': '';
+                $norules = !empty($this->user_prefs['addresses']) ? 'display: none;' : '';
 
                 $address_table->set_row_attribs(['class' => 'noaddressrules', 'style' => $norules]);
                 $address_table->add(['colspan' => '3'], rcube_utils::rep_specialchars_output($this->gettext('noaddressrules')));
@@ -1223,8 +1230,9 @@ class sauserprefs extends rcube_plugin
                 }
 
                 break;
-            // Test scores
             case 'scores':
+                // Test scores
+
                 $blocks = [
                     'main' => ['name' => rcmail::Q($this->gettext('mainoptions'))],
                 ];
