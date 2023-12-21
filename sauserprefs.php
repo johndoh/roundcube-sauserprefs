@@ -280,7 +280,7 @@ class sauserprefs extends rcube_plugin
 
         unset($attrib['form']);
 
-        list($form_start, $form_end) = rcmail_action::get_form_tags($attrib, 'plugin.sauserprefs.save', null,
+        [$form_start, $form_end] = rcmail_action::get_form_tags($attrib, 'plugin.sauserprefs.save', null,
             ['name' => '_section', 'value' => $this->cur_section]);
 
         $out = $form_start;
