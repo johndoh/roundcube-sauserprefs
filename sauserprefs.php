@@ -476,7 +476,7 @@ class sauserprefs extends rcube_plugin
             $names = array_flip(self::$SAv4_prefs);
 
             // process prefs names for different SA versions
-            $translator = function ($input) use ($names) {
+            $translator = static function ($input) use ($names) {
                 $output = [];
 
                 foreach ($input as $key => $val) {
