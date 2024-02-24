@@ -77,8 +77,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
             if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to'
                 || $pref_name == 'welcomelist_from' || $pref_name == 'blocklist_from' || $pref_name == 'welcomelist_to') {
                 $prefs['addresses'][] = ['field' => $pref_name, 'value' => $pref_value];
-            }
-            else {
+            } else {
                 $prefs[$pref_name] = $pref_value;
             }
 
@@ -120,16 +119,13 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
                         $actions[$address['action']][] = $address;
                     }
                 }
-            }
-            elseif (array_key_exists($preference, $cur_prefs)) {
-                if ($value == "" || $value == $global_prefs[$preference]) {
+            } elseif (array_key_exists($preference, $cur_prefs)) {
+                if ($value == '' || $value == $global_prefs[$preference]) {
                     $actions['DELETE'][] = ['field' => $preference, 'value' => null];
-                }
-                elseif ($value != $cur_prefs[$preference]) {
+                } elseif ($value != $cur_prefs[$preference]) {
                     $actions['UPDATE'][] = ['field' => $preference, 'value' => $value];
                 }
-            }
-            elseif ($value != $global_prefs[$preference]) {
+            } elseif ($value != $global_prefs[$preference]) {
                 $actions['INSERT'][] = ['field' => $preference, 'value' => $value];
             }
         }
@@ -152,8 +148,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
                             rcube::write_log('errors', 'sauserprefs error: cannot insert "' . $pref['field'] . '" = "' . $pref['value'] . '" for ' . $user_id);
                             break;
                         }
-                    }
-                    elseif ($type == 'UPDATE') {
+                    } elseif ($type == 'UPDATE') {
                         $this->db->query(
                             "UPDATE `{$this->table_name}` SET `{$this->value_field}` = ? WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
                             $pref['value'],
@@ -166,8 +161,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
                             rcube::write_log('errors', 'sauserprefs error: cannot update "' . $pref['field'] . '" = "' . $pref['value'] . '" for ' . $user_id);
                             break;
                         }
-                    }
-                    elseif ($type == 'DELETE') {
+                    } elseif ($type == 'DELETE') {
                         $sql = "DELETE FROM `{$this->table_name}` WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?";
                         $vals = [$user_id, $pref['field']];
                         $msg = '"' . $pref['field'] . '"';

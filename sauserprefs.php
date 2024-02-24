@@ -95,7 +95,7 @@ class sauserprefs extends rcube_plugin
             return;
         }
 
-        $this->sa_user = $this->rcube->config->get('sauserprefs_userid', "%u");
+        $this->sa_user = $this->rcube->config->get('sauserprefs_userid', '%u');
 
         $identity_arr = $this->rcube->user->get_identity();
         $identity = $identity_arr['email'];
@@ -107,16 +107,14 @@ class sauserprefs extends rcube_plugin
         $abook_sync = $this->rcube->config->get('sauserprefs_abook_sync', false);
         if ($abook_sync === true) {
             $this->addressbook_sync = [0];
-        }
-        elseif ($abook_sync !== false) {
+        } elseif ($abook_sync !== false) {
             $this->addressbook_sync = !is_array($abook_sync) ? [$abook_sync] : $abook_sync;
         }
 
         $abook_import = $this->rcube->config->get('sauserprefs_abook_import', false);
         if ($abook_import === true) {
             $this->addressbook_import = [0];
-        }
-        elseif ($abook_import !== false) {
+        } elseif ($abook_import !== false) {
             $this->addressbook_import = !is_array($abook_import) ? [$abook_import] : $abook_import;
         }
 
@@ -156,8 +154,7 @@ class sauserprefs extends rcube_plugin
 
             // integration with taskwatermark plugin
             $this->add_hook('taskwatermark_show', [$this, 'taskwatermark_show']);
-        }
-        elseif (!empty($this->addressbook_sync)) {
+        } elseif (!empty($this->addressbook_sync)) {
             $this->add_hook('contact_create', [$this, 'contact_add']);
             $this->add_hook('contact_update', [$this, 'contact_save']);
             $this->add_hook('contact_delete', [$this, 'contact_delete']);
@@ -186,13 +183,12 @@ class sauserprefs extends rcube_plugin
             $this->user_prefs = array_merge($this->global_prefs, $this->user_prefs);
 
             // use jQuery for popup window (required by core, no need to include here)
-            //$this->require_plugin('jqueryui');
+            // $this->require_plugin('jqueryui');
             $this->rcube->output->include_script('list.js');
             $this->rcube->output->add_handler('userprefs', [$this, 'gen_form']);
             $this->rcube->output->add_handler('sectionname', [$this, 'prefs_section_name']);
             $this->rcube->output->send('sauserprefs.settingsedit');
-        }
-        else {
+        } else {
             $this->rcube->output->add_handler('sasectionslist', [$this, 'section_list']);
             // backwards compatibility saprefsframe removed in 1.18
             $this->rcube->output->add_handler('saprefsframe', [$this, 'preference_frame']);
@@ -275,7 +271,7 @@ class sauserprefs extends rcube_plugin
 
         // output global prefs as default in env
         foreach ($this->global_prefs as $key => $val) {
-            $this->rcube->output->set_env(str_replace(" ", "_", $key), $val);
+            $this->rcube->output->set_env(str_replace(' ', '_', $key), $val);
         }
 
         unset($attrib['form']);
@@ -321,64 +317,63 @@ class sauserprefs extends rcube_plugin
                     if (is_array(rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST))) {
                         $input_locals = rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST);
                         $locales = array_intersect($input_locals, $this->sa_locales);
-                        $new_prefs['ok_locales'] = implode(" ", $locales);
+                        $new_prefs['ok_locales'] = implode(' ', $locales);
                     }
                 }
 
                 if (!isset($this->no_override['ok_languages'])) {
-                    $new_prefs['ok_languages'] = is_array(rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST)) ? implode(" ", rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST)) : '';
+                    $new_prefs['ok_languages'] = is_array(rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST)) ? implode(' ', rcube_utils::get_input_value('_spamlang', rcube_utils::INPUT_POST)) : '';
                 }
 
                 break;
             case 'headers':
                 if (!isset($this->no_override['fold_headers'])) {
-                    $new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? "0" : "1";
+                    $new_prefs['fold_headers'] = empty($_POST['_spamfoldheaders']) ? '0' : '1';
                 }
 
                 if (!isset($this->no_override['add_header all Level'])) {
-                    $spamchar = empty($_POST['_spamlevelchar']) ? "*" : rcube_utils::get_input_string('_spamlevelchar', rcube_utils::INPUT_POST);
+                    $spamchar = empty($_POST['_spamlevelchar']) ? '*' : rcube_utils::get_input_string('_spamlevelchar', rcube_utils::INPUT_POST);
                     $spamchar = substr($spamchar, 0, 1); // input validation, make sure its only ever 1 char
 
-                    if (rcube_utils::get_input_string('_spamlevelstars', rcube_utils::INPUT_POST) == "1") {
-                        $new_prefs['add_header all Level'] = "_STARS(" . $spamchar . ")_";
-                        $new_prefs['remove_header all'] = "0";
-                    }
-                    else {
-                        $new_prefs['add_header all Level'] = "";
-                        $new_prefs['remove_header all'] = "Level";
+                    if (rcube_utils::get_input_string('_spamlevelstars', rcube_utils::INPUT_POST) == '1') {
+                        $new_prefs['add_header all Level'] = '_STARS(' . $spamchar . ')_';
+                        $new_prefs['remove_header all'] = '0';
+                    } else {
+                        $new_prefs['add_header all Level'] = '';
+                        $new_prefs['remove_header all'] = 'Level';
                     }
                 }
 
                 break;
             case 'tests':
                 if (!isset($this->no_override['use_razor1'])) {
-                    $new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? "0" : "1";
+                    $new_prefs['use_razor1'] = empty($_POST['_spamuserazor1']) ? '0' : '1';
                 }
 
                 if (!isset($this->no_override['use_razor2'])) {
-                    $new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? "0" : "1";
+                    $new_prefs['use_razor2'] = empty($_POST['_spamuserazor2']) ? '0' : '1';
                 }
 
                 if (!isset($this->no_override['use_pyzor'])) {
-                    $new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? "0" : "1";
+                    $new_prefs['use_pyzor'] = empty($_POST['_spamusepyzor']) ? '0' : '1';
                 }
 
                 if (!isset($this->no_override['use_dcc'])) {
-                    $new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? "0" : "1";
+                    $new_prefs['use_dcc'] = empty($_POST['_spamusedcc']) ? '0' : '1';
                 }
 
                 if (!isset($this->no_override['skip_rbl_checks'])) {
-                    $new_prefs['skip_rbl_checks'] = empty($_POST['_spamskiprblchecks']) ? "1" : "0";
+                    $new_prefs['skip_rbl_checks'] = empty($_POST['_spamskiprblchecks']) ? '1' : '0';
                 }
 
                 break;
             case 'bayes':
                 if (!isset($this->no_override['use_bayes'])) {
-                    $new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? "0" : "1";
+                    $new_prefs['use_bayes'] = empty($_POST['_spamusebayes']) ? '0' : '1';
                 }
 
                 if (!isset($this->no_override['bayes_auto_learn'])) {
-                    $new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? "0" : "1";
+                    $new_prefs['bayes_auto_learn'] = empty($_POST['_spambayesautolearn']) ? '0' : '1';
                 }
 
                 if (!isset($this->no_override['bayes_auto_learn_threshold_nonspam'])) {
@@ -390,7 +385,7 @@ class sauserprefs extends rcube_plugin
                 }
 
                 if (!isset($this->no_override['use_bayes_rules'])) {
-                    $new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? "0" : "1";
+                    $new_prefs['use_bayes_rules'] = empty($_POST['_spambayesrules']) ? '0' : '1';
                 }
 
                 break;
@@ -407,23 +402,23 @@ class sauserprefs extends rcube_plugin
 
                 foreach ($acts as $idx => $act) {
                     switch ($prefs[$idx]) {
-                        case "whitelist_from":
-                        case "welcomelist_from":
+                        case 'whitelist_from':
+                        case 'welcomelist_from':
                             $new_prefs['addresses'][] = ['field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act];
                             break;
-                        case "blacklist_from":
-                        case "blocklist_from":
+                        case 'blacklist_from':
+                        case 'blocklist_from':
                             $new_prefs['addresses'][] = ['field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act];
                             break;
-                        case "whitelist_to":
-                        case "welcomelist_to":
+                        case 'whitelist_to':
+                        case 'welcomelist_to':
                             $new_prefs['addresses'][] = ['field' => $prefs[$idx], 'value' => $vals[$idx], 'action' => $act];
                             break;
                     }
                 }
 
                 if (!isset($this->no_override[$this->awl_plugin])) {
-                    $new_prefs[$this->awl_plugin] = empty($_POST['_awl']) ? "0" : "1";
+                    $new_prefs[$this->awl_plugin] = empty($_POST['_awl']) ? '0' : '1';
                 }
 
                 if (!isset($this->no_override['score USER_IN_BLOCKLIST'])) {
@@ -455,12 +450,10 @@ class sauserprefs extends rcube_plugin
             // save prefs
             if ($this->_save($this->sa_user, $data['new_prefs'], $this->user_prefs, $this->global_prefs)) {
                 $this->rcube->output->command('display_message', $this->gettext('sauserprefchanged'), 'confirmation');
-            }
-            else {
+            } else {
                 $this->rcube->output->command('display_message', $this->gettext('sauserpreffailed'), 'error');
             }
-        }
-        else {
+        } else {
             $this->rcube->output->command('display_message', $data['message'] ?? $this->gettext('sauserpreffailed'), 'error');
         }
 
@@ -487,11 +480,9 @@ class sauserprefs extends rcube_plugin
                                 $address['field'] = $names[$address['field']];
                             }
                         }
-                    }
-                    elseif (array_key_exists($key, $names)) {
+                    } elseif (array_key_exists($key, $names)) {
                         $output[$names[$key]] = $val;
-                    }
-                    else {
+                    } else {
                         $output[$key] = $val;
                     }
                 }
@@ -548,8 +539,7 @@ class sauserprefs extends rcube_plugin
 
         if ($this->storage->purge_bayes($this->sa_user)) {
             $this->rcube->output->command('display_message', $this->gettext('done'), 'confirmation');
-        }
-        else {
+        } else {
             $this->rcube->output->command('display_message', $this->gettext('servererror'), 'error');
         }
     }
@@ -636,17 +626,16 @@ class sauserprefs extends rcube_plugin
             set_include_path($include_path);
 
             $class = $this->rcube->config->get('sauserprefs_storage', 'sql');
-            $class = "rcube_sauserprefs_storage_" . $class;
+            $class = 'rcube_sauserprefs_storage_' . $class;
 
             // try to instantiate class
             if (class_exists($class)) {
                 $this->storage = new $class($this->rcube->config);
-            }
-            else {
+            } else {
                 // no storage found, raise error
                 rcube::raise_error(['code' => 604, 'type' => 'sauserprefs',
                     'line' => __LINE__, 'file' => __FILE__,
-                    'message' => "Failed to find storage driver. Check sauserprefs_storage config option",
+                    'message' => 'Failed to find storage driver. Check sauserprefs_storage config option',
                 ], true, true);
             }
         }
@@ -752,7 +741,7 @@ class sauserprefs extends rcube_plugin
 
                     $blocks['langs']['options']['header'] = [
                         'content_attribs' => ['id' => 'listcontrols'],
-                        'content' => $this->gettext('select') . ":&nbsp;&nbsp;" . $select_all . "&nbsp;&nbsp;" . $select_invert . "&nbsp;&nbsp;" . $select_none,
+                        'content' => $this->gettext('select') . ':&nbsp;&nbsp;' . $select_all . '&nbsp;&nbsp;' . $select_invert . '&nbsp;&nbsp;' . $select_none,
                     ];
 
                     $lang_table = new html_table(['id' => 'spam-langs-table', 'class' => 'records-table listing sortable-table spam-langs-table fixedheader', 'cellspacing' => '0', 'cols' => 2]);
@@ -761,8 +750,7 @@ class sauserprefs extends rcube_plugin
 
                     if ($lang_config = $this->rcube->config->get('sauserprefs_langs_allowed')) {
                         $this->sa_langs = array_intersect($this->sa_langs, (array) $lang_config);
-                    }
-                    elseif ($lang_config = $this->rcube->config->get('sauserprefs_languages')) {
+                    } elseif ($lang_config = $this->rcube->config->get('sauserprefs_languages')) {
                         // backwards compatibility sauserprefs_languages removed 20180714
                         $this->sa_langs = array_intersect($this->sa_langs, array_keys((array) $lang_config));
                     }
@@ -771,23 +759,20 @@ class sauserprefs extends rcube_plugin
                     $ok_languages = [];
 
                     if (!isset($this->no_override['ok_locales'])) {
-                        if ($this->user_prefs['ok_locales'] == "all") {
+                        if ($this->user_prefs['ok_locales'] == 'all') {
                             $ok_locales = $this->sa_locales;
-                        }
-                        else {
-                            $ok_locales = explode(" ", $this->user_prefs['ok_locales']);
+                        } else {
+                            $ok_locales = explode(' ', $this->user_prefs['ok_locales']);
                         }
                     }
 
                     if (!isset($this->no_override['ok_languages'])) {
-                        if ($this->user_prefs['ok_languages'] == "all") {
+                        if ($this->user_prefs['ok_languages'] == 'all') {
                             $ok_languages = $this->sa_langs;
+                        } else {
+                            $ok_languages = explode(' ', $this->user_prefs['ok_languages']);
                         }
-                        else {
-                            $ok_languages = explode(" ", $this->user_prefs['ok_languages']);
-                        }
-                    }
-                    else {
+                    } else {
                         // only show langs from localess
                         $this->sa_langs = array_intersect($this->sa_langs, $this->sa_locales);
                     }
@@ -846,13 +831,12 @@ class sauserprefs extends rcube_plugin
 
                 if (!isset($this->no_override['add_header all Level'])) {
                     if (!isset($this->user_prefs['remove_header all']) || $this->user_prefs['remove_header all'] != 'Level') {
-                        $enabled = "1";
+                        $enabled = '1';
                         $char = $this->user_prefs['add_header all Level'];
                         $char = substr($char, 7, 1);
-                    }
-                    else {
-                        $enabled = "0";
-                        $char = "*";
+                    } else {
+                        $enabled = '0';
+                        $char = '*';
                     }
 
                     $field_id = 'rcmfd_spamlevelstars';
@@ -964,7 +948,7 @@ class sauserprefs extends rcube_plugin
 
                 if (!isset($this->no_override['skip_rbl_checks'])) {
                     $field_id = 'rcmfd_spamskiprblchecks';
-                    $enabled = $this->user_prefs['skip_rbl_checks'] == "1" ? "0" : "1";
+                    $enabled = $this->user_prefs['skip_rbl_checks'] == '1' ? '0' : '1';
                     $input_spamtest = new html_checkbox(['name' => '_spamskiprblchecks', 'id' => $field_id, 'value' => '1']);
 
                     $blocks['main']['options']['spamskiprblchecks'] = [
@@ -1126,7 +1110,7 @@ class sauserprefs extends rcube_plugin
                 $data = html::p(null, rcmail::Q($this->gettext('welcomelistexp')));
 
                 if (!empty($this->addressbook_sync)) {
-                    $data .= rcmail::Q(str_replace('%s', $this->_list_contact_sources($this->addressbook_sync), $this->gettext('autowelcomelist'))) . "<br /><br />";
+                    $data .= rcmail::Q(str_replace('%s', $this->_list_contact_sources($this->addressbook_sync), $this->gettext('autowelcomelist'))) . '<br /><br />';
                 }
 
                 $blocks['main']['intro'] = $data;
@@ -1149,7 +1133,7 @@ class sauserprefs extends rcube_plugin
                 $delete_all = $this->rcube->output->button(['class' => 'delete-all', 'command' => 'plugin.sauserprefs.welcomelist_delete_all', 'type' => 'link', 'label' => 'sauserprefs.deleteall', 'title' => 'sauserprefs.deletealltip']);
 
                 $table = new html_table(['class' => $attrib['tbl_class'] . ' addressprefstable', 'cols' => 4]);
-                $table->add(['colspan' => 4, 'id' => 'listcontrols'], $import . "&nbsp;&nbsp;" . $delete_all);
+                $table->add(['colspan' => 4, 'id' => 'listcontrols'], $import . '&nbsp;&nbsp;' . $delete_all);
 
                 $address_table = new html_table(['id' => 'address-rules-table', 'class' => 'records-table listing sortable-table address-rules-table fixedheader', 'cellspacing' => '0', 'cols' => 3]);
                 $address_table->add_header('rule', $this->rcube->output->button(['command' => 'plugin.sauserprefs.table_sort', 'prop' => '#address-rules-table', 'type' => 'link', 'label' => 'sauserprefs.rule', 'title' => 'sortby']));
@@ -1161,8 +1145,7 @@ class sauserprefs extends rcube_plugin
                     foreach ((array) $this->user_prefs['addresses'] as $address) {
                         $this->_address_row($address_table, $address['field'], $address['value'], $attrib);
                     }
-                }
-                else {
+                } else {
                     $this->rcube->output->set_env('address_rule_count', 0);
                 }
 
@@ -1299,18 +1282,18 @@ class sauserprefs extends rcube_plugin
         $hidden_text = new html_hiddenfield(['name' => '_address_rule_value[]', 'value' => $value]);
 
         switch ($field) {
-            case "whitelist_from":
-            case "welcomelist_from":
+            case 'whitelist_from':
+            case 'welcomelist_from':
                 $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('welcomelist_from'));
                 $class = 'welcomelist_from';
                 break;
-            case "blacklist_from":
-            case "blocklist_from":
+            case 'blacklist_from':
+            case 'blocklist_from':
                 $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('blocklist_from'));
                 $class = 'blocklist_from';
                 break;
-            case "whitelist_to":
-            case "welcomelist_to":
+            case 'whitelist_to':
+            case 'welcomelist_to':
                 $fieldtxt = rcube_utils::rep_specialchars_output($this->gettext('welcomelist_to'));
                 $class = 'welcomelist_to';
                 break;
@@ -1335,24 +1318,19 @@ class sauserprefs extends rcube_plugin
         if ($config = $this->rcube->config->get('sauserprefs_score_options')) {
             if (array_key_exists($field_name, $config)) {
                 $config = $config[$field_name];
-            }
-            elseif ($field_name == '_score_user_blocklist' && array_key_exists('_score_user_blacklist', $config)) {
+            } elseif ($field_name == '_score_user_blocklist' && array_key_exists('_score_user_blacklist', $config)) {
                 // backwards compatibility, _score_user_blacklist removed in 1.19
                 $config = $config['_score_user_blacklist'];
-            }
-            elseif ($field_name == '_score_user_welcomelist' && array_key_exists('_score_user_whitelist', $config)) {
+            } elseif ($field_name == '_score_user_welcomelist' && array_key_exists('_score_user_whitelist', $config)) {
                 // backwards compatibility, _score_user_whitelist removed in 1.19
                 $config = $config['_score_user_whitelist'];
-            }
-            elseif ($field_name == '_score_user_welcomelist' && array_key_exists('_score_user_allowlist', $config)) {
+            } elseif ($field_name == '_score_user_welcomelist' && array_key_exists('_score_user_allowlist', $config)) {
                 // backwards compatibility, _score_user_allowlist removed in 1.20
                 $config = $config['_score_user_allowlist'];
-            }
-            else {
+            } else {
                 $config = $config['*'];
             }
-        }
-        else {
+        } else {
             $config = ['min' => 1, 'max' => 10, 'increment' => $this->rcube->config->get('sauserprefs_score_inc', 1)];
         }
         $decPlaces = self::decimal_places($config['increment'], $locale_info['decimal_point']);
@@ -1404,8 +1382,7 @@ class sauserprefs extends rcube_plugin
             if (array_key_exists($pref, self::$deprecated_prefs)) {
                 $pref = self::$deprecated_prefs[$pref];
             }
-        }
-        else {
+        } else {
             if (($orig_pref = array_search($pref, self::$deprecated_prefs)) != false) {
                 $pref = $orig_pref;
             }
@@ -1416,13 +1393,13 @@ class sauserprefs extends rcube_plugin
 
     public static function sort_addresses($a, $b)
     {
-        return strnatcasecmp($a["value"], $b["value"]);
+        return strnatcasecmp($a['value'], $b['value']);
     }
 
     private function _help_button($target)
     {
         $help_button = html::span(['class' => 'helpicon', 'title' => $this->gettext('moreinfo')], '');
-        $help_button = html::a(['name' => '_headerhlp', 'href' => "#", 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("' . $target . '");', 'title' => $this->gettext('help')], $help_button);
+        $help_button = html::a(['name' => '_headerhlp', 'href' => '#', 'onclick' => 'return ' . rcmail_output::JS_OBJECT_NAME . '.sauserprefs_help("' . $target . '");', 'title' => $this->gettext('help')], $help_button);
 
         return $help_button;
     }
