@@ -65,8 +65,9 @@ rcube_webmail.prototype.sauserprefs_addressrule_insert_row = function (p) {
             return false;
         }
     });
-    if (error)
-    { return false; }
+    if (error) {
+        return false;
+    }
 
     var adrTable = $('#address-rules-table tbody');
     var new_row = $(adrTable).children('tr.newaddressrule').clone();
@@ -90,8 +91,9 @@ rcube_webmail.prototype.sauserprefs_addressrule_delete_row = function (obj) {
     var actField = $(obj).find('input[name="_address_rule_act[]"]');
 
     // skip empty rows
-    if (!actField.parent().is(':visible'))
-    { return; }
+    if (!actField.parent().is(':visible')) {
+        return;
+    }
 
     if (actField.val() == 'INSERT') {
         $(obj).closest('tr').remove();
@@ -103,8 +105,9 @@ rcube_webmail.prototype.sauserprefs_addressrule_delete_row = function (obj) {
 
     this.env.address_rule_count--;
 
-    if ($('#address-rules-table tbody').children('tr').filter(':visible').length == 0)
-    { $('#address-rules-table tbody').children('tr.noaddressrules').show(); }
+    if ($('#address-rules-table tbody').children('tr').filter(':visible').length == 0) {
+        $('#address-rules-table tbody').children('tr.noaddressrules').show();
+    }
 };
 
 rcube_webmail.prototype.sauserprefs_addressrule_import = function (address) {
