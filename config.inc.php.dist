@@ -4,6 +4,8 @@
  * SAUserPrefs configuration file
  */
 
+$config = [];
+
 // spamassassin database settings
 $config['sauserprefs_db_dsnw'] = 'mysql://username:password@localhost/database';
 
