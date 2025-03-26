@@ -82,7 +82,7 @@ class sauserprefs extends rcube_plugin
 
     public function init()
     {
-        $this->rcube = rcube::get_instance();
+        $this->rcube = rcmail::get_instance();
         $this->load_config();
         $this->_load_host_config();
 

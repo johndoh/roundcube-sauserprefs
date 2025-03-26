@@ -43,6 +43,8 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
      */
     public function __construct($config)
     {
+        parent::__construct($config);
+
         $this->db_dsnw = $config->get('sauserprefs_db_dsnw');
         $this->db_dsnr = $config->get('sauserprefs_db_dsnr');
         $this->db_persistent = $config->get('sauserprefs_db_persistent');
@@ -82,7 +84,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
             }
 
             // update deprecated prefs in db
-            if ($sql_arr[$this->preference_field] != $pref_name && (sauserprefs::$SAv4 || (!sauserprefs::$SAv4 && !array_key_exists($sql_arr[$this->preference_field], sauserprefs::$SAv4_prefs)))) {
+            if ($sql_arr[$this->preference_field] != $pref_name && (sauserprefs::$SAv4 || (!sauserprefs::$SAv4 && !array_key_exists($sql_arr[$this->preference_field], sauserprefs::$SAv4_prefs)))) {  // @phpstan-ignore-line
                 $this->_db_connect('w');
 
                 $this->db->query(
