@@ -257,7 +257,7 @@ class sauserprefs extends rcube_plugin
 
         // output table sorting prefs
         $sorts = $this->rcube->config->get('sauserprefs_sort', '{}');
-        $sorts = json_decode($sorts, true);
+        $sorts = is_string($sorts) ? json_decode($sorts, true) : [];
         if (!isset($sorts['#spam-langs-table'])) {
             $sorts['#spam-langs-table'] = [0, 'true'];
         }
