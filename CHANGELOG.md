@@ -1,9 +1,10 @@
 # Roundcube Webmail SAUserPrefs
 
-## Unreleased
+## Version 1.20.2 (2025-04-19, rc-1.5)
 
 - Fix PHP8 warnings (#74)
 - Fix warning on contact edit
+- Fix handling of old style table sorting prefs (#78)
 
 ## Version 1.20.1 (2022-10-29, rc-1.5)
 
