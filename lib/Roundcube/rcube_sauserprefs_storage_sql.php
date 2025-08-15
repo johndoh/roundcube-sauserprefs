@@ -73,7 +73,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
 
         while ($sql_result && ($sql_arr = $this->db->fetch_assoc($sql_result))) {
             $pref_name = $sql_arr[$this->preference_field];
-            $pref_name = sauserprefs::map_pref_name($pref_name);
+            $pref_name = \sauserprefs::map_pref_name($pref_name);
             $pref_value = $sql_arr[$this->value_field];
 
             if ($pref_name == 'whitelist_from' || $pref_name == 'blacklist_from' || $pref_name == 'whitelist_to'
@@ -84,12 +84,12 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
             }
 
             // update deprecated prefs in db
-            if ($sql_arr[$this->preference_field] != $pref_name && (sauserprefs::$SAv4 || (!sauserprefs::$SAv4 && !array_key_exists($sql_arr[$this->preference_field], sauserprefs::$SAv4_prefs)))) {  // @phpstan-ignore-line
+            if ($sql_arr[$this->preference_field] != $pref_name && (\sauserprefs::$SAv4 || (!\sauserprefs::$SAv4 && !array_key_exists($sql_arr[$this->preference_field], \sauserprefs::$SAv4_prefs)))) {  // @phpstan-ignore-line
                 $this->_db_connect('w');
 
                 $this->db->query(
                     "UPDATE `{$this->table_name}` SET `{$this->preference_field}` = ? WHERE `{$this->username_field}` = ? AND `{$this->preference_field}` = ?;",
-                    sauserprefs::map_pref_name($pref_name),
+                    \sauserprefs::map_pref_name($pref_name),
                     $user,
                     $sql_arr[$this->preference_field]);
             }
