@@ -1369,7 +1369,7 @@ class sauserprefs extends rcube_plugin
         $places = 0;
         $input = (string) $input;
 
-        if (strpos($input, $separator) !== false) {
+        if (str_contains($input, $separator)) {
             $places = strcspn(strrev($input), $separator);
         }
 

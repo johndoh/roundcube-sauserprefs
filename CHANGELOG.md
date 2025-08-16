@@ -1,5 +1,7 @@
 # Roundcube Webmail SAUserPrefs
 
+- Drop support for PHP < 8.1
+
 ## Version 1.20.2 (2025-04-19, rc-1.5)
 
 - Fix PHP8 warnings (#74)
