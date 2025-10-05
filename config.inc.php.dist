@@ -75,7 +75,7 @@ $config['sauserprefs_host_config'] = null;
 // Some configs have been renamed in SAv4, old config names are depreciated
 // see https://bz.apache.org/SpamAssassin/show_bug.cgi?id=7826 for more info
 // setting this config to true will make this plugin use the new config names
-$config['sauserprefs_sav4'] = false;
+$config['sauserprefs_sav4'] = true;
 
 // default settings
 // these are overridden by $GLOBAL and user settings from the database

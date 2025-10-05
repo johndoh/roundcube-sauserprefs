@@ -1,6 +1,7 @@
 # Roundcube Webmail SAUserPrefs
 
 - Drop support for PHP < 8.1
+- Enable SA v4 support by default
 
 ## Version 1.20.2 (2025-04-19, rc-1.5)
 
