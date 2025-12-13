@@ -62,6 +62,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
      *
      * @return array Array of preferences in format [$pref_name => $pref_value, ...]
      */
+    #[\Override]
     public function load_prefs($user)
     {
         $this->_db_connect('r');
@@ -108,6 +109,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
      *
      * @return bool True on success, False on error
      */
+    #[\Override]
     public function save_prefs($user_id, $new_prefs, $cur_prefs, $global_prefs)
     {
         $result = true;
@@ -194,6 +196,7 @@ class rcube_sauserprefs_storage_sql extends rcube_sauserprefs_storage
      *
      * @param string $user_id sauserprefs_userid
      */
+    #[\Override]
     public function purge_bayes($user_id)
     {
         $result = false;

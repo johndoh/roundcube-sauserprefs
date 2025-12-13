@@ -80,6 +80,7 @@ class sauserprefs extends rcube_plugin
         'whitelist_to' => 'welcomelist_to',
     ];
 
+    #[\Override]
     public function init()
     {
         $this->rcube = rcmail::get_instance();
