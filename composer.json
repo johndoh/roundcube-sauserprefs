@@ -3,6 +3,7 @@
   "description": "Control SpamAssassin settings from within Roundcube",
   "license": "GPL-3.0-or-later",
   "type": "roundcube-plugin",
+  "version": "1.21",
   "keywords": [
     "spamassassin",
     "preferences"
