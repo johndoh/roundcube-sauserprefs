@@ -33,17 +33,20 @@ folder for details on the skin license.
 
 Install
 -------
+* Install via Composer by adding `johndoh/sauserprefs` to your `composer.json`
+file or running `composer require johndoh/sauserprefs`
+<br/>or
 * Place this plugin folder into plugins directory of Roundcube
-* Add sauserprefs to $config['plugins'] in your Roundcube config
+* Add `sauserprefs` to `$config['plugins']` in your Roundcube config
 
 **NB:** When downloading the plugin from GitHub you will need to create a
-directory called sauserprefs and place the files in there, ignoring the root
+directory called `sauserprefs` and place the files in there, ignoring the root
 directory in the downloaded archive.
 
 Config
 ------
-The default config file is plugins/sauserprefs/config.inc.php.dist
-Rename this to plugins/sauserprefs/config.inc.php
+The default config file is `plugins/sauserprefs/config.inc.php.dist`
+Rename this to `plugins/sauserprefs/config.inc.php`
 * You must set the database connection string
 * Enter the table name, name of the username field, preference field, and value
 field
