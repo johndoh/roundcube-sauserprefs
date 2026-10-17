@@ -13,9 +13,8 @@ ATTENTION
 This is just a snapshot from the GIT repository and is **NOT A STABLE version
 of SAUserPrefs**. It is Intended for use with the **GIT-master** version of
 Roundcube and it may not be compatible with older versions. Stable versions of
-SAUserPrefs are available from the [Roundcube plugin repository][rcplugrepo]
-(for 1.0 and above) or the [releases section][releases] of the GitHub
-repository.
+SAUserPrefs are available from [Packagist][rcplugrepo] or the
+[releases section][releases] of the GitHub repository.
 
 Requirements
 ------------
@@ -233,7 +232,7 @@ then recompiling the CSS.
 
 [usingsql]: https://wiki.apache.org/spamassassin/UsingSQL
 [webuserprefs]: https://sourceforge.net/projects/webuserprefs/
-[rcplugrepo]: https://plugins.roundcube.net/#/packages/johndoh/sauserprefs
+[rcplugrepo]: https://packagist.org/packages/johndoh/sauserprefs
 [releases]: https://github.com/johndoh/roundcube-sauserprefs/releases
 [rcjqui]: https://github.com/roundcube/roundcubemail/tree/master/plugins/jqueryui
 [gpl]: https://www.gnu.org/licenses/gpl.html
